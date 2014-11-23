@@ -29,9 +29,9 @@
         },
         "x-editable": {
             "main": [
-                "bootstrap3-editable/css/bootstrap-editable.css",
-                "bootstrap3-editable/img/*",
-                "bootstrap3-editable/js/bootstrap-editable.js"
+                "dist/bootstrap3-editable/css/bootstrap-editable.css",
+                "dist/bootstrap3-editable/img/*",
+                "dist/bootstrap3-editable/js/bootstrap-editable.js"
             ]
         },
         "flotcharts": {
