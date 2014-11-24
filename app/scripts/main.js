@@ -1047,7 +1047,6 @@ function ViewModel() {
 
         // Get RSI
         self.rsi().data = self.flotFinanceSymbol().getRsi(14, self.computeScale(), self.enableSplitDetection());
-        log.info(self.flotFinanceSymbol().getRsi(14, self.computeScale(), self.enableSplitDetection()));
         self.rsiPlotArgs.series.push(self.rsi());
 
         // Calculate MA Fastest
@@ -1166,7 +1165,7 @@ function ViewModel() {
     };
 
     self.plotVolume = function() {
-        log.info('Plotting Volume');
+        log.debug('Plotting Volume');
         self.updateVolumePlotAxisMinAndMax();
         if (self.showMacd() || self.showRsi()) {
             self.volumePlotArgs.options.xaxis.font = {color: 'transparent'};
@@ -1203,7 +1202,7 @@ function ViewModel() {
     };
 
     self.plotRsi = function() {
-        log.info('Plotting RSI');
+        log.debug('Plotting RSI');
         self.updateRsiPlotAxisMinAndMax();
         if (self.showMacd()) {
             self.rsiPlotArgs.options.xaxis.font = {color: 'transparent'};
@@ -1216,7 +1215,6 @@ function ViewModel() {
             } else {
                 self.rsiPlotArgs.options.xaxis.tickColor = 'transparent';
             }
-            log.info(self.rsi());
             self.rsiPlotArgs.series = [self.rsi()];
             $('#rsi-plot').css('margin-top', '-26px');
             $('#rsi-plot').slideDown('fast', function() {
