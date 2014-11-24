@@ -1,3 +1,9 @@
+'use strict';
+/* global numeral */
+/* exported numeral */
+/* exported formatPercent */
+/* exported formatPrice */
+
 numeral.language('custom', {
     delimiters: {
         thousands: ' ',
@@ -9,7 +15,7 @@ numeral.language('custom', {
         billion: 'b',
         trillion: 't'
     },
-    ordinal : function (number) {
+    ordinal : function () {
         return '.';
     },
     currency: {
@@ -20,19 +26,19 @@ numeral.language('custom');
 
 
 function formatPercent(number) {
-    if (number === undefined || number === null || number === "") {
-        return "";
+    if (number === undefined || number === null || number === '') {
+        return '';
     }
     if (number > 0) {
-        return "&nbsp;" + numeral(number).format("0.00%");
+        return '&nbsp;' + numeral(number).format('0.00%');
     } else {
-        return numeral(number).format("0.00%");
+        return numeral(number).format('0.00%');
     }
 }
 
 function formatPrice(number) {
-    if (number === undefined || number === null || number === "") {
-        return "";
+    if (number === undefined || number === null || number === '') {
+        return '';
     }
-    return numeral(number).format("0,0.00");
+    return numeral(number).format('0,0.00');
 }

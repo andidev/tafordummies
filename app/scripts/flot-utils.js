@@ -1,3 +1,7 @@
+'use strict';
+/* exported findYaxisMinMax */
+/* exported addPaddingsToYaxisMinMax */
+
 function findYaxisMinMax(series, from, to, currentYaxisMinMax) {
     if (!$.isArray(series)) {
         series = [series];
