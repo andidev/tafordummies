@@ -1304,7 +1304,7 @@ function ViewModel() {
         var currentDateToRight;
 
         while (minIndex <= maxIndex) {
-            currentIndex = (minIndex + maxIndex) / 2;
+            currentIndex = Math.floor((minIndex + maxIndex) / 2);
             if (data[currentIndex - 1] === undefined) {
                 return 0;
             } else if (data[currentIndex + 1] === undefined) {
