@@ -75,10 +75,10 @@
                         <div class="pull-left">
                             <ul class="list-inline">
                                 <li><input id="symbol"/></li>
-                                <li class="hover-popover" data-content="Percent" data-bind="css: percentColorClass"><i class="fa" data-bind="css: percentArrowClass"></i><strong data-bind="html: formattedPercent"></strong></li>
-                                <li class="text-info hover-popover" data-content="Highest"><i class="fa fa-chevron-up"></i> <strong data-bind="text: formattedHighest"></strong></li>
-                                <li class="text-info hover-popover" data-content="Lowest"><i class="fa fa-chevron-down text-error"></i> <strong data-bind="text: formattedLowest"></strong></li>
-                                <li class="text-info hover-popover" data-content="Profit"><i class="fa fa-dollar"></i><strong data-bind="html: formattedProfit(), css: profitColorClass, visible: showMacd"></strong></li>
+                                <li class="hover-popover" data-content="Percent" data-bind="css: percentColorClass"><i class="fa" data-bind="css: percentArrowClass"></i><strong data-bind="html: percentFormatted"></strong></li>
+                                <li class="text-info hover-popover" data-content="Highest"><i class="fa fa-chevron-up"></i> <strong data-bind="text: highestFormatted"></strong></li>
+                                <li class="text-info hover-popover" data-content="Lowest"><i class="fa fa-chevron-down text-error"></i> <strong data-bind="text: lowestFormatted"></strong></li>
+                                <li class="text-info hover-popover" data-content="Profit"><i class="fa fa-dollar"></i><strong data-bind="html: profitFormatted(), css: profitColorClass, visible: showMacd"></strong></li>
                             </ul>
                         </div>
                         <div class="pull-right">
@@ -170,8 +170,8 @@
                         <div id="volume-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
                         <div id="rsi-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
                         <div id="macd-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
-                        <div id="hover-popover" class="popover right"><div class="arrow"></div><div class="popover-content"><span data-bind="css: hoverPopoverPercentColorClass"><i class="fa" data-bind="css: hoverPopoverPercentArrowClass"></i> <strong data-bind="html: hoverPopoverFormattedPercent()"></strong></span> <strong class="text-info" data-bind="text: hoverPopoverFormattedPrice"></strong> <strong class="text-muted" data-bind="text: hoverPopoverFormattedDate"></strong></div></div>
-                        <!--<div id="hover-popover" class="popover right"><div class="arrow" style="top: 35%;"></div><div class="popover-content"><span data-bind="css: hoverPopoverPercentColorClass"><i class="fa" data-bind="css: hoverPopoverPercentArrowClass"></i> <strong data-bind="html: hoverPopoverFormattedPercent()"></strong></span> <strong class="text-info" data-bind="text: hoverPopoverFormattedPrice"></strong></div><h3 style="height: 20px; padding-top: 1px; margin-bottom: 0px; padding-bottom: 0px; border-top: 1px solid #ebebeb; border-bottom: 0px; border-radius: 0 0 5px 5px;" class="popover-title text-muted text-center"><strong class="text-muted" data-bind="text: hoverPopoverFormattedDate"></strong></h3></div>-->
+                        <div id="hover-popover" class="popover right"><div class="arrow"></div><div class="popover-content"><span data-bind="css: hoverPercentColorClass"><i class="fa" data-bind="css: hoverPercentArrowClass"></i> <strong data-bind="html: hoverPercentFormatted()"></strong></span> <strong class="text-info" data-bind="text: hoverPriceFormatted"></strong> <strong class="text-muted" data-bind="text: hoverDateFormatted"></strong></div></div>
+                        <!--<div id="hover-popover" class="popover right"><div class="arrow" style="top: 35%;"></div><div class="popover-content"><span data-bind="css: hoverPercentColorClass"><i class="fa" data-bind="css: hoverPercentArrowClass"></i> <strong data-bind="html: hoverPercentFormatted()"></strong></span> <strong class="text-info" data-bind="text: hoverPriceFormatted"></strong></div><h3 style="height: 20px; padding-top: 1px; margin-bottom: 0px; padding-bottom: 0px; border-top: 1px solid #ebebeb; border-bottom: 0px; border-radius: 0 0 5px 5px;" class="popover-title text-muted text-center"><strong class="text-muted" data-bind="text: hoverDateFormatted"></strong></h3></div>-->
                     </div>
                     <div id="ta-footer" class="col-md-12">
                         <div class="pull-left">
@@ -202,11 +202,11 @@
                                                                 </ul>
                                 -->
                                 <div id="from-to-date" class="input-daterange input-group">
-                                    <a id="from-date-button" class="btn btn-default form-control" data-bind="text: formattedFromDate()"></a>
+                                    <a id="from-date-button" class="btn btn-default form-control" data-bind="text: fromDateFormatted()"></a>
                                     <input id="from-date" type="text" class="btn btn-default form-control" name="start" data-bind="event: {changeDate: changeFromDate}"/>
                                     <span class="input-group-addon">to</span>
                                     <input id="to-date" type="text" class="btn btn-default form-control" name="end" data-bind="event: {changeDate: changeToDate}"/>
-                                    <a id="to-date-button" class="btn btn-default form-control" data-bind="text: formattedToDate()"></a>
+                                    <a id="to-date-button" class="btn btn-default form-control" data-bind="text: toDateFormatted()"></a>
                                 </div>
                                 <!--
                                                                 <div id="from-to-date" class="input-daterange input-group" style="width: 250px;">

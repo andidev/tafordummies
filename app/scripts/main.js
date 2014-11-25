@@ -183,7 +183,7 @@ function ViewModel() {
     self.timePeriod = ko.observable(defaultValue('3years', url.param('timePeriod')));
     self.zoomHistory = ko.observableArray([]);
     self.toDate = ko.observable();
-    self.formattedToDate = ko.computed(function() {
+    self.toDateFormatted = ko.computed(function() {
         if (self.toDate() === undefined) {
             return '';
         }
@@ -191,7 +191,7 @@ function ViewModel() {
         return formatDate(self.toDate());
     });
     self.fromDate = ko.observable();
-    self.formattedFromDate = ko.computed(function() {
+    self.fromDateFormatted = ko.computed(function() {
         if (self.fromDate() === undefined) {
             return '';
         }
@@ -294,7 +294,7 @@ function ViewModel() {
     self.$rsiPlot = null;
 
     self.percent = ko.observable(0);
-    self.formattedPercent = ko.computed(function() {
+    self.percentFormatted = ko.computed(function() {
         return formatPercent(self.percent());
     });
     self.percentArrowClass = ko.computed(function() {
@@ -316,15 +316,15 @@ function ViewModel() {
         }
     });
     self.highest = ko.observable(0);
-    self.formattedHighest = ko.computed(function() {
+    self.highestFormatted = ko.computed(function() {
         return formatPrice(self.highest());
     });
     self.lowest = ko.observable(0);
-    self.formattedLowest = ko.computed(function() {
+    self.lowestFormatted = ko.computed(function() {
         return formatPrice(self.lowest());
     });
     self.profit = ko.observable();
-    self.formattedProfit = ko.computed(function() {
+    self.profitFormatted = ko.computed(function() {
         return formatPercent(self.profit());
     });
     self.profitColorClass = ko.computed(function() {
@@ -851,7 +851,7 @@ function ViewModel() {
         } else if (keyCode === 17) { // Ctrl
             log.trace('Ctrl key pressed');
             self.ctrlKeyDown = true;
-            self.hoverPopoverDate(self.hoverPopoverDate()); // Refresh hover popover date
+            self.hoverDate(self.hoverDate()); // Refresh hover date
             return true;
         }
         return true;
@@ -861,48 +861,48 @@ function ViewModel() {
         if (keyCode === 17) { // Ctrl
             log.debug('Ctrl key released');
             self.ctrlKeyDown = false;
-            self.hoverPopoverDate(self.hoverPopoverDate()); // Refresh hover popover date
+            self.hoverDate(self.hoverDate()); // Refresh hover date
             return true;
         }
         return true;
     });
 
     self.previousPriceInfoIndex = null;
-    self.hoverPopoverPercent = ko.observable('');
-    self.hoverPopoverFormattedPercent = ko.computed(function() {
-        return formatPercent(self.hoverPopoverPercent());
+    self.hoverPercent = ko.observable('');
+    self.hoverPercentFormatted = ko.computed(function() {
+        return formatPercent(self.hoverPercent());
     });
-    self.hoverPopoverPercentArrowClass = ko.computed(function() {
-        if (self.hoverPopoverPercent() > 0) {
+    self.hoverPercentArrowClass = ko.computed(function() {
+        if (self.hoverPercent() > 0) {
             return 'fa-arrow-up';
-        } else if (self.hoverPopoverPercent() < 0) {
+        } else if (self.hoverPercent() < 0) {
             return 'fa-arrow-down';
         } else {
             return 'fa-arrow-right';
         }
     });
-    self.hoverPopoverPercentColorClass = ko.computed(function() {
-        if (self.hoverPopoverPercent() > 0) {
+    self.hoverPercentColorClass = ko.computed(function() {
+        if (self.hoverPercent() > 0) {
             return 'text-success';
-        } else if (self.hoverPopoverPercent() < 0) {
+        } else if (self.hoverPercent() < 0) {
             return 'text-danger';
         } else {
             return '';
         }
     });
-    self.hoverPopoverPrice = ko.observable('');
-    self.hoverPopoverFormattedPrice = ko.computed(function() {
-        return formatPrice(self.hoverPopoverPrice());
+    self.hoverPrice = ko.observable('');
+    self.hoverPriceFormatted = ko.computed(function() {
+        return formatPrice(self.hoverPrice());
     });
-    self.hoverPopoverDate = ko.observable();
-    self.hoverPopoverFormattedDate = ko.computed(function() {
-        if (self.hoverPopoverDate() === undefined) {
+    self.hoverDate = ko.observable();
+    self.hoverDateFormatted = ko.computed(function() {
+        if (self.hoverDate() === undefined) {
             return '';
         } else if (self.ctrlKeyDown) {
             // Show detailed format
-            return formatLongDate(self.hoverPopoverDate());
+            return formatLongDate(self.hoverDate());
         } else {
-            return formatDate(self.hoverPopoverDate());
+            return formatDate(self.hoverDate());
         }
     });
     self.showPriceInfo = function(viewModel, event, pos) {
@@ -944,9 +944,9 @@ function ViewModel() {
                 if (priceToTheLeft !== null) {
                     percent = (price - priceToTheLeft) / priceToTheLeft;
                 }
-                self.hoverPopoverPercent(percent);
-                self.hoverPopoverPrice(price);
-                self.hoverPopoverDate(date);
+                self.hoverPercent(percent);
+                self.hoverPrice(price);
+                self.hoverDate(date);
                 var pointOffset = self.$plot.pointOffset({x: date, y: price});
 
                 $('#hover-popover').show().css({
