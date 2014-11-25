@@ -1045,24 +1045,25 @@ function ViewModel() {
     self.hidePriceInfo = function() {
         if (self.$plot) {
             self.$plot.clearCrosshair();
-            self.hoverMaFastest();
-            self.hoverMaFast();
-            self.hoverMaSlow();
-            self.hoverMaSlower();
-            self.hoverMaSlowest();
+            self.hoverPrice('');
+            self.hoverMaFastest('');
+            self.hoverMaFast('');
+            self.hoverMaSlow('');
+            self.hoverMaSlower('');
+            self.hoverMaSlowest('');
             if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
                 self.$volumePlot.clearCrosshair();
-                self.hoverVolume();
+                self.hoverVolume('');
             }
             if (self.showRsi() && self.$rsiPlot) {
                 self.$rsiPlot.clearCrosshair();
-                self.hoverRsi();
+                self.hoverRsi('');
             }
             if (self.showMacd() && self.$macdPlot) {
                 self.$macdPlot.clearCrosshair();
-                self.hoverMacd();
-                self.hoverMacdHistogram();
-                self.hoverMacdSignal();
+                self.hoverMacd('');
+                self.hoverMacdHistogram('');
+                self.hoverMacdSignal('');
             }
             self.$plot.unhighlight(0, self.previousPriceInfoIndex);
             $('#hover-popover').hide();
