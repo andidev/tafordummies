@@ -660,7 +660,7 @@ function ViewModel() {
                 });
                 var from = self.price().data[fromIndex][0].clone();
                 var to = self.price().data[toIndex][0].clone();
-                log.debug('Zooming selected from ' + formatDate(from) + ' to ' + formatDate(to));
+                log.info('Zooming selected from ' + formatDate(from) + ' to ' + formatDate(to));
                 self.updateFromDate(from);
                 self.updateToDate(to);
                 self.timePeriod('custom');
