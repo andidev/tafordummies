@@ -10,6 +10,7 @@
 /* global defaultNumberValue */
 /* global formatDate */
 /* global formatLongDate */
+/* global formatNumber */
 /* global formatPercent */
 /* global formatPrice */
 /* global addPaddingsToYaxisMinMax */
@@ -236,7 +237,34 @@ function ViewModel() {
             autoHighlight: false
         },
         legend: {
-            position: 'nw'
+            position: 'nw',
+            labelFormatter: function(label) {
+                if (label === self.symbolName()) {
+                    return label + ' <span data-bind="text: \'(\' + hoverPriceFormatted() + \')\', visible: hoverPrice"></span>';
+                } else if (label === 'MA ' + self.maFastestDatumPoints()) {
+                    return label + ' <span data-bind="text: \'(\' + hoverMaFastestFormatted() + \')\', visible: hoverMaFastest"></span>';
+                } else if (label === 'MA ' + self.maFastDatumPoints()) {
+                    return label + ' <span data-bind="text: \'(\' + hoverMaFastFormatted() + \')\', visible: hoverMaFast"></span>';
+                } else if (label === 'MA ' + self.maSlowDatumPoints()) {
+                    return label + ' <span data-bind="text: \'(\' + hoverMaSlowFormatted() + \')\', visible: hoverMaSlow"></span>';
+                } else if (label === 'MA ' + self.maSlowerDatumPoints()) {
+                    return label + ' <span data-bind="text: \'(\' + hoverMaSlowerFormatted() + \')\', visible: hoverMaSlower"></span>';
+                } else if (label === 'MA ' + self.maSlowestDatumPoints()) {
+                    return label + ' <span data-bind="text: \'(\' + hoverMaSlowestFormatted() + \')\', visible: hoverMaSlowest"></span>';
+                } else if (label === 'Volume') {
+                    return label + ' <span data-bind="text: \'(\' + hoverVolumeFormatted() + \')\', visible: hoverVolume"></span>';
+                } else if (label === 'RSI 14') {
+                    return label + ' <span data-bind="text: \'(\' + hoverRsiFormatted() + \')\', visible: hoverRsi"></span>';
+                } else if (label === 'Histogram') {
+                    return label + ' <span data-bind="text: \'(\' + hoverMacdFormatted() + \')\', visible: hoverMacd"></span>';
+                } else if (label === 'MACD 12,26') {
+                    return label + ' <span data-bind="text: \'(\' + hoverMacdSignalFormatted() + \')\', visible: hoverMacdSignal"></span>';
+                } else if (label === 'Signal 9') {
+                    return label + ' <span data-bind="text: \'(\' + hoverMacdHistogramFormatted() + \')\', visible: hoverMacdHistogram"></span>';
+                } else {
+                    return label;
+                }
+            }
         },
         highlightColor: '#428bca'
     };
@@ -890,9 +918,49 @@ function ViewModel() {
             return '';
         }
     });
-    self.hoverPrice = ko.observable('');
+    self.hoverPrice = ko.observable();
     self.hoverPriceFormatted = ko.computed(function() {
         return formatPrice(self.hoverPrice());
+    });
+    self.hoverMaFastest = ko.observable();
+    self.hoverMaFastestFormatted = ko.computed(function() {
+        return formatPrice(self.hoverMaFastest());
+    });
+    self.hoverMaFast = ko.observable();
+    self.hoverMaFastFormatted = ko.computed(function() {
+        return formatPrice(self.hoverMaFast());
+    });
+    self.hoverMaSlow = ko.observable();
+    self.hoverMaSlowFormatted = ko.computed(function() {
+        return formatPrice(self.hoverMaSlow());
+    });
+    self.hoverMaSlower = ko.observable();
+    self.hoverMaSlowerFormatted = ko.computed(function() {
+        return formatPrice(self.hoverMaSlower());
+    });
+    self.hoverMaSlowest = ko.observable();
+    self.hoverMaSlowestFormatted = ko.computed(function() {
+        return formatPrice(self.hoverMaSlowest());
+    });
+    self.hoverVolume = ko.observable();
+    self.hoverVolumeFormatted = ko.computed(function() {
+        return formatNumber(self.hoverVolume());
+    });
+    self.hoverRsi = ko.observable();
+    self.hoverRsiFormatted = ko.computed(function() {
+        return formatPrice(self.hoverRsi());
+    });
+    self.hoverMacd = ko.observable();
+    self.hoverMacdFormatted = ko.computed(function() {
+        return formatPrice(self.hoverMacd());
+    });
+    self.hoverMacdSignal = ko.observable();
+    self.hoverMacdSignalFormatted = ko.computed(function() {
+        return formatPrice(self.hoverMacdSignal());
+    });
+    self.hoverMacdHistogram = ko.observable();
+    self.hoverMacdHistogramFormatted = ko.computed(function() {
+        return formatPrice(self.hoverMacdHistogram());
     });
     self.hoverDate = ko.observable();
     self.hoverDateFormatted = ko.computed(function() {
@@ -906,7 +974,7 @@ function ViewModel() {
         }
     });
     self.showPriceInfo = function(viewModel, event, pos) {
-        if (self.$plot !== undefined) {
+        if (self.$plot) {
             var priceInfoIndex = self.findClosestDatapoint(pos.x);
             if (priceInfoIndex !== self.previousPriceInfoIndex) {
                 log.trace('Showing price info');
@@ -920,19 +988,19 @@ function ViewModel() {
                     x: date,
                     y: price
                 });
-                if (self.showVolume() && self.hasVolume() && self.$volumePlot !== undefined) {
+                if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
                     self.$volumePlot.lockCrosshair({
                         x: date,
                         y: price
                     });
                 }
-                if (self.showRsi() && self.$rsiPlot !== undefined) {
+                if (self.showRsi() && self.$rsiPlot) {
                     self.$rsiPlot.lockCrosshair({
                         x: date,
                         y: price
                     });
                 }
-                if (self.showMacd() && self.$macdPlot !== undefined) {
+                if (self.showMacd() && self.$macdPlot) {
                     self.$macdPlot.lockCrosshair({
                         x: date,
                         y: price
@@ -946,6 +1014,22 @@ function ViewModel() {
                 }
                 self.hoverPercent(percent);
                 self.hoverPrice(price);
+                self.hoverMaFastest(self.plotArgs.series[1].data[priceInfoIndex][1]);
+                self.hoverMaFast(self.plotArgs.series[2].data[priceInfoIndex][1]);
+                self.hoverMaSlow(self.plotArgs.series[3].data[priceInfoIndex][1]);
+                self.hoverMaSlower(self.plotArgs.series[4].data[priceInfoIndex][1]);
+                self.hoverMaSlowest(self.plotArgs.series[5].data[priceInfoIndex][1]);
+                if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
+                    self.hoverVolume(self.volumePlotArgs.series[0].data[priceInfoIndex][1]);
+                }
+                if (self.showRsi() && self.$rsiPlot) {
+                    self.hoverRsi(self.rsiPlotArgs.series[0].data[priceInfoIndex][1]);
+                }
+                if (self.showMacd() && self.$macdPlot) {
+                    self.hoverMacd(self.macdPlotArgs.series[0].data[priceInfoIndex][1]);
+                    self.hoverMacdHistogram(self.macdPlotArgs.series[1].data[priceInfoIndex][1]);
+                    self.hoverMacdSignal(self.macdPlotArgs.series[2].data[priceInfoIndex][1]);
+                }
                 self.hoverDate(date);
                 var pointOffset = self.$plot.pointOffset({x: date, y: price});
 
@@ -959,16 +1043,26 @@ function ViewModel() {
     };
 
     self.hidePriceInfo = function() {
-        if (self.$plot !== undefined) {
+        if (self.$plot) {
             self.$plot.clearCrosshair();
-            if (self.showVolume() && self.hasVolume() && self.$volumePlot !== undefined) {
+            self.hoverMaFastest();
+            self.hoverMaFast();
+            self.hoverMaSlow();
+            self.hoverMaSlower();
+            self.hoverMaSlowest();
+            if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
                 self.$volumePlot.clearCrosshair();
+                self.hoverVolume();
             }
-            if (self.showRsi() && self.$rsiPlot !== undefined) {
+            if (self.showRsi() && self.$rsiPlot) {
                 self.$rsiPlot.clearCrosshair();
+                self.hoverRsi();
             }
-            if (self.showMacd() && self.$macdPlot !== undefined) {
+            if (self.showMacd() && self.$macdPlot) {
                 self.$macdPlot.clearCrosshair();
+                self.hoverMacd();
+                self.hoverMacdHistogram();
+                self.hoverMacdSignal();
             }
             self.$plot.unhighlight(0, self.previousPriceInfoIndex);
             $('#hover-popover').hide();
@@ -1139,6 +1233,9 @@ function ViewModel() {
             self.plotArgs.options.xaxis.font = null;
         }
         self.$plot = $.plot(self.plotArgs.placeholder, self.plotArgs.series, self.plotArgs.options);
+        $('#plot').find('.legend').each(function (index, element) {
+            ko.applyBindings(self, element);
+        });
     };
 
     self.plotMacd = function() {
@@ -1156,6 +1253,9 @@ function ViewModel() {
             $('#macd-plot').slideDown('fast', function() {
                 self.$macdPlot = $.plot(this, self.macdPlotArgs.series, self.macdPlotArgs.options);
                 self.updateProfit();
+                $(this).find('.legend').each(function (index, element) {
+                    ko.applyBindings(self, element);
+                });
             });
         } else {
             $('#macd-plot').slideUp('fast', function() {
@@ -1193,6 +1293,9 @@ function ViewModel() {
             $('#volume-plot').css('margin-top', '-26px');
             $('#volume-plot').slideDown('fast', function() {
                 self.$volumePlot = $.plot(this, self.volumePlotArgs.series, self.volumePlotArgs.options);
+                $(this).find('.legend').each(function (index, element) {
+                    ko.applyBindings(self, element);
+                });
             });
         } else {
             $('#volume-plot').slideUp('fast', function() {
@@ -1219,6 +1322,9 @@ function ViewModel() {
             $('#rsi-plot').css('margin-top', '-26px');
             $('#rsi-plot').slideDown('fast', function() {
                 self.$rsiPlot = $.plot(this, self.rsiPlotArgs.series, self.rsiPlotArgs.options);
+                $(this).find('.legend').each(function (index, element) {
+                    ko.applyBindings(self, element);
+                });
             });
         } else {
             $('#rsi-plot').slideUp('fast', function() {

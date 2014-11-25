@@ -1,6 +1,7 @@
 'use strict';
 /* global numeral */
 /* exported numeral */
+/* exported formatNumber */
 /* exported formatPercent */
 /* exported formatPrice */
 
@@ -24,6 +25,12 @@ numeral.language('custom', {
 });
 numeral.language('custom');
 
+function formatNumber(number) {
+    if (number === undefined || number === null || number === '') {
+        return '';
+    }
+    return numeral(number).format('0,0');
+}
 
 function formatPercent(number) {
     if (number === undefined || number === null || number === '') {
