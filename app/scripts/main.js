@@ -1044,7 +1044,6 @@ function ViewModel() {
                 var pointOffset = self.$plot.pointOffset({x: date, y: price});
 
                 $('#hover-popover').show().css({
-                    top: pointOffset.top - 21,
                     left: pointOffset.left + 30
                 });
                 self.previousPriceInfoIndex = priceInfoIndex;
@@ -1118,6 +1117,11 @@ function ViewModel() {
 
         self.processData();
         self.plot();
+        $('#ta-plots').mousemove(function (event) {
+            $('#hover-popover').css({
+                top: event.pageY - 120
+            });
+        });
     };
 
     self.processData = function() {
