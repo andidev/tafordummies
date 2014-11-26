@@ -304,6 +304,10 @@ function ViewModel() {
                         lineWidth: 1,
                         yaxis: {from: 30, to: 30}
                     }, {
+                        color: 'rgba(0, 0, 0, 0.1)',
+                        lineWidth: 1,
+                        yaxis: {from: 50, to: 50}
+                    }, {
                         color: 'rgba(0, 255, 0, 0.5)',
                         lineWidth: 1,
                         yaxis: {from: 70, to: 70}
@@ -312,7 +316,8 @@ function ViewModel() {
             yaxis: {
                 tickColor: 'transparent',
                 min: 0,
-                max: 100
+                max: 100,
+                ticks: [30, 50, 70]
             }
         }, self.commonPlotOptions)
     };
