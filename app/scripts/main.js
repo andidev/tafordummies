@@ -61,7 +61,7 @@ function ViewModel() {
     self.showMa5Ma14 = ko.observable(defaultBooleanValue(true, url.param('showMa5Ma14')));
     self.maFastestDatumPoints = ko.observable(defaultNumberValue(5, url.param('maFastestDatumPoints')));
     self.maFastest = ko.observable({
-        label: 'MA' + self.maFastestDatumPoints(),
+        label: 'MA(' + self.maFastestDatumPoints() + ')',
         data: [],
         color: 'rgba(51, 120, 190, 0.4)',
         shadowSize: 1,
@@ -72,7 +72,7 @@ function ViewModel() {
     });
     self.maFastDatumPoints = ko.observable(defaultNumberValue(14, url.param('maFastDatumPoints')));
     self.maFast = ko.observable({
-        label: 'MA' + self.maFastDatumPoints(),
+        label: 'MA(' + self.maFastDatumPoints() + ')',
         data: [],
         color: 'rgba(178, 56, 59, 0.4)',
         shadowSize: 1,
@@ -85,7 +85,7 @@ function ViewModel() {
     self.showMa50Ma100Ma200 = ko.observable(defaultBooleanValue(true, url.param('showMa50Ma100Ma200')));
     self.maSlowDatumPoints = ko.observable(defaultNumberValue(50, url.param('maSlowDatumPoints')));
     self.maSlow = ko.observable({
-        label: 'MA' + self.maSlowDatumPoints(),
+        label: 'MA(' + self.maSlowDatumPoints() + ')',
         data: [],
         color: 'rgba(0, 0, 0, 0.4)',
         shadowSize: 1,
@@ -96,7 +96,7 @@ function ViewModel() {
     });
     self.maSlowerDatumPoints = ko.observable(defaultNumberValue(100, url.param('maSlowerDatumPoints')));
     self.maSlower = ko.observable({
-        label: 'MA' + self.maSlowerDatumPoints(),
+        label: 'MA(' + self.maSlowerDatumPoints() + ')',
         data: [],
         color: 'rgba(0, 0, 0, 0.2)',
         shadowSize: 1,
@@ -107,7 +107,7 @@ function ViewModel() {
     });
     self.maSlowestDatumPoints = ko.observable(defaultNumberValue(200, url.param('maSlowestDatumPoints')));
     self.maSlowest = ko.observable({
-        label: 'MA' + self.maSlowestDatumPoints(),
+        label: 'MA(' + self.maSlowestDatumPoints() + ')',
         data: [],
         color: 'rgba(0, 0, 0, 0.1)',
         shadowSize: 1,
@@ -118,7 +118,7 @@ function ViewModel() {
     });
     self.showMacd = ko.observable(defaultBooleanValue(false, url.param('showMacd')));
     self.macd = ko.observable({
-        label: 'MACD 12,26',
+        label: 'MACD(12,26)',
         data: [],
         color: 'rgba(51, 120, 190, 0.4)',
         shadowSize: 1,
@@ -128,7 +128,7 @@ function ViewModel() {
         }
     });
     self.macdSignal = ko.observable({
-        label: 'Signal 9',
+        label: 'Signal(9)',
         data: [],
         color: 'rgba(178, 56, 59, 0.4)',
         shadowSize: 1,
@@ -169,7 +169,7 @@ function ViewModel() {
     });
     self.showRsi = ko.observable(defaultBooleanValue(false, url.param('showRsi')));
     self.rsi = ko.observable({
-        label: 'RSI 14',
+        label: 'RSI(14)',
         data: [],
         color: 'rgba(51, 120, 190, 1)',
         shadowSize: 1,
@@ -246,25 +246,25 @@ function ViewModel() {
             labelFormatter: function(label) {
                 if (label === self.symbolName()) {
                     return '<span class="legend-label">' + label + '</span> <span class="legend-label-value" data-bind="text: hoverPriceFormatted, visible: hoverPrice"></span>';
-                } else if (label === 'MA' + self.maFastestDatumPoints()) {
+                } else if (label === 'MA(' + self.maFastestDatumPoints() + ')') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaFastestFormatted, visible: hoverMaFastest"></span>';
-                } else if (label === 'MA' + self.maFastDatumPoints()) {
+                } else if (label === 'MA(' + self.maFastDatumPoints() + ')') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaFastFormatted, visible: hoverMaFast"></span>';
-                } else if (label === 'MA' + self.maSlowDatumPoints()) {
+                } else if (label === 'MA(' + self.maSlowDatumPoints() + ')') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaSlowFormatted, visible: hoverMaSlow"></span>';
-                } else if (label === 'MA' + self.maSlowerDatumPoints()) {
+                } else if (label === 'MA(' + self.maSlowerDatumPoints() + ')') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaSlowerFormatted, visible: hoverMaSlower"></span>';
-                } else if (label === 'MA' + self.maSlowestDatumPoints()) {
+                } else if (label === 'MA(' + self.maSlowestDatumPoints() + ')') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaSlowestFormatted, visible: hoverMaSlowest"></span>';
                 } else if (label === 'Volume') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverVolumeFormatted, visible: hoverVolume"></span>';
-                } else if (label === 'RSI 14') {
+                } else if (label === 'RSI(14)') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverRsiFormatted, visible: hoverRsi"></span>';
                 } else if (label === 'Histogram') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdFormatted, visible: hoverMacd"></span>';
-                } else if (label === 'MACD 12,26') {
+                } else if (label === 'MACD(12,26)') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdSignalFormatted, visible: hoverMacdSignal"></span>';
-                } else if (label === 'Signal 9') {
+                } else if (label === 'Signal(9)') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdHistogramFormatted, visible: hoverMacdHistogram"></span>';
                 } else {
                     return label;
@@ -562,10 +562,10 @@ function ViewModel() {
     };
     self.toggleMacd = function() {
         if (self.showMacd() === true) {
-            log.info('Hiding MACD 12,26,9');
+            log.info('Hiding MACD(12,26,9)');
             self.showMacd(false);
         } else {
-            log.info('Showing MACD 12,26,9');
+            log.info('Showing MACD(12,26,9)');
             self.showMacd(true);
         }
         self.plot();
@@ -1209,9 +1209,9 @@ function ViewModel() {
         self.updatePercentAndHighestAndLowest();
         if (self.showMa5Ma14()) {
             self.maFastest().lines.show = true;
-            self.maFastest().label = 'MA' + self.maFastestDatumPoints();
+            self.maFastest().label = 'MA(' + self.maFastestDatumPoints() + ')';
             self.maFast().lines.show = true;
-            self.maFast().label = 'MA' + self.maFastDatumPoints();
+            self.maFast().label = 'MA(' + self.maFastDatumPoints() + ')';
         } else {
             self.maFastest().lines.show = false;
             self.maFastest().label = null;
@@ -1220,11 +1220,11 @@ function ViewModel() {
         }
         if (self.showMa50Ma100Ma200()) {
             self.maSlow().lines.show = true;
-            self.maSlow().label = 'MA' + self.maSlowDatumPoints();
+            self.maSlow().label = 'MA(' + self.maSlowDatumPoints() + ')';
             self.maSlower().lines.show = true;
-            self.maSlower().label = 'MA' + self.maSlowerDatumPoints();
+            self.maSlower().label = 'MA(' + self.maSlowerDatumPoints() + ')';
             self.maSlowest().lines.show = true;
-            self.maSlowest().label = 'MA' + self.maSlowestDatumPoints();
+            self.maSlowest().label = 'MA(' + self.maSlowestDatumPoints() + ')';
         } else {
             self.maSlow().lines.show = false;
             self.maSlow().label = null;
