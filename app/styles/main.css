@@ -51,3 +51,29 @@ body {
 #to-date {
     right: 0px;
 }
+.legend-label {
+    display: block;
+    float: left;
+    width: 90px;
+    padding-left: 5px;
+}
+#volume-plot .legend-label,
+#rsi-plot .legend-label {
+    width: 60px;
+}
+
+.legend-label-value {
+    display: block;
+    float: right;
+    vertical-align: baseline;
+    padding-left: 5px;
+    text-align: right;
+    color: #31708f;
+    font-style: italic;
+}
+#volume-plot .legend-label-value {
+    width: 70px;
+}
+#rsi-plot .legend-label-value {
+    width: 30px;
+}

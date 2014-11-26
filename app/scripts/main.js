@@ -240,27 +240,27 @@ function ViewModel() {
             position: 'nw',
             labelFormatter: function(label) {
                 if (label === self.symbolName()) {
-                    return label + ' <span data-bind="text: \'(\' + hoverPriceFormatted() + \')\', visible: hoverPrice"></span>';
-                    return label + ' <span data-bind="text: \'(\' + hoverMaFastestFormatted() + \')\', visible: hoverMaFastest"></span>';
-                    return label + ' <span data-bind="text: \'(\' + hoverMaFastFormatted() + \')\', visible: hoverMaFast"></span>';
-                    return label + ' <span data-bind="text: \'(\' + hoverMaSlowFormatted() + \')\', visible: hoverMaSlow"></span>';
-                    return label + ' <span data-bind="text: \'(\' + hoverMaSlowerFormatted() + \')\', visible: hoverMaSlower"></span>';
-                    return label + ' <span data-bind="text: \'(\' + hoverMaSlowestFormatted() + \')\', visible: hoverMaSlowest"></span>';
+                    return '<span class="legend-label">' + label + '</span> <span class="legend-label-value" data-bind="text: hoverPriceFormatted, visible: hoverPrice"></span>';
                 } else if (label === 'MA' + self.maFastestDatumPoints()) {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaFastestFormatted, visible: hoverMaFastest"></span>';
                 } else if (label === 'MA' + self.maFastDatumPoints()) {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaFastFormatted, visible: hoverMaFast"></span>';
                 } else if (label === 'MA' + self.maSlowDatumPoints()) {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaSlowFormatted, visible: hoverMaSlow"></span>';
                 } else if (label === 'MA' + self.maSlowerDatumPoints()) {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaSlowerFormatted, visible: hoverMaSlower"></span>';
                 } else if (label === 'MA' + self.maSlowestDatumPoints()) {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaSlowestFormatted, visible: hoverMaSlowest"></span>';
                 } else if (label === 'Volume') {
-                    return label + ' <span data-bind="text: \'(\' + hoverVolumeFormatted() + \')\', visible: hoverVolume"></span>';
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverVolumeFormatted, visible: hoverVolume"></span>';
                 } else if (label === 'RSI 14') {
-                    return label + ' <span data-bind="text: \'(\' + hoverRsiFormatted() + \')\', visible: hoverRsi"></span>';
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverRsiFormatted, visible: hoverRsi"></span>';
                 } else if (label === 'Histogram') {
-                    return label + ' <span data-bind="text: \'(\' + hoverMacdFormatted() + \')\', visible: hoverMacd"></span>';
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdFormatted, visible: hoverMacd"></span>';
                 } else if (label === 'MACD 12,26') {
-                    return label + ' <span data-bind="text: \'(\' + hoverMacdSignalFormatted() + \')\', visible: hoverMacdSignal"></span>';
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdSignalFormatted, visible: hoverMacdSignal"></span>';
                 } else if (label === 'Signal 9') {
-                    return label + ' <span data-bind="text: \'(\' + hoverMacdHistogramFormatted() + \')\', visible: hoverMacdHistogram"></span>';
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdHistogramFormatted, visible: hoverMacdHistogram"></span>';
                 } else {
                     return label;
                 }
@@ -1045,12 +1045,12 @@ function ViewModel() {
     self.hidePriceInfo = function() {
         if (self.$plot) {
             self.$plot.clearCrosshair();
-            self.hoverPrice('');
-            self.hoverMaFastest('');
-            self.hoverMaFast('');
-            self.hoverMaSlow('');
-            self.hoverMaSlower('');
-            self.hoverMaSlowest('');
+//            self.hoverPrice('');
+//            self.hoverMaFastest('');
+//            self.hoverMaFast('');
+//            self.hoverMaSlow('');
+//            self.hoverMaSlower('');
+//            self.hoverMaSlowest('');
             if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
                 self.$volumePlot.clearCrosshair();
                 self.hoverVolume('');
