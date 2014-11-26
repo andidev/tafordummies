@@ -43,9 +43,17 @@ function formatPercent(number) {
     }
 }
 
-function formatPrice(number) {
+function formatPrice(number, decimals) {
     if (number === undefined || number === null || number === '') {
         return '';
     }
-    return numeral(number).format('0,0.00');
+    if (decimals !== undefined) {
+        var zeros = '';
+        for (var i = 0; i < decimals; i++) {
+            zeros = zeros + '0';
+        }
+        return numeral(number).format('0,0.' + zeros);
+    } else {
+        return numeral(number).format('0,0.00');
+    }
 }

@@ -213,14 +213,19 @@ function ViewModel() {
         yaxes: [{
                 position: 'left',
                 reserveSpace: true,
-                labelWidth: 30
-
+                labelWidth: 30,
+                tickFormatter: function(value, axis){
+                    return formatPrice(value, axis.tickDecimals);
+                }
             }, {
                 position: 'right',
                 reserveSpace: true,
                 labelWidth: 30,
                 color: 'rgba(56, 174, 17, 0.5)',
-                tickColor: 'rgba(56, 174, 17, 0.5)'
+                tickColor: 'rgba(56, 174, 17, 0.5)',
+                tickFormatter: function(value, axis){
+                    return formatPrice(value, axis.tickDecimals);
+                }
             }
         ],
         selection: {
