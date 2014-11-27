@@ -1054,12 +1054,12 @@ function ViewModel() {
     self.hidePriceInfo = function() {
         if (self.$plot) {
             self.$plot.clearCrosshair();
-//            self.hoverPrice('');
-//            self.hoverMaFastest('');
-//            self.hoverMaFast('');
-//            self.hoverMaSlow('');
-//            self.hoverMaSlower('');
-//            self.hoverMaSlowest('');
+            self.hoverPrice('');
+            self.hoverMaFastest('');
+            self.hoverMaFast('');
+            self.hoverMaSlow('');
+            self.hoverMaSlower('');
+            self.hoverMaSlowest('');
             if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
                 self.$volumePlot.clearCrosshair();
                 self.hoverVolume('');
