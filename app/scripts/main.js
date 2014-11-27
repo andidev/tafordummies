@@ -1041,11 +1041,7 @@ function ViewModel() {
                     self.hoverMacdSignal(self.macdPlotArgs.series[2].data[priceInfoIndex][1]);
                 }
                 self.hoverDate(date);
-                var pointOffset = self.$plot.pointOffset({x: date, y: price});
-
-                $('#hover-popover').show().css({
-                    left: pointOffset.left + 30
-                });
+                $('#hover-info').show();
                 self.previousPriceInfoIndex = priceInfoIndex;
             }
         }
@@ -1075,7 +1071,7 @@ function ViewModel() {
                 self.hoverMacdSignal('');
             }
             self.$plot.unhighlight(0, self.previousPriceInfoIndex);
-            $('#hover-popover').hide();
+            $('#hover-info').hide();
             self.previousPriceInfoIndex = null;
         }
     };
@@ -1118,9 +1114,19 @@ function ViewModel() {
         self.processData();
         self.plot();
         $('#ta-plots').mousemove(function (event) {
-            $('#hover-popover').css({
-                top: event.pageY - 120
-            });
+            var distanceToPlotRight = 1210 - event.pageX;
+            var plotHoverWidth = $('#hover-info').width();
+            if (distanceToPlotRight < plotHoverWidth) {
+                $('#hover-info').removeClass('right').addClass('left').css({
+                    top: event.pageY - 90,
+                    left: 870
+                });
+            } else {
+                $('#hover-info').css({
+                    top: event.pageY - 90,
+                    left: event.pageX - 120
+                });
+            }
         });
     };
 
