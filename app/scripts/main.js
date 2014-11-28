@@ -117,8 +117,10 @@ function ViewModel() {
         }
     });
     self.showMacd = ko.observable(defaultBooleanValue(false, url.param('showMacd')));
+    self.macdFastDatumPoints = ko.observable(defaultNumberValue(12, url.param('macdFastDatumPoints')));
+    self.macdSlowDatumPoints = ko.observable(defaultNumberValue(26, url.param('macdSlowDatumPoints')));
     self.macd = ko.observable({
-        label: 'MACD(12,26)',
+        label: 'MACD(' + self.macdFastDatumPoints() + ',' + self.macdSlowDatumPoints() + ')',
         data: [],
         color: 'rgba(51, 120, 190, 0.4)',
         shadowSize: 1,
@@ -127,8 +129,9 @@ function ViewModel() {
             lineWidth: 1
         }
     });
+    self.macdSignalDatumPoints = ko.observable(defaultNumberValue(9, url.param('macdSignalDatumPoints')));
     self.macdSignal = ko.observable({
-        label: 'Signal(9)',
+        label: 'Signal(' + self.macdSignalDatumPoints() + ')',
         data: [],
         color: 'rgba(178, 56, 59, 0.4)',
         shadowSize: 1,
@@ -263,9 +266,9 @@ function ViewModel() {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverRsiFormatted, visible: hoverRsi"></span>';
                 } else if (label === 'Histogram') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdFormatted, visible: hoverMacd"></span>';
-                } else if (label === 'MACD(12,26)') {
+                } else if (label === 'MACD' + self.macdFastDatumPoints() + ',' + self.macdSlowDatumPoints() + ')') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdSignalFormatted, visible: hoverMacdSignal"></span>';
-                } else if (label === 'Signal(9)') {
+                } else if (label === 'Signal(' + self.macdSignalDatumPoints() + ')') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdHistogramFormatted, visible: hoverMacdHistogram"></span>';
                 } else {
                     return label;
@@ -563,10 +566,10 @@ function ViewModel() {
     };
     self.toggleMacd = function() {
         if (self.showMacd() === true) {
-            log.info('Hiding MACD(12,26,9)');
+            log.info('Hiding MACD(' + self.macdFastDatumPoints() + ',' + self.macdSlowDatumPoints() + ',' + self.macdSignalDatumPoints() + ')');
             self.showMacd(false);
         } else {
-            log.info('Showing MACD(12,26,9)');
+            log.info('Showing MACD(' + self.macdFastDatumPoints() + ',' + self.macdSlowDatumPoints() + ',' + self.macdSignalDatumPoints() + ')');
             self.showMacd(true);
         }
         self.plot();
@@ -629,6 +632,36 @@ function ViewModel() {
         if (self.maSlowestDatumPoints() !== newDatumPoints) {
             log.info('Updating MA Slowest to MA(' + newDatumPoints + ')');
             self.maSlowestDatumPoints(newDatumPoints);
+            self.processData();
+            self.plot();
+        }
+    };
+    self.slideMacdFast = function(viewModel, event) {
+        log.trace('Sliding MACD Fast');
+        var newDatumPoints = event.value;
+        if (self.macdFastDatumPoints() !== newDatumPoints) {
+            log.info('Updating MACD Fast to EMA(' + newDatumPoints + ')');
+            self.macdFastDatumPoints(newDatumPoints);
+            self.processData();
+            self.plot();
+        }
+    };
+    self.slideMacdSlow = function(viewModel, event) {
+        log.trace('Sliding MACD Slow');
+        var newDatumPoints = event.value;
+        if (self.macdSlowDatumPoints() !== newDatumPoints) {
+            log.info('Updating MACD Slow to EMA(' + newDatumPoints + ')');
+            self.macdSlowDatumPoints(newDatumPoints);
+            self.processData();
+            self.plot();
+        }
+    };
+    self.slideMacdSignal = function(viewModel, event) {
+        log.trace('Sliding MACD Signal');
+        var newDatumPoints = event.value;
+        if (self.macdSignalDatumPoints() !== newDatumPoints) {
+            log.info('Updating MACD Signal to EMA(' + newDatumPoints + ')');
+            self.macdSignalDatumPoints(newDatumPoints);
             self.processData();
             self.plot();
         }
@@ -1196,15 +1229,15 @@ function ViewModel() {
         self.plotArgs.series.push(self.maSlowest());
 
         // Calculate MACD
-        self.macd().data = self.flotFinanceSymbol().getMacd(26, 12, 9, self.computeScale(), self.enableSplitDetection());
+        self.macd().data = self.flotFinanceSymbol().getMacd(self.macdSlowDatumPoints(), self.macdFastDatumPoints(), self.macdSignalDatumPoints(), self.computeScale(), self.enableSplitDetection());
         self.macdPlotArgs.series.push(self.macd());
 
         // Calculate MACD Signal
-        self.macdSignal().data = self.flotFinanceSymbol().getMacdSignal(26, 12, 9, self.computeScale(), self.enableSplitDetection());
+        self.macdSignal().data = self.flotFinanceSymbol().getMacdSignal(self.macdSlowDatumPoints(), self.macdFastDatumPoints(), self.macdSignalDatumPoints(), self.computeScale(), self.enableSplitDetection());
         self.macdPlotArgs.series.push(self.macdSignal());
 
         // Calculate MACD Histogram
-        self.macdHistogram().data = self.flotFinanceSymbol().getMacdHistogram(26, 12, 9, self.computeScale(), self.enableSplitDetection());
+        self.macdHistogram().data = self.flotFinanceSymbol().getMacdHistogram(self.macdSlowDatumPoints(), self.macdFastDatumPoints(), self.macdSignalDatumPoints(), self.computeScale(), self.enableSplitDetection());
         self.macdPlotArgs.series.push(self.macdHistogram());
 
         var stop = moment().valueOf();

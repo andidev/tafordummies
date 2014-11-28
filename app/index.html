@@ -152,7 +152,16 @@
                                         </li>
                                         <li role="presentation" class="divider"></li>
                                         <li>
-                                            <a href="#" class="clearfix" data-bind="click: toggleMacd">MACD <i class="fa pull-right" data-bind="css: {'fa-check': showMacd()}"></i></a>
+                                            <a href="#" class="clearfix" data-bind="click: toggleMacd"><span data-bind="text: 'MACD(' + macdFastDatumPoints() + ',' + macdSlowDatumPoints() + ',' + macdSignalDatumPoints() + ')'">MACD(12,26,9)</span> <i class="fa pull-right" data-bind="css: {'fa-check': showMacd()}"></i></a>
+                                        </li>
+                                        <li style="padding-left: 25px" data-bind="event: {slide: slideMacdFast}, visible: showMacd">
+                                            <input class="slider" style="width: 145px" type="text" value="" data-slider-min="1" data-slider-max="26" data-slider-step="1" data-slider-value="12">
+                                        </li>
+                                        <li style="padding-left: 25px" data-bind="event: {slide: slideMacdSlow}, visible: showMacd">
+                                            <input class="slider" style="width: 145px" type="text" value="" data-slider-min="26" data-slider-max="50" data-slider-step="1" data-slider-value="26">
+                                        </li>
+                                        <li style="padding-left: 25px" data-bind="event: {slide: slideMacdSignal}, visible: showMacd">
+                                            <input class="slider" style="width: 145px" type="text" value="" data-slider-min="1" data-slider-max="50" data-slider-step="1" data-slider-value="9">
                                         </li>
                                     </ul>
                                 </div>
@@ -234,7 +243,6 @@
                     <li>add loading popup</li>
                     <li>highligt highest/lowest points in plot</li>
                     <li>add EMA toggle</li>
-                    <li>make MACD parameters adjustable</li>
                     <li>Verify MA, EMA, MACD against http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:moving_averages</li>
                     <li>Verify MA, EMA, MACD, RSI against other sites</li>
                     <li>Handle local storage exceeded error (QuotaExceededError) correctly by removing oldest data (by refactororing lastDataCacheCheckDate to lastDataCheckDate)</li>
