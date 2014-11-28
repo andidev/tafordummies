@@ -543,20 +543,20 @@ function ViewModel() {
     };
     self.toggleMa5Ma14 = function() {
         if (self.showMa5Ma14() === true) {
-            log.info('Hiding MA5/MA14');
+            log.info('Hiding MA(' + self.maFastestDatumPoints() + ',' + self.maFastDatumPoints() + ')');
             self.showMa5Ma14(false);
         } else {
-            log.info('Showing MA5/MA14');
+            log.info('Showing MA(' + self.maFastestDatumPoints() + ',' + self.maFastDatumPoints() + ')');
             self.showMa5Ma14(true);
         }
         self.plot();
     };
     self.toggleMa50Ma100Ma200 = function() {
         if (self.showMa50Ma100Ma200() === true) {
-            log.info('Hiding MA50/MA100/MA200');
+            log.info('Hiding MA(' + self.maSlowDatumPoints() + ',' + self.maSlowerDatumPoints() + ',' + self.maSlowestDatumPoints() + ')');
             self.showMa50Ma100Ma200(false);
         } else {
-            log.info('Showing MA50/MA100/MA200');
+            log.info('Showing MA(' + self.maSlowDatumPoints() + ',' + self.maSlowerDatumPoints() + ',' + self.maSlowestDatumPoints() + ')');
             self.showMa50Ma100Ma200(true);
         }
         self.plot();
