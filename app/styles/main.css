@@ -25,7 +25,7 @@ body {
     display: none;
 }
 #hover-info {
-    position: absolute;
+    position: fixed;
     padding: 8px 12px;
     background-color: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(0, 0, 0, 0.1);

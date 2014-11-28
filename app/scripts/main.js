@@ -1114,17 +1114,17 @@ function ViewModel() {
         self.processData();
         self.plot();
         $('#ta-plots').mousemove(function (event) {
-            var distanceToPlotRight = 1210 - event.pageX;
-            var plotHoverWidth = $('#hover-info').width();
+            var distanceToPlotRight = $(window).width() - (event.pageX + 10);
+            var plotHoverWidth = $('#hover-info').outerWidth();
             if (distanceToPlotRight < plotHoverWidth) {
-                $('#hover-info').removeClass('right').addClass('left').css({
-                    top: event.pageY - 90,
-                    left: 870
+                $('#hover-info').css({
+                    top: event.pageY + 10,
+                    left: $(window).width() - $('#hover-info').outerWidth()
                 });
             } else {
-                $('#hover-info').css({
-                    top: event.pageY - 90,
-                    left: event.pageX - 120
+                $('#hover-info').removeAttr('right').css({
+                    top: event.pageY + 10,
+                    left: event.pageX + 10
                 });
             }
         });
