@@ -170,7 +170,7 @@ function ViewModel() {
     self.showRsi = ko.observable(defaultBooleanValue(false, url.param('showRsi')));
     self.rsiDatumPoints = ko.observable(defaultNumberValue(14, url.param('rsiDatumPoints')));
     self.rsi = ko.observable({
-        label: 'RSI(14)',
+        label: 'RSI(' + self.rsiDatumPoints() + ')',
         data: [],
         color: 'rgba(51, 120, 190, 1)',
         shadowSize: 1,
