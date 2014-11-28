@@ -1162,12 +1162,12 @@ function ViewModel() {
             var plotHoverWidth = $('#hover-info').outerWidth();
             if (distanceToPlotRight < plotHoverWidth) {
                 $('#hover-info').css({
-                    top: event.pageY + 10,
+                    top: event.pageY + 10 - $(window).scrollTop(),
                     left: $(window).width() - $('#hover-info').outerWidth()
                 });
             } else {
                 $('#hover-info').removeAttr('right').css({
-                    top: event.pageY + 10,
+                    top: event.pageY + 10 - $(window).scrollTop(),
                     left: event.pageX + 10
                 });
             }
