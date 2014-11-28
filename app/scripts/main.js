@@ -576,7 +576,7 @@ function ViewModel() {
         log.trace('Sliding MA Fastest');
         var newDatumPoints = event.value;
         if (self.maFastestDatumPoints() !== newDatumPoints) {
-            log.info('Updating MA Fastest to MA' + newDatumPoints);
+            log.info('Updating MA Fastest to MA(' + newDatumPoints + ')');
             self.maFastestDatumPoints(newDatumPoints);
             self.processData();
             self.plot();
@@ -586,7 +586,7 @@ function ViewModel() {
         log.trace('Sliding MA Fast');
         var newDatumPoints = event.value;
         if (self.maFastDatumPoints() !== newDatumPoints) {
-            log.info('Updating MA Fast to MA' + newDatumPoints);
+            log.info('Updating MA Fast to MA(' + newDatumPoints + ')');
             self.maFastDatumPoints(newDatumPoints);
             self.processData();
             self.plot();
@@ -596,7 +596,7 @@ function ViewModel() {
         log.trace('Sliding MA Slow');
         var newDatumPoints = event.value;
         if (self.maSlowDatumPoints() !== newDatumPoints) {
-            log.info('Updating MA Slow to MA' + newDatumPoints);
+            log.info('Updating MA Slow to MA(' + newDatumPoints + ')');
             self.maSlowDatumPoints(newDatumPoints);
             self.processData();
             self.plot();
@@ -606,7 +606,7 @@ function ViewModel() {
         log.trace('Sliding MA Slower');
         var newDatumPoints = event.value;
         if (self.maSlowerDatumPoints() !== newDatumPoints) {
-            log.info('Updating MA Slower to MA' + newDatumPoints);
+            log.info('Updating MA Slower to MA(' + newDatumPoints + ')');
             self.maSlowerDatumPoints(newDatumPoints);
             self.processData();
             self.plot();
@@ -616,7 +616,7 @@ function ViewModel() {
         log.trace('Sliding MA Slowest');
         var newDatumPoints = event.value;
         if (self.maSlowestDatumPoints() !== newDatumPoints) {
-            log.info('Updating MA Slowest to MA' + newDatumPoints);
+            log.info('Updating MA Slowest to MA(' + newDatumPoints + ')');
             self.maSlowestDatumPoints(newDatumPoints);
             self.processData();
             self.plot();
