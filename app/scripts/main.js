@@ -58,7 +58,7 @@ function ViewModel() {
             fillColor: 'rgba(51, 120, 190, 0.09)'
         }
     });
-    self.showMa5Ma14 = ko.observable(defaultBooleanValue(true, url.param('showMa5Ma14')));
+    self.showTaFast = ko.observable(defaultBooleanValue(true, url.param('showTaFast')));
     self.maFastestDatumPoints = ko.observable(defaultNumberValue(5, url.param('maFastestDatumPoints')));
     self.maFastest = ko.observable({
         label: 'MA(' + self.maFastestDatumPoints() + ')',
@@ -82,7 +82,7 @@ function ViewModel() {
         }
     });
 
-    self.showMa50Ma100Ma200 = ko.observable(defaultBooleanValue(true, url.param('showMa50Ma100Ma200')));
+    self.showTaSlow = ko.observable(defaultBooleanValue(true, url.param('showTaSlow')));
     self.maSlowDatumPoints = ko.observable(defaultNumberValue(50, url.param('maSlowDatumPoints')));
     self.maSlow = ko.observable({
         label: 'MA(' + self.maSlowDatumPoints() + ')',
@@ -544,23 +544,23 @@ function ViewModel() {
         self.processData();
         self.plot();
     };
-    self.toggleMa5Ma14 = function() {
-        if (self.showMa5Ma14() === true) {
+    self.toggleTaFast = function() {
+        if (self.showTaFast() === true) {
             log.info('Hiding MA(' + self.maFastestDatumPoints() + ',' + self.maFastDatumPoints() + ')');
-            self.showMa5Ma14(false);
+            self.showTaFast(false);
         } else {
             log.info('Showing MA(' + self.maFastestDatumPoints() + ',' + self.maFastDatumPoints() + ')');
-            self.showMa5Ma14(true);
+            self.showTaFast(true);
         }
         self.plot();
     };
-    self.toggleMa50Ma100Ma200 = function() {
-        if (self.showMa50Ma100Ma200() === true) {
+    self.toggleTaSlow = function() {
+        if (self.showTaSlow() === true) {
             log.info('Hiding MA(' + self.maSlowDatumPoints() + ',' + self.maSlowerDatumPoints() + ',' + self.maSlowestDatumPoints() + ')');
-            self.showMa50Ma100Ma200(false);
+            self.showTaSlow(false);
         } else {
             log.info('Showing MA(' + self.maSlowDatumPoints() + ',' + self.maSlowerDatumPoints() + ',' + self.maSlowestDatumPoints() + ')');
-            self.showMa50Ma100Ma200(true);
+            self.showTaSlow(true);
         }
         self.plot();
     };
@@ -1261,7 +1261,7 @@ function ViewModel() {
         log.debug('Plotting Main');
         self.updatePlotAxisMinAndMax();
         self.updatePercentAndHighestAndLowest();
-        if (self.showMa5Ma14()) {
+        if (self.showTaFast()) {
             self.maFastest().lines.show = true;
             self.maFastest().label = 'MA(' + self.maFastestDatumPoints() + ')';
             self.maFast().lines.show = true;
@@ -1272,7 +1272,7 @@ function ViewModel() {
             self.maFast().lines.show = false;
             self.maFast().label = null;
         }
-        if (self.showMa50Ma100Ma200()) {
+        if (self.showTaSlow()) {
             self.maSlow().lines.show = true;
             self.maSlow().label = 'MA(' + self.maSlowDatumPoints() + ')';
             self.maSlower().lines.show = true;
@@ -1406,10 +1406,10 @@ function ViewModel() {
 
         // Find yaxis min/max
         var yaxisMinMax = findYaxisMinMax(self.price(), self.fromDate(), self.toDate());
-        if (self.showMa5Ma14()) {
+        if (self.showTaFast()) {
             yaxisMinMax = findYaxisMinMax([self.maFastest(), self.maFast()], self.fromDate(), self.toDate(), yaxisMinMax);
         }
-        if (self.showMa50Ma100Ma200()) {
+        if (self.showTaSlow()) {
             yaxisMinMax = findYaxisMinMax([self.maSlow(), self.maSlower(), self.maSlowest()], self.fromDate(), self.toDate(), yaxisMinMax);
         }
         yaxisMinMax = addPaddingsToYaxisMinMax(yaxisMinMax, self.settings.paddingFactor);

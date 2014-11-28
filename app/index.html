@@ -129,25 +129,25 @@
                                         </li>
                                         <li role="presentation" class="divider"></li>
                                         <li>
-                                            <a href="#" class="clearfix" data-bind="click: toggleMa5Ma14"><span data-bind="text: 'MA(' + maFastestDatumPoints() + ',' + maFastDatumPoints() + ')'">MA(5,14)</span> <i class="fa pull-right" data-bind="css: {'fa-check': showMa5Ma14(), 'fa-check-w': !showMa5Ma14()}"></i></a>
+                                            <a href="#" class="clearfix" data-bind="click: toggleTaFast"><span data-bind="text: 'MA(' + maFastestDatumPoints() + ',' + maFastDatumPoints() + ')'">MA(5,14)</span> <i class="fa pull-right" data-bind="css: {'fa-check': showTaFast(), 'fa-check-w': !showTaFast()}"></i></a>
                                         </li>
-                                        <li style="padding-left: 25px" data-bind="event: {slide: slideMaFastest}, visible: showMa5Ma14">
+                                        <li style="padding-left: 25px" data-bind="event: {slide: slideMaFastest}, visible: showTaFast">
                                             <input class="slider" style="width: 145px" type="text" value="" data-slider-min="0" data-slider-max="5" data-slider-step="1" data-slider-value="5">
                                         </li>
-                                        <li style="padding-left: 25px" data-bind="event: {slide: slideMaFast}, visible: showMa5Ma14">
+                                        <li style="padding-left: 25px" data-bind="event: {slide: slideMaFast}, visible: showTaFast">
                                             <input class="slider" style="width: 145px" type="text" value="" data-slider-min="5" data-slider-max="100" data-slider-step="1" data-slider-value="14">
                                         </li>
                                         <li role="presentation" class="divider"></li>
                                         <li>
-                                            <a href="#" class="clearfix" data-bind="click: toggleMa50Ma100Ma200"><span data-bind="text: 'MA(' + maSlowDatumPoints() + ',' + maSlowerDatumPoints() + ',' + maSlowestDatumPoints() + ')'">MA(50,100,200)</span> <i class="fa pull-right" data-bind="css: {'fa-check': showMa50Ma100Ma200(), 'fa-check-w': !showMa50Ma100Ma200()}"></i></a>
+                                            <a href="#" class="clearfix" data-bind="click: toggleTaSlow"><span data-bind="text: 'MA(' + maSlowDatumPoints() + ',' + maSlowerDatumPoints() + ',' + maSlowestDatumPoints() + ')'">MA(50,100,200)</span> <i class="fa pull-right" data-bind="css: {'fa-check': showTaSlow(), 'fa-check-w': !showTaSlow()}"></i></a>
                                         </li>
-                                        <li style="padding-left: 25px" data-bind="event: {slide: slideMaSlow}, visible: showMa50Ma100Ma200">
+                                        <li style="padding-left: 25px" data-bind="event: {slide: slideMaSlow}, visible: showTaSlow">
                                             <input class="slider" style="width: 145px" type="text" value="" data-slider-min="50" data-slider-max="100" data-slider-step="1" data-slider-value="50">
                                         </li>
-                                        <li style="padding-left: 25px" data-bind="event: {slide: slideMaSlower}, visible: showMa50Ma100Ma200">
+                                        <li style="padding-left: 25px" data-bind="event: {slide: slideMaSlower}, visible: showTaSlow">
                                             <input class="slider" style="width: 145px" type="text" value="" data-slider-min="100" data-slider-max="200" data-slider-step="1" data-slider-value="100">
                                         </li>
-                                        <li style="padding-left: 25px" data-bind="event: {slide: slideMaSlowest}, visible: showMa50Ma100Ma200">
+                                        <li style="padding-left: 25px" data-bind="event: {slide: slideMaSlowest}, visible: showTaSlow">
                                             <input class="slider" style="width: 145px" type="text" value="" data-slider-min="200" data-slider-max="1000" data-slider-step="10" data-slider-value="200">
                                         </li>
                                         <li role="presentation" class="divider"></li>
