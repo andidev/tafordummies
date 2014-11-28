@@ -122,7 +122,10 @@
                                         </li>
                                         <li role="presentation" class="divider"></li>
                                         <li>
-                                            <a href="#" class="clearfix" data-bind="click: toggleRsi">RSI <i class="fa pull-right" data-bind="css: {'fa-check': showRsi()}"></i></a>
+                                            <a href="#" class="clearfix" data-bind="click: toggleRsi"><span data-bind="text: 'RSI(' + rsiDatumPoints() + ')'">RSI(14)</span> <i class="fa pull-right" data-bind="css: {'fa-check': showRsi()}"></i></a>
+                                        </li>
+                                        <li style="padding-left: 25px" data-bind="event: {slide: slideRsi}, visible: showRsi">
+                                            <input class="slider" style="width: 145px" type="text" value="" data-slider-min="1" data-slider-max="40" data-slider-step="1" data-slider-value="14">
                                         </li>
                                         <li role="presentation" class="divider"></li>
                                         <li>

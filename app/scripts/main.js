@@ -168,6 +168,7 @@ function ViewModel() {
         }
     });
     self.showRsi = ko.observable(defaultBooleanValue(false, url.param('showRsi')));
+    self.rsiDatumPoints = ko.observable(defaultNumberValue(14, url.param('rsiDatumPoints')));
     self.rsi = ko.observable({
         label: 'RSI(14)',
         data: [],
@@ -258,7 +259,7 @@ function ViewModel() {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaSlowestFormatted, visible: hoverMaSlowest"></span>';
                 } else if (label === 'Volume') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverVolumeFormatted, visible: hoverVolume"></span>';
-                } else if (label === 'RSI(14)') {
+                } else if (label === 'RSI(' + self.rsiDatumPoints() + ')') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverRsiFormatted, visible: hoverRsi"></span>';
                 } else if (label === 'Histogram') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdFormatted, visible: hoverMacd"></span>';
@@ -572,6 +573,16 @@ function ViewModel() {
     };
 
 
+    self.slideRsi = function(viewModel, event) {
+        log.trace('Sliding RSI');
+        var newDatumPoints = event.value;
+        if (self.rsiDatumPoints() !== newDatumPoints) {
+            log.info('Updating RSI to RSI(' + newDatumPoints + ')');
+            self.rsiDatumPoints(newDatumPoints);
+            self.processData();
+            self.plot();
+        }
+    };
     self.slideMaFastest = function(viewModel, event) {
         log.trace('Sliding MA Fastest');
         var newDatumPoints = event.value;
@@ -1161,7 +1172,7 @@ function ViewModel() {
         }
 
         // Get RSI
-        self.rsi().data = self.flotFinanceSymbol().getRsi(14, self.computeScale(), self.enableSplitDetection());
+        self.rsi().data = self.flotFinanceSymbol().getRsi(self.rsiDatumPoints(), self.computeScale(), self.enableSplitDetection());
         self.rsiPlotArgs.series.push(self.rsi());
 
         // Calculate MA Fastest
