@@ -266,7 +266,7 @@ function ViewModel() {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverRsiFormatted, visible: hoverRsi"></span>';
                 } else if (label === 'Histogram') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdFormatted, visible: hoverMacd"></span>';
-                } else if (label === 'MACD' + self.macdFastPeriod() + ',' + self.macdSlowPeriod() + ')') {
+                } else if (label === 'MACD(' + self.macdFastPeriod() + ',' + self.macdSlowPeriod() + ')') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdSignalFormatted, visible: hoverMacdSignal"></span>';
                 } else if (label === 'Signal(' + self.macdSignalPeriod() + ')') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdHistogramFormatted, visible: hoverMacdHistogram"></span>';
