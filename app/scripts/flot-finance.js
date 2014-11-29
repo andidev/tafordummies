@@ -125,7 +125,7 @@
     flotFinance.fn.getSmaPrice = cached(function (n, scale, splitDetection) {
         var data = this.getClosePrice(scale, splitDetection);
         var priceTA = this.getPriceTA(scale, splitDetection);
-        data = convertToFlotFormat(priceTA.ma(n).asArray(), data);
+        data = convertToFlotFormat(priceTA.sma(n).asArray(), data);
         return data;
     });
 
@@ -208,9 +208,9 @@
      *
      * @return     {Array} the MACD curve
      */
-    flotFinance.fn.getMacdTA = cached(function (nSlow, nFast, nSignal, scale, splitDetection) {
+    flotFinance.fn.getMacdTA = cached(function (nFast, nSlow, nSignal, scale, splitDetection) {
         var priceTA = this.getPriceTA(scale, splitDetection);
-        var macdTA = priceTA.macd(nSlow, nFast, nSignal);
+        var macdTA = priceTA.macd(nFast, nSlow, nSignal);
         return macdTA;
     });
 

@@ -1287,15 +1287,15 @@ function ViewModel() {
         self.plotArgs.series.push(self.taSlowest());
 
         // Calculate MACD
-        self.macd().data = self.flotFinanceSymbol().getMacd(self.macdSlowPeriod(), self.macdFastPeriod(), self.macdSignalPeriod(), self.computeScale(), self.enableSplitDetection());
+        self.macd().data = self.flotFinanceSymbol().getMacd(self.macdFastPeriod(), self.macdSlowPeriod(), self.macdSignalPeriod(), self.computeScale(), self.enableSplitDetection());
         self.macdPlotArgs.series.push(self.macd());
 
         // Calculate MACD Signal
-        self.macdSignal().data = self.flotFinanceSymbol().getMacdSignal(self.macdSlowPeriod(), self.macdFastPeriod(), self.macdSignalPeriod(), self.computeScale(), self.enableSplitDetection());
+        self.macdSignal().data = self.flotFinanceSymbol().getMacdSignal(self.macdFastPeriod(), self.macdSlowPeriod(), self.macdSignalPeriod(), self.computeScale(), self.enableSplitDetection());
         self.macdPlotArgs.series.push(self.macdSignal());
 
         // Calculate MACD Histogram
-        self.macdHistogram().data = self.flotFinanceSymbol().getMacdHistogram(self.macdSlowPeriod(), self.macdFastPeriod(), self.macdSignalPeriod(), self.computeScale(), self.enableSplitDetection());
+        self.macdHistogram().data = self.flotFinanceSymbol().getMacdHistogram(self.macdFastPeriod(), self.macdSlowPeriod(), self.macdSignalPeriod(), self.computeScale(), self.enableSplitDetection());
         self.macdPlotArgs.series.push(self.macdHistogram());
 
         var stop = moment().valueOf();
