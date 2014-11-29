@@ -3,7 +3,7 @@ TA For Dummies
 
 Charts and Tools for doing Technical Analysis on Stocks.
 
-Data is downloaded from yahoo finance and flotcharts is used for presentation together with twitter bootstrap and knockoutjs + more.
+Flotcharts is used for presentation together with twitter bootstrap and knockoutjs + more.
 
 Take a look at the demo at http://andidev.github.io/tafordummies
 
