@@ -20,5 +20,5 @@ bower install
 
 Run it with grunt
 ```bash
-grunt server
+grunt serve
 ```
