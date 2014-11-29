@@ -3,12 +3,16 @@ TA For Dummies
 
 Charts and Tools for doing Technical Analysis on Stocks.
 
-Take a look at the demo of the latest code at http://andidev.github.io/tafordummies/
+Data is downloaded from yahoo finance and flotcharts is used for presentation together with twitter bootstrap and knockoutjs + more.
 
-Requirements
-- node js
+Take a look at the demo at http://andidev.github.io/tafordummies
 
-Getting started
+## Development
+
+###Requirements
+- Node.js
+
+###Getting started
 
 Install the node packages
 ```bash
