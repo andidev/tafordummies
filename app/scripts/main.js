@@ -59,7 +59,7 @@ function ViewModel() {
         }
     });
     self.showTaFast = ko.observable(defaultBooleanValue(true, url.param('showTaFast')));
-    self.taFastType = ko.observable(defaultValue("SMA", url.param('taFastType')));
+    self.taFastType = ko.observable(defaultValue('SMA', url.param('taFastType')));
     self.taFastTypeOpposite = ko.computed(function(){
         if (self.taFastType() === 'EMA') {
             return 'SMA';
@@ -91,7 +91,7 @@ function ViewModel() {
     });
 
     self.showTaSlow = ko.observable(defaultBooleanValue(true, url.param('showTaSlow')));
-    self.taSlowType = ko.observable(defaultValue("SMA", url.param('taSlowType')));
+    self.taSlowType = ko.observable(defaultValue('SMA', url.param('taSlowType')));
     self.taSlowTypeOpposite = ko.computed(function(){
         if (self.taSlowType() === 'EMA') {
             return 'SMA';
