@@ -59,9 +59,9 @@ function ViewModel() {
         }
     });
     self.showTaFast = ko.observable(defaultBooleanValue(true, url.param('showTaFast')));
-    self.maFastestDatumPoints = ko.observable(defaultNumberValue(5, url.param('maFastestDatumPoints')));
-    self.maFastest = ko.observable({
-        label: 'MA(' + self.maFastestDatumPoints() + ')',
+    self.smaFastestDatumPoints = ko.observable(defaultNumberValue(5, url.param('maFastestDatumPoints')));
+    self.smaFastest = ko.observable({
+        label: 'SMA(' + self.smaFastestDatumPoints() + ')',
         data: [],
         color: 'rgba(51, 120, 190, 0.4)',
         shadowSize: 1,
@@ -70,9 +70,9 @@ function ViewModel() {
             lineWidth: 1
         }
     });
-    self.maFastDatumPoints = ko.observable(defaultNumberValue(14, url.param('maFastDatumPoints')));
-    self.maFast = ko.observable({
-        label: 'MA(' + self.maFastDatumPoints() + ')',
+    self.smaFastDatumPoints = ko.observable(defaultNumberValue(14, url.param('maFastDatumPoints')));
+    self.smaFast = ko.observable({
+        label: 'SMA(' + self.smaFastDatumPoints() + ')',
         data: [],
         color: 'rgba(178, 56, 59, 0.4)',
         shadowSize: 1,
@@ -83,9 +83,9 @@ function ViewModel() {
     });
 
     self.showTaSlow = ko.observable(defaultBooleanValue(true, url.param('showTaSlow')));
-    self.maSlowDatumPoints = ko.observable(defaultNumberValue(50, url.param('maSlowDatumPoints')));
-    self.maSlow = ko.observable({
-        label: 'MA(' + self.maSlowDatumPoints() + ')',
+    self.smaSlowDatumPoints = ko.observable(defaultNumberValue(50, url.param('maSlowDatumPoints')));
+    self.smaSlow = ko.observable({
+        label: 'SMA(' + self.smaSlowDatumPoints() + ')',
         data: [],
         color: 'rgba(0, 0, 0, 0.4)',
         shadowSize: 1,
@@ -94,9 +94,9 @@ function ViewModel() {
             lineWidth: 1
         }
     });
-    self.maSlowerDatumPoints = ko.observable(defaultNumberValue(100, url.param('maSlowerDatumPoints')));
-    self.maSlower = ko.observable({
-        label: 'MA(' + self.maSlowerDatumPoints() + ')',
+    self.smaSlowerDatumPoints = ko.observable(defaultNumberValue(100, url.param('maSlowerDatumPoints')));
+    self.smaSlower = ko.observable({
+        label: 'SMA(' + self.smaSlowerDatumPoints() + ')',
         data: [],
         color: 'rgba(0, 0, 0, 0.2)',
         shadowSize: 1,
@@ -105,9 +105,9 @@ function ViewModel() {
             lineWidth: 1
         }
     });
-    self.maSlowestDatumPoints = ko.observable(defaultNumberValue(200, url.param('maSlowestDatumPoints')));
-    self.maSlowest = ko.observable({
-        label: 'MA(' + self.maSlowestDatumPoints() + ')',
+    self.smaSlowestDatumPoints = ko.observable(defaultNumberValue(200, url.param('maSlowestDatumPoints')));
+    self.smaSlowest = ko.observable({
+        label: 'SMA(' + self.smaSlowestDatumPoints() + ')',
         data: [],
         color: 'rgba(0, 0, 0, 0.1)',
         shadowSize: 1,
@@ -250,16 +250,16 @@ function ViewModel() {
             labelFormatter: function(label) {
                 if (label === self.symbolName()) {
                     return '<span class="legend-label">' + label + '</span> <span class="legend-label-value" data-bind="text: hoverPriceFormatted, visible: hoverPrice"></span>';
-                } else if (label === 'MA(' + self.maFastestDatumPoints() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaFastestFormatted, visible: hoverMaFastest"></span>';
-                } else if (label === 'MA(' + self.maFastDatumPoints() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaFastFormatted, visible: hoverMaFast"></span>';
-                } else if (label === 'MA(' + self.maSlowDatumPoints() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaSlowFormatted, visible: hoverMaSlow"></span>';
-                } else if (label === 'MA(' + self.maSlowerDatumPoints() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaSlowerFormatted, visible: hoverMaSlower"></span>';
-                } else if (label === 'MA(' + self.maSlowestDatumPoints() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMaSlowestFormatted, visible: hoverMaSlowest"></span>';
+                } else if (label === 'SMA(' + self.smaFastestDatumPoints() + ')') {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverSmaFastestFormatted, visible: hoverSmaFastest"></span>';
+                } else if (label === 'SMA(' + self.smaFastDatumPoints() + ')') {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverSmaFastFormatted, visible: hoverSmaFast"></span>';
+                } else if (label === 'SMA(' + self.smaSlowDatumPoints() + ')') {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverSmaSlowFormatted, visible: hoverSmaSlow"></span>';
+                } else if (label === 'SMA(' + self.smaSlowerDatumPoints() + ')') {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverSmaSlowerFormatted, visible: hoverSmaSlower"></span>';
+                } else if (label === 'SMA(' + self.smaSlowestDatumPoints() + ')') {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverSmaSlowestFormatted, visible: hoverSmaSlowest"></span>';
                 } else if (label === 'Volume') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverVolumeFormatted, visible: hoverVolume"></span>';
                 } else if (label === 'RSI(' + self.rsiDatumPoints() + ')') {
@@ -546,20 +546,20 @@ function ViewModel() {
     };
     self.toggleTaFast = function() {
         if (self.showTaFast() === true) {
-            log.info('Hiding MA(' + self.maFastestDatumPoints() + ',' + self.maFastDatumPoints() + ')');
+            log.info('Hiding SMA(' + self.smaFastestDatumPoints() + ',' + self.smaFastDatumPoints() + ')');
             self.showTaFast(false);
         } else {
-            log.info('Showing MA(' + self.maFastestDatumPoints() + ',' + self.maFastDatumPoints() + ')');
+            log.info('Showing SMA(' + self.smaFastestDatumPoints() + ',' + self.smaFastDatumPoints() + ')');
             self.showTaFast(true);
         }
         self.plot();
     };
     self.toggleTaSlow = function() {
         if (self.showTaSlow() === true) {
-            log.info('Hiding MA(' + self.maSlowDatumPoints() + ',' + self.maSlowerDatumPoints() + ',' + self.maSlowestDatumPoints() + ')');
+            log.info('Hiding SMA(' + self.smaSlowDatumPoints() + ',' + self.smaSlowerDatumPoints() + ',' + self.smaSlowestDatumPoints() + ')');
             self.showTaSlow(false);
         } else {
-            log.info('Showing MA(' + self.maSlowDatumPoints() + ',' + self.maSlowerDatumPoints() + ',' + self.maSlowestDatumPoints() + ')');
+            log.info('Showing SMA(' + self.smaSlowDatumPoints() + ',' + self.smaSlowerDatumPoints() + ',' + self.smaSlowestDatumPoints() + ')');
             self.showTaSlow(true);
         }
         self.plot();
@@ -586,52 +586,52 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.slideMaFastest = function(viewModel, event) {
-        log.trace('Sliding MA Fastest');
+    self.slideSmaFastest = function(viewModel, event) {
+        log.trace('Sliding SMA Fastest');
         var newDatumPoints = event.value;
-        if (self.maFastestDatumPoints() !== newDatumPoints) {
-            log.info('Updating MA Fastest to MA(' + newDatumPoints + ')');
-            self.maFastestDatumPoints(newDatumPoints);
+        if (self.smaFastestDatumPoints() !== newDatumPoints) {
+            log.info('Updating SMA Fastest to SMA(' + newDatumPoints + ')');
+            self.smaFastestDatumPoints(newDatumPoints);
             self.processData();
             self.plot();
         }
     };
-    self.slideMaFast = function(viewModel, event) {
-        log.trace('Sliding MA Fast');
+    self.slideSmaFast = function(viewModel, event) {
+        log.trace('Sliding SMA Fast');
         var newDatumPoints = event.value;
-        if (self.maFastDatumPoints() !== newDatumPoints) {
-            log.info('Updating MA Fast to MA(' + newDatumPoints + ')');
-            self.maFastDatumPoints(newDatumPoints);
+        if (self.smaFastDatumPoints() !== newDatumPoints) {
+            log.info('Updating SMA Fast to SMA(' + newDatumPoints + ')');
+            self.smaFastDatumPoints(newDatumPoints);
             self.processData();
             self.plot();
         }
     };
-    self.slideMaSlow = function(viewModel, event) {
-        log.trace('Sliding MA Slow');
+    self.slideSmaSlow = function(viewModel, event) {
+        log.trace('Sliding SMA Slow');
         var newDatumPoints = event.value;
-        if (self.maSlowDatumPoints() !== newDatumPoints) {
-            log.info('Updating MA Slow to MA(' + newDatumPoints + ')');
-            self.maSlowDatumPoints(newDatumPoints);
+        if (self.smaSlowDatumPoints() !== newDatumPoints) {
+            log.info('Updating SMA Slow to SMA(' + newDatumPoints + ')');
+            self.smaSlowDatumPoints(newDatumPoints);
             self.processData();
             self.plot();
         }
     };
-    self.slideMaSlower = function(viewModel, event) {
-        log.trace('Sliding MA Slower');
+    self.slideSmaSlower = function(viewModel, event) {
+        log.trace('Sliding SMA Slower');
         var newDatumPoints = event.value;
-        if (self.maSlowerDatumPoints() !== newDatumPoints) {
-            log.info('Updating MA Slower to MA(' + newDatumPoints + ')');
-            self.maSlowerDatumPoints(newDatumPoints);
+        if (self.smaSlowerDatumPoints() !== newDatumPoints) {
+            log.info('Updating SMA Slower to SMA(' + newDatumPoints + ')');
+            self.smaSlowerDatumPoints(newDatumPoints);
             self.processData();
             self.plot();
         }
     };
-    self.slideMaSlowest = function(viewModel, event) {
-        log.trace('Sliding MA Slowest');
+    self.slideSmaSlowest = function(viewModel, event) {
+        log.trace('Sliding SMA Slowest');
         var newDatumPoints = event.value;
-        if (self.maSlowestDatumPoints() !== newDatumPoints) {
-            log.info('Updating MA Slowest to MA(' + newDatumPoints + ')');
-            self.maSlowestDatumPoints(newDatumPoints);
+        if (self.smaSlowestDatumPoints() !== newDatumPoints) {
+            log.info('Updating SMA Slowest to SMA(' + newDatumPoints + ')');
+            self.smaSlowestDatumPoints(newDatumPoints);
             self.processData();
             self.plot();
         }
@@ -976,25 +976,25 @@ function ViewModel() {
     self.hoverPriceFormatted = ko.computed(function() {
         return formatPrice(self.hoverPrice());
     });
-    self.hoverMaFastest = ko.observable();
-    self.hoverMaFastestFormatted = ko.computed(function() {
-        return formatPrice(self.hoverMaFastest());
+    self.hoverSmaFastest = ko.observable();
+    self.hoverSmaFastestFormatted = ko.computed(function() {
+        return formatPrice(self.hoverSmaFastest());
     });
-    self.hoverMaFast = ko.observable();
-    self.hoverMaFastFormatted = ko.computed(function() {
-        return formatPrice(self.hoverMaFast());
+    self.hoverSmaFast = ko.observable();
+    self.hoverSmaFastFormatted = ko.computed(function() {
+        return formatPrice(self.hoverSmaFast());
     });
-    self.hoverMaSlow = ko.observable();
-    self.hoverMaSlowFormatted = ko.computed(function() {
-        return formatPrice(self.hoverMaSlow());
+    self.hoverSmaSlow = ko.observable();
+    self.hoverSmaSlowFormatted = ko.computed(function() {
+        return formatPrice(self.hoverSmaSlow());
     });
-    self.hoverMaSlower = ko.observable();
-    self.hoverMaSlowerFormatted = ko.computed(function() {
-        return formatPrice(self.hoverMaSlower());
+    self.hoverSmaSlower = ko.observable();
+    self.hoverSmaSlowerFormatted = ko.computed(function() {
+        return formatPrice(self.hoverSmaSlower());
     });
-    self.hoverMaSlowest = ko.observable();
-    self.hoverMaSlowestFormatted = ko.computed(function() {
-        return formatPrice(self.hoverMaSlowest());
+    self.hoverSmaSlowest = ko.observable();
+    self.hoverSmaSlowestFormatted = ko.computed(function() {
+        return formatPrice(self.hoverSmaSlowest());
     });
     self.hoverVolume = ko.observable();
     self.hoverVolumeFormatted = ko.computed(function() {
@@ -1068,11 +1068,11 @@ function ViewModel() {
                 }
                 self.hoverPercent(percent);
                 self.hoverPrice(price);
-                self.hoverMaFastest(self.plotArgs.series[1].data[priceInfoIndex][1]);
-                self.hoverMaFast(self.plotArgs.series[2].data[priceInfoIndex][1]);
-                self.hoverMaSlow(self.plotArgs.series[3].data[priceInfoIndex][1]);
-                self.hoverMaSlower(self.plotArgs.series[4].data[priceInfoIndex][1]);
-                self.hoverMaSlowest(self.plotArgs.series[5].data[priceInfoIndex][1]);
+                self.hoverSmaFastest(self.plotArgs.series[1].data[priceInfoIndex][1]);
+                self.hoverSmaFast(self.plotArgs.series[2].data[priceInfoIndex][1]);
+                self.hoverSmaSlow(self.plotArgs.series[3].data[priceInfoIndex][1]);
+                self.hoverSmaSlower(self.plotArgs.series[4].data[priceInfoIndex][1]);
+                self.hoverSmaSlowest(self.plotArgs.series[5].data[priceInfoIndex][1]);
                 if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
                     self.hoverVolume(self.volumePlotArgs.series[0].data[priceInfoIndex][1]);
                 }
@@ -1095,11 +1095,11 @@ function ViewModel() {
         if (self.$plot) {
             self.$plot.clearCrosshair();
             self.hoverPrice('');
-            self.hoverMaFastest('');
-            self.hoverMaFast('');
-            self.hoverMaSlow('');
-            self.hoverMaSlower('');
-            self.hoverMaSlowest('');
+            self.hoverSmaFastest('');
+            self.hoverSmaFast('');
+            self.hoverSmaSlow('');
+            self.hoverSmaSlower('');
+            self.hoverSmaSlowest('');
             if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
                 self.$volumePlot.clearCrosshair();
                 self.hoverVolume('');
@@ -1208,25 +1208,25 @@ function ViewModel() {
         self.rsi().data = self.flotFinanceSymbol().getRsi(self.rsiDatumPoints(), self.computeScale(), self.enableSplitDetection());
         self.rsiPlotArgs.series.push(self.rsi());
 
-        // Calculate MA Fastest
-        self.maFastest().data = self.flotFinanceSymbol().getMaPrice(self.maFastestDatumPoints(), self.computeScale(), self.enableSplitDetection());
-        self.plotArgs.series.push(self.maFastest());
+        // Calculate SMA Fastest
+        self.smaFastest().data = self.flotFinanceSymbol().getMaPrice(self.smaFastestDatumPoints(), self.computeScale(), self.enableSplitDetection());
+        self.plotArgs.series.push(self.smaFastest());
 
-        // Calculate MA Fast
-        self.maFast().data = self.flotFinanceSymbol().getMaPrice(self.maFastDatumPoints(), self.computeScale(), self.enableSplitDetection());
-        self.plotArgs.series.push(self.maFast());
+        // Calculate SMA Fast
+        self.smaFast().data = self.flotFinanceSymbol().getMaPrice(self.smaFastDatumPoints(), self.computeScale(), self.enableSplitDetection());
+        self.plotArgs.series.push(self.smaFast());
 
-        // Calculate MA Slow
-        self.maSlow().data = self.flotFinanceSymbol().getMaPrice(self.maSlowDatumPoints(), self.computeScale(), self.enableSplitDetection());
-        self.plotArgs.series.push(self.maSlow());
+        // Calculate SMA Slow
+        self.smaSlow().data = self.flotFinanceSymbol().getMaPrice(self.smaSlowDatumPoints(), self.computeScale(), self.enableSplitDetection());
+        self.plotArgs.series.push(self.smaSlow());
 
-        // Calculate MA Slower
-        self.maSlower().data = self.flotFinanceSymbol().getMaPrice(self.maSlowerDatumPoints(), self.computeScale(), self.enableSplitDetection());
-        self.plotArgs.series.push(self.maSlower());
+        // Calculate SMA Slower
+        self.smaSlower().data = self.flotFinanceSymbol().getMaPrice(self.smaSlowerDatumPoints(), self.computeScale(), self.enableSplitDetection());
+        self.plotArgs.series.push(self.smaSlower());
 
-        // Calculate MA Slowest
-        self.maSlowest().data = self.flotFinanceSymbol().getMaPrice(self.maSlowestDatumPoints(), self.computeScale(), self.enableSplitDetection());
-        self.plotArgs.series.push(self.maSlowest());
+        // Calculate SMA Slowest
+        self.smaSlowest().data = self.flotFinanceSymbol().getMaPrice(self.smaSlowestDatumPoints(), self.computeScale(), self.enableSplitDetection());
+        self.plotArgs.series.push(self.smaSlowest());
 
         // Calculate MACD
         self.macd().data = self.flotFinanceSymbol().getMacd(self.macdSlowDatumPoints(), self.macdFastDatumPoints(), self.macdSignalDatumPoints(), self.computeScale(), self.enableSplitDetection());
@@ -1262,30 +1262,30 @@ function ViewModel() {
         self.updatePlotAxisMinAndMax();
         self.updatePercentAndHighestAndLowest();
         if (self.showTaFast()) {
-            self.maFastest().lines.show = true;
-            self.maFastest().label = 'MA(' + self.maFastestDatumPoints() + ')';
-            self.maFast().lines.show = true;
-            self.maFast().label = 'MA(' + self.maFastDatumPoints() + ')';
+            self.smaFastest().lines.show = true;
+            self.smaFastest().label = 'SMA(' + self.smaFastestDatumPoints() + ')';
+            self.smaFast().lines.show = true;
+            self.smaFast().label = 'SMA(' + self.smaFastDatumPoints() + ')';
         } else {
-            self.maFastest().lines.show = false;
-            self.maFastest().label = null;
-            self.maFast().lines.show = false;
-            self.maFast().label = null;
+            self.smaFastest().lines.show = false;
+            self.smaFastest().label = null;
+            self.smaFast().lines.show = false;
+            self.smaFast().label = null;
         }
         if (self.showTaSlow()) {
-            self.maSlow().lines.show = true;
-            self.maSlow().label = 'MA(' + self.maSlowDatumPoints() + ')';
-            self.maSlower().lines.show = true;
-            self.maSlower().label = 'MA(' + self.maSlowerDatumPoints() + ')';
-            self.maSlowest().lines.show = true;
-            self.maSlowest().label = 'MA(' + self.maSlowestDatumPoints() + ')';
+            self.smaSlow().lines.show = true;
+            self.smaSlow().label = 'SMA(' + self.smaSlowDatumPoints() + ')';
+            self.smaSlower().lines.show = true;
+            self.smaSlower().label = 'SMA(' + self.smaSlowerDatumPoints() + ')';
+            self.smaSlowest().lines.show = true;
+            self.smaSlowest().label = 'SMA(' + self.smaSlowestDatumPoints() + ')';
         } else {
-            self.maSlow().lines.show = false;
-            self.maSlow().label = null;
-            self.maSlower().lines.show = false;
-            self.maSlower().label = null;
-            self.maSlowest().lines.show = false;
-            self.maSlowest().label = null;
+            self.smaSlow().lines.show = false;
+            self.smaSlow().label = null;
+            self.smaSlower().lines.show = false;
+            self.smaSlower().label = null;
+            self.smaSlowest().lines.show = false;
+            self.smaSlowest().label = null;
         }
         if (self.settings.showXaxisTicksInGrid) {
             self.plotArgs.options.xaxis.tickColor = null;
@@ -1407,10 +1407,10 @@ function ViewModel() {
         // Find yaxis min/max
         var yaxisMinMax = findYaxisMinMax(self.price(), self.fromDate(), self.toDate());
         if (self.showTaFast()) {
-            yaxisMinMax = findYaxisMinMax([self.maFastest(), self.maFast()], self.fromDate(), self.toDate(), yaxisMinMax);
+            yaxisMinMax = findYaxisMinMax([self.smaFastest(), self.smaFast()], self.fromDate(), self.toDate(), yaxisMinMax);
         }
         if (self.showTaSlow()) {
-            yaxisMinMax = findYaxisMinMax([self.maSlow(), self.maSlower(), self.maSlowest()], self.fromDate(), self.toDate(), yaxisMinMax);
+            yaxisMinMax = findYaxisMinMax([self.smaSlow(), self.smaSlower(), self.smaSlowest()], self.fromDate(), self.toDate(), yaxisMinMax);
         }
         yaxisMinMax = addPaddingsToYaxisMinMax(yaxisMinMax, self.settings.paddingFactor);
 
