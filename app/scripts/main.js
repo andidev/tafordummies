@@ -59,9 +59,17 @@ function ViewModel() {
         }
     });
     self.showTaFast = ko.observable(defaultBooleanValue(true, url.param('showTaFast')));
-    self.smaFastestPeriod = ko.observable(defaultNumberValue(5, url.param('maFastestPeriod')));
-    self.smaFastest = ko.observable({
-        label: 'SMA(' + self.smaFastestPeriod() + ')',
+    self.taFastType = ko.observable(defaultValue("SMA", url.param('taFastType')));
+    self.taFastTypeOpposite = ko.computed(function(){
+        if (self.taFastType() === 'EMA') {
+            return 'SMA';
+        } else {
+            return 'EMA';
+        }
+    });
+    self.taFastestPeriod = ko.observable(defaultNumberValue(5, url.param('maFastestPeriod')));
+    self.taFastest = ko.observable({
+        label: self.taFastType() + '(' + self.taFastestPeriod() + ')',
         data: [],
         color: 'rgba(51, 120, 190, 0.4)',
         shadowSize: 1,
@@ -70,9 +78,9 @@ function ViewModel() {
             lineWidth: 1
         }
     });
-    self.smaFastPeriod = ko.observable(defaultNumberValue(14, url.param('maFastPeriod')));
-    self.smaFast = ko.observable({
-        label: 'SMA(' + self.smaFastPeriod() + ')',
+    self.taFastPeriod = ko.observable(defaultNumberValue(14, url.param('maFastPeriod')));
+    self.taFast = ko.observable({
+        label: self.taFastType() + '(' + self.taFastPeriod() + ')',
         data: [],
         color: 'rgba(178, 56, 59, 0.4)',
         shadowSize: 1,
@@ -83,9 +91,17 @@ function ViewModel() {
     });
 
     self.showTaSlow = ko.observable(defaultBooleanValue(true, url.param('showTaSlow')));
-    self.smaSlowPeriod = ko.observable(defaultNumberValue(50, url.param('maSlowPeriod')));
-    self.smaSlow = ko.observable({
-        label: 'SMA(' + self.smaSlowPeriod() + ')',
+    self.taSlowType = ko.observable(defaultValue("SMA", url.param('taSlowType')));
+    self.taSlowTypeOpposite = ko.computed(function(){
+        if (self.taSlowType() === 'EMA') {
+            return 'SMA';
+        } else {
+            return 'EMA';
+        }
+    });
+    self.taSlowPeriod = ko.observable(defaultNumberValue(50, url.param('maSlowPeriod')));
+    self.taSlow = ko.observable({
+        label: self.taSlowType() + '(' + self.taSlowPeriod() + ')',
         data: [],
         color: 'rgba(0, 0, 0, 0.4)',
         shadowSize: 1,
@@ -94,9 +110,9 @@ function ViewModel() {
             lineWidth: 1
         }
     });
-    self.smaSlowerPeriod = ko.observable(defaultNumberValue(100, url.param('maSlowerPeriod')));
-    self.smaSlower = ko.observable({
-        label: 'SMA(' + self.smaSlowerPeriod() + ')',
+    self.taSlowerPeriod = ko.observable(defaultNumberValue(100, url.param('maSlowerPeriod')));
+    self.taSlower = ko.observable({
+        label: self.taSlowType() + '(' + self.taSlowerPeriod() + ')',
         data: [],
         color: 'rgba(0, 0, 0, 0.2)',
         shadowSize: 1,
@@ -105,9 +121,9 @@ function ViewModel() {
             lineWidth: 1
         }
     });
-    self.smaSlowestPeriod = ko.observable(defaultNumberValue(200, url.param('maSlowestPeriod')));
-    self.smaSlowest = ko.observable({
-        label: 'SMA(' + self.smaSlowestPeriod() + ')',
+    self.taSlowestPeriod = ko.observable(defaultNumberValue(200, url.param('maSlowestPeriod')));
+    self.taSlowest = ko.observable({
+        label: self.taSlowType() + '(' + self.taSlowestPeriod() + ')',
         data: [],
         color: 'rgba(0, 0, 0, 0.1)',
         shadowSize: 1,
@@ -250,16 +266,16 @@ function ViewModel() {
             labelFormatter: function(label) {
                 if (label === self.symbolName()) {
                     return '<span class="legend-label">' + label + '</span> <span class="legend-label-value" data-bind="text: hoverPriceFormatted, visible: hoverPrice"></span>';
-                } else if (label === 'SMA(' + self.smaFastestPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverSmaFastestFormatted, visible: hoverSmaFastest"></span>';
-                } else if (label === 'SMA(' + self.smaFastPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverSmaFastFormatted, visible: hoverSmaFast"></span>';
-                } else if (label === 'SMA(' + self.smaSlowPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverSmaSlowFormatted, visible: hoverSmaSlow"></span>';
-                } else if (label === 'SMA(' + self.smaSlowerPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverSmaSlowerFormatted, visible: hoverSmaSlower"></span>';
-                } else if (label === 'SMA(' + self.smaSlowestPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverSmaSlowestFormatted, visible: hoverSmaSlowest"></span>';
+                } else if (label === self.taFastType() + '(' + self.taFastestPeriod() + ')') {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverTaFastestFormatted, visible: hoverTaFastest"></span>';
+                } else if (label === self.taFastType() + '(' + self.taFastPeriod() + ')') {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverTaFastFormatted, visible: hoverTaFast"></span>';
+                } else if (label === self.taSlowType() + '(' + self.taSlowPeriod() + ')') {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverTaSlowFormatted, visible: hoverTaSlow"></span>';
+                } else if (label === self.taSlowType() + '(' + self.taSlowerPeriod() + ')') {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverTaSlowerFormatted, visible: hoverTaSlower"></span>';
+                } else if (label === self.taSlowType() + '(' + self.taSlowestPeriod() + ')') {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverTaSlowestFormatted, visible: hoverTaSlowest"></span>';
                 } else if (label === 'Volume') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverVolumeFormatted, visible: hoverVolume"></span>';
                 } else if (label === 'RSI(' + self.rsiPeriod() + ')') {
@@ -546,22 +562,44 @@ function ViewModel() {
     };
     self.toggleTaFast = function() {
         if (self.showTaFast() === true) {
-            log.info('Hiding SMA(' + self.smaFastestPeriod() + ',' + self.smaFastPeriod() + ')');
+            log.info('Hiding TA Fast ' + self.taFastType() + '(' + self.taFastestPeriod() + ',' + self.taFastPeriod() + ')');
             self.showTaFast(false);
         } else {
-            log.info('Showing SMA(' + self.smaFastestPeriod() + ',' + self.smaFastPeriod() + ')');
+            log.info('Showing TA Fast ' + self.taFastType() + '(' + self.taFastestPeriod() + ',' + self.taFastPeriod() + ')');
             self.showTaFast(true);
         }
         self.plot();
     };
+    self.toggleTaFastType = function() {
+        if (self.taFastType() === 'EMA') {
+            log.info('Changing TA Fast Type to SMA');
+            self.taFastType('SMA');
+        } else {
+            log.info('Changing TA Fast Type to EMA');
+            self.taFastType('EMA');
+        }
+        self.processData();
+        self.plot();
+    };
     self.toggleTaSlow = function() {
         if (self.showTaSlow() === true) {
-            log.info('Hiding SMA(' + self.smaSlowPeriod() + ',' + self.smaSlowerPeriod() + ',' + self.smaSlowestPeriod() + ')');
+            log.info('Hiding TA Slow ' + self.taSlowType() + '(' + self.taSlowPeriod() + ',' + self.taSlowerPeriod() + ',' + self.taSlowestPeriod() + ')');
             self.showTaSlow(false);
         } else {
-            log.info('Showing SMA(' + self.smaSlowPeriod() + ',' + self.smaSlowerPeriod() + ',' + self.smaSlowestPeriod() + ')');
+            log.info('Showing TA Slow ' + self.taSlowType() + '(' + self.taSlowPeriod() + ',' + self.taSlowerPeriod() + ',' + self.taSlowestPeriod() + ')');
             self.showTaSlow(true);
         }
+        self.plot();
+    };
+    self.toggleTaSlowType = function() {
+        if (self.taSlowType() === 'EMA') {
+            log.info('Changing TA Slow Type to SMA');
+            self.taSlowType('SMA');
+        } else {
+            log.info('Changing TA Slow Type to EMA');
+            self.taSlowType('EMA');
+        }
+        self.processData();
         self.plot();
     };
     self.toggleMacd = function() {
@@ -586,52 +624,52 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.slideSmaFastest = function(viewModel, event) {
-        log.trace('Sliding SMA Fastest');
+    self.slideTaFastest = function(viewModel, event) {
+        log.trace('Sliding TA Fastest');
         var newPeriod = event.value;
-        if (self.smaFastestPeriod() !== newPeriod) {
-            log.info('Updating SMA Fastest to SMA(' + newPeriod + ')');
-            self.smaFastestPeriod(newPeriod);
+        if (self.taFastestPeriod() !== newPeriod) {
+            log.info('Updating TA Fastest to ' + self.taFastType() + '(' + newPeriod + ')');
+            self.taFastestPeriod(newPeriod);
             self.processData();
             self.plot();
         }
     };
-    self.slideSmaFast = function(viewModel, event) {
-        log.trace('Sliding SMA Fast');
+    self.slideTaFast = function(viewModel, event) {
+        log.trace('Sliding TA Fast');
         var newPeriod = event.value;
-        if (self.smaFastPeriod() !== newPeriod) {
-            log.info('Updating SMA Fast to SMA(' + newPeriod + ')');
-            self.smaFastPeriod(newPeriod);
+        if (self.taFastPeriod() !== newPeriod) {
+            log.info('Updating TA Fast to ' + self.taFastType() + '(' + newPeriod + ')');
+            self.taFastPeriod(newPeriod);
             self.processData();
             self.plot();
         }
     };
-    self.slideSmaSlow = function(viewModel, event) {
-        log.trace('Sliding SMA Slow');
+    self.slideTaSlow = function(viewModel, event) {
+        log.trace('Sliding TA Slow');
         var newPeriod = event.value;
-        if (self.smaSlowPeriod() !== newPeriod) {
-            log.info('Updating SMA Slow to SMA(' + newPeriod + ')');
-            self.smaSlowPeriod(newPeriod);
+        if (self.taSlowPeriod() !== newPeriod) {
+            log.info('Updating TA Slow to ' + self.taSlowType() + '(' + newPeriod + ')');
+            self.taSlowPeriod(newPeriod);
             self.processData();
             self.plot();
         }
     };
-    self.slideSmaSlower = function(viewModel, event) {
-        log.trace('Sliding SMA Slower');
+    self.slideTaSlower = function(viewModel, event) {
+        log.trace('Sliding TA Slower');
         var newPeriod = event.value;
-        if (self.smaSlowerPeriod() !== newPeriod) {
-            log.info('Updating SMA Slower to SMA(' + newPeriod + ')');
-            self.smaSlowerPeriod(newPeriod);
+        if (self.taSlowerPeriod() !== newPeriod) {
+            log.info('Updating TA Slower to ' + self.taSlowType() + '(' + newPeriod + ')');
+            self.taSlowerPeriod(newPeriod);
             self.processData();
             self.plot();
         }
     };
-    self.slideSmaSlowest = function(viewModel, event) {
-        log.trace('Sliding SMA Slowest');
+    self.slideTaSlowest = function(viewModel, event) {
+        log.trace('Sliding TA Slowest');
         var newPeriod = event.value;
-        if (self.smaSlowestPeriod() !== newPeriod) {
-            log.info('Updating SMA Slowest to SMA(' + newPeriod + ')');
-            self.smaSlowestPeriod(newPeriod);
+        if (self.taSlowestPeriod() !== newPeriod) {
+            log.info('Updating TA Slowest to ' + self.taSlowType() + '(' + newPeriod + ')');
+            self.taSlowestPeriod(newPeriod);
             self.processData();
             self.plot();
         }
@@ -976,25 +1014,25 @@ function ViewModel() {
     self.hoverPriceFormatted = ko.computed(function() {
         return formatPrice(self.hoverPrice());
     });
-    self.hoverSmaFastest = ko.observable();
-    self.hoverSmaFastestFormatted = ko.computed(function() {
-        return formatPrice(self.hoverSmaFastest());
+    self.hoverTaFastest = ko.observable();
+    self.hoverTaFastestFormatted = ko.computed(function() {
+        return formatPrice(self.hoverTaFastest());
     });
-    self.hoverSmaFast = ko.observable();
-    self.hoverSmaFastFormatted = ko.computed(function() {
-        return formatPrice(self.hoverSmaFast());
+    self.hoverTaFast = ko.observable();
+    self.hoverTaFastFormatted = ko.computed(function() {
+        return formatPrice(self.hoverTaFast());
     });
-    self.hoverSmaSlow = ko.observable();
-    self.hoverSmaSlowFormatted = ko.computed(function() {
-        return formatPrice(self.hoverSmaSlow());
+    self.hoverTaSlow = ko.observable();
+    self.hoverTaSlowFormatted = ko.computed(function() {
+        return formatPrice(self.hoverTaSlow());
     });
-    self.hoverSmaSlower = ko.observable();
-    self.hoverSmaSlowerFormatted = ko.computed(function() {
-        return formatPrice(self.hoverSmaSlower());
+    self.hoverTaSlower = ko.observable();
+    self.hoverTaSlowerFormatted = ko.computed(function() {
+        return formatPrice(self.hoverTaSlower());
     });
-    self.hoverSmaSlowest = ko.observable();
-    self.hoverSmaSlowestFormatted = ko.computed(function() {
-        return formatPrice(self.hoverSmaSlowest());
+    self.hoverTaSlowest = ko.observable();
+    self.hoverTaSlowestFormatted = ko.computed(function() {
+        return formatPrice(self.hoverTaSlowest());
     });
     self.hoverVolume = ko.observable();
     self.hoverVolumeFormatted = ko.computed(function() {
@@ -1068,11 +1106,11 @@ function ViewModel() {
                 }
                 self.hoverPercent(percent);
                 self.hoverPrice(price);
-                self.hoverSmaFastest(self.plotArgs.series[1].data[priceInfoIndex][1]);
-                self.hoverSmaFast(self.plotArgs.series[2].data[priceInfoIndex][1]);
-                self.hoverSmaSlow(self.plotArgs.series[3].data[priceInfoIndex][1]);
-                self.hoverSmaSlower(self.plotArgs.series[4].data[priceInfoIndex][1]);
-                self.hoverSmaSlowest(self.plotArgs.series[5].data[priceInfoIndex][1]);
+                self.hoverTaFastest(self.plotArgs.series[1].data[priceInfoIndex][1]);
+                self.hoverTaFast(self.plotArgs.series[2].data[priceInfoIndex][1]);
+                self.hoverTaSlow(self.plotArgs.series[3].data[priceInfoIndex][1]);
+                self.hoverTaSlower(self.plotArgs.series[4].data[priceInfoIndex][1]);
+                self.hoverTaSlowest(self.plotArgs.series[5].data[priceInfoIndex][1]);
                 if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
                     self.hoverVolume(self.volumePlotArgs.series[0].data[priceInfoIndex][1]);
                 }
@@ -1095,11 +1133,11 @@ function ViewModel() {
         if (self.$plot) {
             self.$plot.clearCrosshair();
             self.hoverPrice('');
-            self.hoverSmaFastest('');
-            self.hoverSmaFast('');
-            self.hoverSmaSlow('');
-            self.hoverSmaSlower('');
-            self.hoverSmaSlowest('');
+            self.hoverTaFastest('');
+            self.hoverTaFast('');
+            self.hoverTaSlow('');
+            self.hoverTaSlower('');
+            self.hoverTaSlowest('');
             if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
                 self.$volumePlot.clearCrosshair();
                 self.hoverVolume('');
@@ -1208,25 +1246,45 @@ function ViewModel() {
         self.rsi().data = self.flotFinanceSymbol().getRsi(self.rsiPeriod(), self.computeScale(), self.enableSplitDetection());
         self.rsiPlotArgs.series.push(self.rsi());
 
-        // Calculate SMA Fastest
-        self.smaFastest().data = self.flotFinanceSymbol().getMaPrice(self.smaFastestPeriod(), self.computeScale(), self.enableSplitDetection());
-        self.plotArgs.series.push(self.smaFastest());
+        // Calculate TA Fastest
+        if (self.taFastType() === 'EMA') {
+            self.taFastest().data = self.flotFinanceSymbol().getEmaPrice(self.taFastestPeriod(), self.computeScale(), self.enableSplitDetection());
+        } else {
+            self.taFastest().data = self.flotFinanceSymbol().getSmaPrice(self.taFastestPeriod(), self.computeScale(), self.enableSplitDetection());
+        }
+        self.plotArgs.series.push(self.taFastest());
 
-        // Calculate SMA Fast
-        self.smaFast().data = self.flotFinanceSymbol().getMaPrice(self.smaFastPeriod(), self.computeScale(), self.enableSplitDetection());
-        self.plotArgs.series.push(self.smaFast());
+        // Calculate TA Fast
+        if (self.taFastType() === 'EMA') {
+            self.taFast().data = self.flotFinanceSymbol().getEmaPrice(self.taFastPeriod(), self.computeScale(), self.enableSplitDetection());
+        } else {
+            self.taFast().data = self.flotFinanceSymbol().getSmaPrice(self.taFastPeriod(), self.computeScale(), self.enableSplitDetection());
+        }
+        self.plotArgs.series.push(self.taFast());
 
-        // Calculate SMA Slow
-        self.smaSlow().data = self.flotFinanceSymbol().getMaPrice(self.smaSlowPeriod(), self.computeScale(), self.enableSplitDetection());
-        self.plotArgs.series.push(self.smaSlow());
+        // Calculate TA Slow
+        if (self.taSlowType() === 'EMA') {
+            self.taSlow().data = self.flotFinanceSymbol().getEmaPrice(self.taSlowPeriod(), self.computeScale(), self.enableSplitDetection());
+        } else {
+            self.taSlow().data = self.flotFinanceSymbol().getSmaPrice(self.taSlowPeriod(), self.computeScale(), self.enableSplitDetection());
+        }
+        self.plotArgs.series.push(self.taSlow());
 
-        // Calculate SMA Slower
-        self.smaSlower().data = self.flotFinanceSymbol().getMaPrice(self.smaSlowerPeriod(), self.computeScale(), self.enableSplitDetection());
-        self.plotArgs.series.push(self.smaSlower());
+        // Calculate TA Slower
+        if (self.taSlowType() === 'EMA') {
+            self.taSlower().data = self.flotFinanceSymbol().getEmaPrice(self.taSlowerPeriod(), self.computeScale(), self.enableSplitDetection());
+        } else {
+            self.taSlower().data = self.flotFinanceSymbol().getSmaPrice(self.taSlowerPeriod(), self.computeScale(), self.enableSplitDetection());
+        }
+        self.plotArgs.series.push(self.taSlower());
 
-        // Calculate SMA Slowest
-        self.smaSlowest().data = self.flotFinanceSymbol().getMaPrice(self.smaSlowestPeriod(), self.computeScale(), self.enableSplitDetection());
-        self.plotArgs.series.push(self.smaSlowest());
+        // Calculate TA Slowest
+        if (self.taSlowType() === 'EMA') {
+            self.taSlowest().data = self.flotFinanceSymbol().getEmaPrice(self.taSlowestPeriod(), self.computeScale(), self.enableSplitDetection());
+        } else {
+            self.taSlowest().data = self.flotFinanceSymbol().getSmaPrice(self.taSlowestPeriod(), self.computeScale(), self.enableSplitDetection());
+        }
+        self.plotArgs.series.push(self.taSlowest());
 
         // Calculate MACD
         self.macd().data = self.flotFinanceSymbol().getMacd(self.macdSlowPeriod(), self.macdFastPeriod(), self.macdSignalPeriod(), self.computeScale(), self.enableSplitDetection());
@@ -1262,30 +1320,30 @@ function ViewModel() {
         self.updatePlotAxisMinAndMax();
         self.updatePercentAndHighestAndLowest();
         if (self.showTaFast()) {
-            self.smaFastest().lines.show = true;
-            self.smaFastest().label = 'SMA(' + self.smaFastestPeriod() + ')';
-            self.smaFast().lines.show = true;
-            self.smaFast().label = 'SMA(' + self.smaFastPeriod() + ')';
+            self.taFastest().lines.show = true;
+            self.taFastest().label = self.taFastType() + '(' + self.taFastestPeriod() + ')';
+            self.taFast().lines.show = true;
+            self.taFast().label = self.taFastType() + '(' + self.taFastPeriod() + ')';
         } else {
-            self.smaFastest().lines.show = false;
-            self.smaFastest().label = null;
-            self.smaFast().lines.show = false;
-            self.smaFast().label = null;
+            self.taFastest().lines.show = false;
+            self.taFastest().label = null;
+            self.taFast().lines.show = false;
+            self.taFast().label = null;
         }
         if (self.showTaSlow()) {
-            self.smaSlow().lines.show = true;
-            self.smaSlow().label = 'SMA(' + self.smaSlowPeriod() + ')';
-            self.smaSlower().lines.show = true;
-            self.smaSlower().label = 'SMA(' + self.smaSlowerPeriod() + ')';
-            self.smaSlowest().lines.show = true;
-            self.smaSlowest().label = 'SMA(' + self.smaSlowestPeriod() + ')';
+            self.taSlow().lines.show = true;
+            self.taSlow().label = self.taSlowType() + '(' + self.taSlowPeriod() + ')';
+            self.taSlower().lines.show = true;
+            self.taSlower().label = self.taSlowType() + '(' + self.taSlowerPeriod() + ')';
+            self.taSlowest().lines.show = true;
+            self.taSlowest().label = self.taSlowType() + '(' + self.taSlowestPeriod() + ')';
         } else {
-            self.smaSlow().lines.show = false;
-            self.smaSlow().label = null;
-            self.smaSlower().lines.show = false;
-            self.smaSlower().label = null;
-            self.smaSlowest().lines.show = false;
-            self.smaSlowest().label = null;
+            self.taSlow().lines.show = false;
+            self.taSlow().label = null;
+            self.taSlower().lines.show = false;
+            self.taSlower().label = null;
+            self.taSlowest().lines.show = false;
+            self.taSlowest().label = null;
         }
         if (self.settings.showXaxisTicksInGrid) {
             self.plotArgs.options.xaxis.tickColor = null;
@@ -1407,10 +1465,10 @@ function ViewModel() {
         // Find yaxis min/max
         var yaxisMinMax = findYaxisMinMax(self.price(), self.fromDate(), self.toDate());
         if (self.showTaFast()) {
-            yaxisMinMax = findYaxisMinMax([self.smaFastest(), self.smaFast()], self.fromDate(), self.toDate(), yaxisMinMax);
+            yaxisMinMax = findYaxisMinMax([self.taFastest(), self.taFast()], self.fromDate(), self.toDate(), yaxisMinMax);
         }
         if (self.showTaSlow()) {
-            yaxisMinMax = findYaxisMinMax([self.smaSlow(), self.smaSlower(), self.smaSlowest()], self.fromDate(), self.toDate(), yaxisMinMax);
+            yaxisMinMax = findYaxisMinMax([self.taSlow(), self.taSlower(), self.taSlowest()], self.fromDate(), self.toDate(), yaxisMinMax);
         }
         yaxisMinMax = addPaddingsToYaxisMinMax(yaxisMinMax, self.settings.paddingFactor);
 

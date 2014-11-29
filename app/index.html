@@ -127,26 +127,32 @@
                                         </li>
                                         <li role="presentation" class="divider"></li>
                                         <li>
-                                            <a href="#" class="clearfix" data-bind="click: toggleTaFast"><span data-bind="text: 'SMA(' + smaFastestPeriod() + ',' + smaFastPeriod() + ')'">SMA(5,14)</span> <i class="fa pull-right" data-bind="css: {'fa-check': showTaFast(), 'fa-check-w': !showTaFast()}"></i></a>
+                                            <a href="#" class="clearfix" data-bind="click: toggleTaFast"><span data-bind="text: taFastType() + '(' + taFastestPeriod() + ',' + taFastPeriod() + ')'">SMA(5,14)</span> <i class="fa pull-right" data-bind="css: {'fa-check': showTaFast(), 'fa-check-w': !showTaFast()}"></i></a>
                                         </li>
-                                        <li style="padding-left: 25px" data-bind="event: {slide: slideSmaFastest}, visible: showTaFast">
+                                        <li style="padding-left: 25px" data-bind="event: {slide: slideTaFastest}, visible: showTaFast">
                                             <input class="slider" style="width: 145px" type="text" value="" data-slider-min="0" data-slider-max="5" data-slider-step="1" data-slider-value="5">
                                         </li>
-                                        <li style="padding-left: 25px" data-bind="event: {slide: slideSmaFast}, visible: showTaFast">
+                                        <li style="padding-left: 25px" data-bind="event: {slide: slideTaFast}, visible: showTaFast">
                                             <input class="slider" style="width: 145px" type="text" value="" data-slider-min="5" data-slider-max="100" data-slider-step="1" data-slider-value="14">
+                                        </li>
+                                        <li>
+                                            <a href="#" data-bind="text: 'Change to ' + taFastTypeOpposite(), click: toggleTaFastType, visible: showTaSlow">Change to EMA</a>
                                         </li>
                                         <li role="presentation" class="divider"></li>
                                         <li>
-                                            <a href="#" class="clearfix" data-bind="click: toggleTaSlow"><span data-bind="text: 'SMA(' + smaSlowPeriod() + ',' + smaSlowerPeriod() + ',' + smaSlowestPeriod() + ')'">SMA(50,100,200)</span> <i class="fa pull-right" data-bind="css: {'fa-check': showTaSlow(), 'fa-check-w': !showTaSlow()}"></i></a>
+                                            <a href="#" class="clearfix" data-bind="click: toggleTaSlow"><span data-bind="text: taSlowType() + '(' + taSlowPeriod() + ',' + taSlowerPeriod() + ',' + taSlowestPeriod() + ')'">SMA(50,100,200)</span> <i class="fa pull-right" data-bind="css: {'fa-check': showTaSlow(), 'fa-check-w': !showTaSlow()}"></i></a>
                                         </li>
-                                        <li style="padding-left: 25px" data-bind="event: {slide: slideSmaSlow}, visible: showTaSlow">
+                                        <li style="padding-left: 25px" data-bind="event: {slide: slideTaSlow}, visible: showTaSlow">
                                             <input class="slider" style="width: 145px" type="text" value="" data-slider-min="50" data-slider-max="100" data-slider-step="1" data-slider-value="50">
                                         </li>
-                                        <li style="padding-left: 25px" data-bind="event: {slide: slideSmaSlower}, visible: showTaSlow">
+                                        <li style="padding-left: 25px" data-bind="event: {slide: slideTaSlower}, visible: showTaSlow">
                                             <input class="slider" style="width: 145px" type="text" value="" data-slider-min="100" data-slider-max="200" data-slider-step="1" data-slider-value="100">
                                         </li>
-                                        <li style="padding-left: 25px" data-bind="event: {slide: slideSmaSlowest}, visible: showTaSlow">
+                                        <li style="padding-left: 25px" data-bind="event: {slide: slideTaSlowest}, visible: showTaSlow">
                                             <input class="slider" style="width: 145px" type="text" value="" data-slider-min="200" data-slider-max="1000" data-slider-step="10" data-slider-value="200">
+                                        </li>
+                                        <li>
+                                            <a href="#" data-bind="text: 'Change to ' + taSlowTypeOpposite(), click: toggleTaSlowType, visible: showTaSlow">Change to EMA</a>
                                         </li>
                                         <li role="presentation" class="divider"></li>
                                         <li>
@@ -240,7 +246,6 @@
                     <li>create custom ticks for dates that show years when only months are visible</li>
                     <li>add loading popup</li>
                     <li>highligt highest/lowest points in plot</li>
-                    <li>add EMA toggle</li>
                     <li>Verify SMA, EMA, MACD against http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:moving_averages</li>
                     <li>Verify SMA, EMA, MACD, RSI against other sites</li>
                     <li>Handle local storage exceeded error (QuotaExceededError) correctly by removing oldest data (by refactororing lastDataCacheCheckDate to lastDataCheckDate)</li>

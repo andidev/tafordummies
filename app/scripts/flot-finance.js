@@ -118,14 +118,26 @@
     });
 
     /**
-     * Get the (Simple) Mean Avarage
+     * Get the Simple Moving Avarage
      *
-     * @return     {Array} the Simple Mean Avarage
+     * @return     {Array} the Simple Moving Avarage
      */
-    flotFinance.fn.getMaPrice = cached(function (n, scale, splitDetection) {
+    flotFinance.fn.getSmaPrice = cached(function (n, scale, splitDetection) {
         var data = this.getClosePrice(scale, splitDetection);
         var priceTA = this.getPriceTA(scale, splitDetection);
         data = convertToFlotFormat(priceTA.ma(n).asArray(), data);
+        return data;
+    });
+
+    /**
+     * Get the Simple Moving Avarage
+     *
+     * @return     {Array} the Simple Moving Avarage
+     */
+    flotFinance.fn.getEmaPrice = cached(function (n, scale, splitDetection) {
+        var data = this.getClosePrice(scale, splitDetection);
+        var priceTA = this.getPriceTA(scale, splitDetection);
+        data = convertToFlotFormat(priceTA.ema(n).asArray(), data);
         return data;
     });
 
