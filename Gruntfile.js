@@ -294,6 +294,16 @@ module.exports = function (grunt) {
         }, {
           src: 'node_modules/apache-server-configs/dist/.htaccess',
           dest: '<%= config.dist %>/.htaccess'
+        }, {
+          expand: true,
+          cwd: 'bower_components/font-awesome/fonts',
+          src: '{,*/}*.*',
+          dest: '<%= config.dist %>/fonts'
+        }, {
+          expand: true,
+          cwd: 'bower_components/select2',
+          src: '{,*/}*.{gif,jpeg,jpg,png}',
+          dest: '<%= config.dist %>/styles'
         }]
       },
       styles: {
@@ -318,6 +328,22 @@ module.exports = function (grunt) {
         'imagemin',
         'svgmin'
       ]
+    },
+
+    // Push changes to github
+    gitpush: {
+      master: {
+        options: {
+        }
+      }
+    },
+
+    // Copy dist folder to gh-pages branch and push to github
+    'gh-pages': {
+      options: {
+        base: 'dist'
+      },
+      src: '**/*'
     }
   });
 
@@ -379,5 +405,11 @@ module.exports = function (grunt) {
     'newer:jshint',
     'test',
     'build'
+  ]);
+
+  grunt.registerTask('deploy', [
+    'default',
+    'gitpush',
+    'gh-pages'
   ]);
 };
