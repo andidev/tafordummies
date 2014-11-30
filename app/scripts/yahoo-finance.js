@@ -38,42 +38,49 @@
      *
      * @return     {Object} the symbol data
      */
-    yahooFinance.fn.getData = function () {
+    yahooFinance.fn.getData = function (callback) {
         try {
             var fromDate;
             var toDate;
-            var downloadedData;
             if (this.isDataCacheEmpty()) {
                 fromDate = moment('1900-01-01', 'YYYY-MM-DD');
                 toDate = mostRecentWorkingDay();
                 log.debug('Dowloading data from ' + fromDate.format('YYYY-MM-DD') + ' to ' + toDate.format('YYYY-MM-DD'));
                 log.time('Downloading data');
-                downloadedData = downloadData(this.symbol, fromDate, toDate);
-                log.timeEnd('Downloading data');
-                log.trace('Saving data to cache', downloadedData);
-                this.setDataCache(downloadedData);
-                log.trace('Data saved to cache', dataCacheKeyNameSpace + this.symbol + '.data', this.getDataCache());
-                return this.getDataCache();
+                self = this;
+                downloadData(this.symbol, fromDate, toDate, function(data){
+                    log.timeEnd('Downloading data');
+                    log.trace('Saving data to cache', data);
+                    self.setDataCache(data);
+                    log.trace('Data saved to cache', dataCacheKeyNameSpace + self.symbol + '.data', self.getDataCache());
+                    callback(self.getDataCache());
+                });
+                return;
             } else if (this.isDataCacheOutOfDate()) {
                 if (this.isDataCacheCheckThrotteled()) {
                     log.debug('Dowloading data not needed (throtteled), using data found in cache');
-                    return this.getDataCache();
+                    callback(this.getDataCache());
+                    return;
                 }
                 fromDate = moment(this.getDataCache()[0].date).add(1, 'day');
                 toDate = mostRecentWorkingDay();
                 log.debug('Dowloading outdated data from ' + fromDate.format('YYYY-MM-DD') + ' to ' + toDate.format('YYYY-MM-DD'));
                 log.time('Downloading data');
-                downloadedData = downloadData(this.symbol, fromDate, toDate);
-                log.timeEnd('Downloading data');
-                if (downloadedData.length > 0) {
-                    log.trace('Updating chached data', downloadedData);
-                    this.appendDataCache(downloadedData);
-                    log.trace('Data saved to cache', dataCacheKeyNameSpace + this.symbol + '.data', this.getDataCache());
-                }
-                return this.getDataCache();
+                self = this;
+                downloadData(this.symbol, fromDate, toDate, function(data){
+                    log.timeEnd('Downloading data');
+                    if (data.length > 0) {
+                        log.trace('Updating chached data', data);
+                        self.appendDataCache(data);
+                        log.trace('Data saved to cache', dataCacheKeyNameSpace + self.symbol + '.data', self.getDataCache());
+                    }
+                    callback(self.getDataCache());
+                });
+                return;
             } else {
                 log.debug('Dowloading data not needed, using data found in cache');
-                return this.getDataCache();
+                callback(this.getDataCache());
+                return;
             }
         } catch (e) {
             if (e.name === 'QuotaExceededError') {
@@ -204,7 +211,7 @@
         return currentDate;
     };
 
-    function downloadData(symbol, fromDate, toDate) {
+    function downloadData(symbol, fromDate, toDate, callback, recursiveData) {
 
         function parseYear(date) {
             return date.format('YYYY');
@@ -232,7 +239,6 @@
         var columnAliases = 'date,open,high,low,close,volume,adjclose';
         var query = 'select ' + columns + ' from csv where url="' + url + '" and columns="' + columnAliases + '"';
 
-        var returnData = [];
         $.ajax('http://query.yahooapis.com/v1/public/yql', {
             data: {
                 q: query,
@@ -240,7 +246,7 @@
                 format: 'json',
                 diagnostics: true
             },
-            async: false,
+            async: true,
             dataType: 'json',
             crossDomain: true
         }).done(function(data) {
@@ -250,11 +256,16 @@
                     var from = data.query.results.row[data.query.results.row.length - 1];
                     var to = data.query.results.row[0];
                     log.debug('Historical prices between date ' + from.date + ' to ' + to.date + ' (' + from.close + ' to ' + to.close + ') received', data.query.results.row);
-                    returnData = data.query.results.row;
                     if (data.query.diagnostics.warning === 'You have reached the maximum number of items which can be returned in a request') {
                         log.debug('Was not able to receive all data in call, trying again');
                         var recursiveToDate = moment(from.date).subtract(1, 'days');
-                        Array.prototype.push.apply(returnData, downloadData(symbol, fromDate, recursiveToDate));
+                        if (recursiveData) {
+                            Array.prototype.push.apply(recursiveData, data.query.results.row)
+                            downloadData(symbol, fromDate, recursiveToDate, callback, recursiveData);
+                        } else {
+                            downloadData(symbol, fromDate, recursiveToDate, callback, data.query.results.row);
+                        }
+                        return;
                     }
                 }
             }
@@ -268,13 +279,18 @@
                     alert('diagnostics.warning = ' + data.query.diagnostics.warning);
                 }
             }
+
+            if (recursiveData) {
+                Array.prototype.push.apply(recursiveData, data.query.results.row);
+                callback(recursiveData);
+            } else {
+                callback(data.query.results.row);
+            }
+            return;
+
         }).fail(function() {
             alert('Error downloading data');
-        }).always(function() {
-
         });
-
-        return returnData;
     }
 
 })();

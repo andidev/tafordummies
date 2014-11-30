@@ -8,17 +8,22 @@
 (function () {
 
     // Constructor
-    var flotFinance = function (symbol) {
+    var flotFinance = function (symbol, callback) {
         // Ensure to use the `new` operator
         if (!(this instanceof flotFinance)) {
-            return new flotFinance(symbol);
+            return new flotFinance(symbol, callback);
         }
 
         // Check the argument
         if (typeof symbol === 'string' || symbol instanceof String) {
             // Save symbol if first argument is a String
             this.symbol = symbol;
-            this.yahooFinanceData = yahooFinance(symbol).getData();
+            this.yahooFinanceData = null;
+            self = this;
+            yahooFinance(symbol).getData(function(data){
+                self.yahooFinanceData = data;
+                callback(self);
+            });
         } else {
             // Invalid argument value
             throw 'First argument must be a String containing a yahoo symbol, search for available symbols at http://finance.yahoo.com/lookup';

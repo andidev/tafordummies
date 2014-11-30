@@ -44,11 +44,7 @@ function ViewModel() {
         });
         return symbolName;
     });
-    self.flotFinanceSymbol = ko.computed(function() {
-        if (self.symbol()) {
-            return flotFinance(self.symbol());
-        }
-    });
+    self.flotFinanceSymbol = ko.observable();
     self.price = ko.observable({
         label: self.symbol(),
         data: [],
@@ -171,8 +167,12 @@ function ViewModel() {
 
     });
     self.hasVolume = ko.computed(function() {
-        if (self.flotFinanceSymbol()) {
-            return self.flotFinanceSymbol().hasVolume();
+        if (self.flotFinanceSymbol !== undefined && self.flotFinanceSymbol() !== undefined) {
+            try {
+                return self.flotFinanceSymbol().hasVolume();
+            } catch (e) {
+                return false;
+            }
         }
     });
     self.showVolume = ko.observable(defaultBooleanValue(true, url.param('showVolume')));
@@ -1189,12 +1189,18 @@ function ViewModel() {
         $('#symbol').on('change', function(event) {
             self.symbol(event.val);
             self.scaleTimePeriodAll('days');
+            flotFinance(self.symbol(), function(flotFinanceInit){
+                self.flotFinanceSymbol(flotFinanceInit);
+                self.processData();
+                self.plot();
+            });
+        });
+
+        flotFinance(self.symbol(), function(flotFinanceInit){
+            self.flotFinanceSymbol(flotFinanceInit);
             self.processData();
             self.plot();
         });
-
-        self.processData();
-        self.plot();
         $('#ta-plots').mousemove(function (event) {
             var distanceToPlotRight = $(window).width() - (event.pageX + 10);
             var plotHoverWidth = $('#hover-info').outerWidth();
@@ -1214,6 +1220,9 @@ function ViewModel() {
 
     self.processData = function() {
         log.debug('Processing data');
+        console.log($('#loader').css('display'))
+        $('#loader').show();
+        console.log($('#loader').css('display'))
         var start = moment().valueOf();
 
         self.plotArgs.series = [];
@@ -1305,6 +1314,9 @@ function ViewModel() {
 
     self.plot = function() {
         log.debug('Plotting');
+        console.log($('#loader').css('display'))
+        $('#loader').hide();
+        console.log($('#loader').css('display'))
         var start = moment().valueOf();
         self.plotMain();
         self.plotMacd();
