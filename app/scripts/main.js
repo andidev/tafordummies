@@ -769,10 +769,10 @@ function ViewModel() {
         var zoomDirection = (self.zoomSelectionTo - self.zoomSelectionFrom) < 0 ? 'left' : 'right';
         var fromIndex = self.findClosestDatapoint(ranges.xaxis.from);
         var toIndex = self.findClosestDatapoint(ranges.xaxis.to);
-        if ((toIndex - fromIndex) >= 2) {
-            if (zoomDirection === 'left') {
-                self.undoZoom();
-            } else if (zoomDirection === 'right'){
+        if (zoomDirection === 'left') {
+            self.undoZoom();
+        } else if (zoomDirection === 'right'){
+            if ((toIndex - fromIndex) >= 2) {
                 self.zoomHistory.push({
                     fromDate: self.fromDate().clone(),
                     toDate: self.toDate().clone(),
