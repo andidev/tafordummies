@@ -1195,7 +1195,7 @@ function ViewModel() {
         }));
         self.processData();
         self.plot();
-        $('#loader').fadeOut('slow');
+        $('#progress-info').fadeOut('slow');
         $('#ta-plots').mousemove(function (event) {
             var distanceToPlotRight = $(window).width() - (event.pageX + 10);
             var plotHoverWidth = $('#hover-info').outerWidth();

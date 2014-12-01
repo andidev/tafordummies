@@ -35,16 +35,16 @@ function defaultNumberValue(defaultVal, data) {
 function async(f) {
     return function () {
         log.trace('Loading...');
-        $('#loader').show();
+        $('#progress-info').show();
         var self = this;
         var selfarguments = arguments;
         setTimeout(function () {
             try {
                 f.apply(self, selfarguments);
                 log.trace('Loading done!');
-                $('#loader').fadeOut('slow');
+                $('#progress-info').fadeOut('slow');
             } catch (e) {
-                $('#loader').fadeOut('slow');
+                $('#progress-info').fadeOut('slow');
                 throw e;
             }
         }, 1);
