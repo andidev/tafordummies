@@ -1190,6 +1190,17 @@ function ViewModel() {
         $('#symbol').on('change', async(function (event) {
             self.symbol(event.val);
             self.scaleTimePeriodAll('days');
+            if (self.timePeriod() === 'custom') {
+                if (self.fromDate().isSame(getFirstPriceDate())) {
+                    self.fromDate(undefined);
+                }
+                if (self.toDate().isSame(getLastPriceDate())) {
+                    self.toDate(undefined);
+                }
+            } else {
+                self.fromDate(undefined);
+                self.toDate(undefined);
+            }
             self.processData();
             self.plot();
         }));
@@ -1228,9 +1239,13 @@ function ViewModel() {
 
         if (self.toDate() === undefined) {
             self.toDate(getLastPriceDate());
+        } else if (self.toDate().isAfter(getLastPriceDate())) {
+            self.toDate(getLastPriceDate());
         }
         if (self.fromDate() === undefined) {
             self.fromDate(getFromDateForTimePeriod());
+        } else if (self.fromDate().isBefore(getFirstPriceDate())) {
+            self.fromDate(getFirstPriceDate());
         }
 
         // Get Price
@@ -1686,20 +1701,47 @@ function ViewModel() {
     }
     function getFromDateForTimePeriod() {
         if (self.timePeriod() === 'all') {
-            return self.price().data[0][0].clone();
+            return getFirstPriceDate();
         } else if (self.timePeriod() === '10years') {
-            return self.toDate().clone().subtract(10, 'years');
+            var tenYearsAgo = self.toDate().clone().subtract(10, 'years');
+            if (tenYearsAgo.isBefore(getFirstPriceDate())) {
+                return getFirstPriceDate();
+            }
+            return tenYearsAgo;
         } else if (self.timePeriod() === '3years') {
-            return self.toDate().clone().subtract(3, 'years');
+            var threeYearsAgo = self.toDate().clone().subtract(3, 'years');
+            if (threeYearsAgo.isBefore(getFirstPriceDate())) {
+                return getFirstPriceDate();
+            }
+            return threeYearsAgo;
         } else if (self.timePeriod() === 'year') {
-            return self.toDate().clone().subtract(1, 'years');
+            var aYearAgo = self.toDate().clone().subtract(1, 'years');
+            if (aYearAgo.isBefore(getFirstPriceDate())) {
+                return getFirstPriceDate();
+            }
+            return aYearAgo;
         } else if (self.timePeriod() === '3months') {
-            return self.toDate().clone().subtract(3, 'months');
+            var threeMonthsAgo = self.toDate().clone().subtract(3, 'months');
+            if (threeMonthsAgo.isBefore(getFirstPriceDate())) {
+                return getFirstPriceDate();
+            }
+            return threeMonthsAgo;
         } else if (self.timePeriod() === 'month') {
-            return self.toDate().clone().subtract(1, 'months');
+            var aMonthAgo = self.toDate().clone().subtract(1, 'months');
+            if (aMonthAgo.isBefore(getFirstPriceDate())) {
+                return getFirstPriceDate();
+            }
+            return aMonthAgo;
         } else if (self.timePeriod() === 'week') {
-            return self.toDate().clone().subtract(1, 'weeks');
+            var aWeekAgo = self.toDate().clone().subtract(1, 'weeks');
+            if (aWeekAgo.isBefore(getFirstPriceDate())) {
+                return getFirstPriceDate();
+            }
+            return aWeekAgo;
         } else {
+            if (self.fromDate() === undefined) {
+                return getFirstPriceDate();
+            }
             return self.fromDate().clone();
         }
     }
