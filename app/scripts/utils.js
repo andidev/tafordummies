@@ -1,4 +1,6 @@
 'use strict';
+ /* global log */
+ /* exported async */
  /* exported defaultValue */
  /* exported defaultBooleanValue */
  /* exported defaultNumberValue */
@@ -28,4 +30,23 @@ function defaultNumberValue(defaultVal, data) {
     } else {
         return parseInt(data);
     }
+}
+
+function async(f) {
+    return function () {
+        log.trace('Loading...');
+        $('#loader').show();
+        var self = this;
+        var selfarguments = arguments;
+        setTimeout(function () {
+            try {
+                f.apply(self, selfarguments);
+                log.trace('Loading done!');
+                $('#loader').fadeOut('slow');
+            } catch (e) {
+                $('#loader').fadeOut('slow');
+                throw e;
+            }
+        }, 1);
+    };
 }

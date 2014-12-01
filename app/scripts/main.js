@@ -5,6 +5,7 @@
 /* global log */
 /* global moment */
 /* global numeral */
+/* global async */
 /* global defaultValue */
 /* global defaultBooleanValue */
 /* global defaultNumberValue */
@@ -1186,15 +1187,15 @@ function ViewModel() {
                 $(':focus').blur();
             }, 1);
         });
-        $('#symbol').on('change', function(event) {
+        $('#symbol').on('change', async(function (event) {
             self.symbol(event.val);
             self.scaleTimePeriodAll('days');
             self.processData();
             self.plot();
-        });
-
+        }));
         self.processData();
         self.plot();
+        $('#loader').fadeOut('slow');
         $('#ta-plots').mousemove(function (event) {
             var distanceToPlotRight = $(window).width() - (event.pageX + 10);
             var plotHoverWidth = $('#hover-info').outerWidth();

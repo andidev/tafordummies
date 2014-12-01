@@ -83,3 +83,9 @@ body {
 #rsi-plot .legend-label-value {
     width: 30px;
 }
+#loader {
+    width: 100px;
+    position: fixed;
+    left: 50%;
+    margin-left: -50px;
+}
