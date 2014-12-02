@@ -732,6 +732,7 @@ function ViewModel() {
     self.changeFromDate = function(viewModel, event) {
         var isFromDateUpdated = !moment(event.date).isSame(self.fromDate());
         if (isFromDateUpdated) {
+            $('#from-date').datepicker('hide'); // Close datepicker manually since autoclose: true setting does not seem to work for datepicker
             log.info('Changing From Date to ' + formatDate(moment(event.date)));
             self.updateFromDate(moment(event.date));
             self.timePeriod('custom');
@@ -742,6 +743,7 @@ function ViewModel() {
     self.changeToDate = function(viewModel, event) {
         var isToDateUpdated = !moment(event.date).isSame(self.toDate());
         if (isToDateUpdated) {
+            $('#to-date').datepicker('hide'); // Close datepicker manually since autoclose: true setting does not seem to work for datepicker
             log.info('Changing To Date to ' + formatDate(moment(event.date)));
             self.updateToDate(moment(event.date));
             self.timePeriod('custom');
