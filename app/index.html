@@ -119,7 +119,7 @@
                                         <li>
                                             <a href="#" class="clearfix" data-bind="visible: hasVolume, click: toggleVolume">Volume <i class="fa pull-right" data-bind="css: {'fa-check': showVolume()}"></i></a>
                                         </li>
-                                        <li role="presentation" class="divider"></li>
+                                        <li role="presentation" class="divider" data-bind="visible: hasVolume"></li>
                                         <li>
                                             <a href="#" class="clearfix" data-bind="click: toggleRsi"><span data-bind="text: 'RSI(' + rsiPeriod() + ')'">RSI(14)</span> <i class="fa pull-right" data-bind="css: {'fa-check': showRsi()}"></i></a>
                                         </li>
