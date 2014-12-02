@@ -965,7 +965,12 @@ function ViewModel() {
             return false;
         } else if (keyCode === 27) { // Escape
             log.trace('Escape key pressed');
-            if ($(':focus').parents('#time-periods').length) {
+            if ($('.datepicker-dropdown:visible').length) {
+                 $('#from-date').datepicker('hide');
+                 $('#to-date').datepicker('hide');
+                 return false;
+            }
+            if ($('#time-periods :focus').length) {
                 $('#time-period-all-button').focus();
             }
             self.changeTimePeriodToAll();
