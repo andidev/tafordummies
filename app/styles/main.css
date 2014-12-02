@@ -104,3 +104,8 @@ body {
 .datepicker table tr td.range, .datepicker table tr td.range.disabled, .datepicker table tr td.range.disabled:hover, .datepicker table tr td.range:hover {
     background-color: rgba(51, 120, 190, 0.09);
 }
+
+/* Select2 colors */
+.select2-results .select2-highlighted {
+    background: rgba(51, 120, 190, 1);;
+}
