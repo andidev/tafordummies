@@ -3,6 +3,7 @@
 /* global moment */
 /* global TA */
 /* global yahooFinance */
+/* global formatDate */
 /* jshint newcap: false */
 
 (function () {
@@ -39,11 +40,11 @@
         return function () {
             var key = this.symbol + JSON.stringify(Array.prototype.slice.call(arguments));
             if (key in cache) {
-                log.trace('Loading from cache ' + key, cache[key], cache);
+                log.trace('Loading from cache "' + key + '"', cache[key], cache);
                 return cache[key];
             } else {
                 var data = f.apply(this, arguments);
-                log.trace('Saving to cache ' + key, data, cache);
+                log.trace('Saving to cache "' + key + '"', data, cache);
                 cache[key] = data;
                 return data;
             }
@@ -359,7 +360,7 @@
         var adjustFactor = 1;
         for (var i = data.length - 2; i >= 0; i--) {
             if (Math.round(data[i][1] / previousPrice) >= 2) {
-                log.debug('Split found and adjusted between ' + data[i][0] + '(' + data[i][1] + ') to ' + previousDate + ' (' + previousPrice + ')');
+                log.info('Split found and adjusted between ' + formatDate(data[i][0]) + ' (' + data[i][1] + ') to ' + formatDate(previousDate) + ' (' + previousPrice + ')');
                 adjustFactor = adjustFactor / Math.round(data[i][1] / previousPrice);
             }
             previousPrice = data[i][1];
