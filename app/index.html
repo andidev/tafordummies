@@ -244,6 +244,10 @@
             <div class="row">
                 <h1>To Do</h1>
                 <ul>
+                    <li>Fix initialization of timePeriod, startDate, fromDate + other url parameters</li>
+                    <li>Refactor startDate fromDate logic/bounce logic</li>
+                    <li>Make it impossible to zoom more than two days with keys</li>
+                    <li>Fix price curve not showing in plot if zooming 3 - 2 days (update min max problem)</li>
                     <li>create custom ticks for dates that show years when only months are visible</li>
                     <li>highligt highest/lowest points in plot</li>
                     <li>Verify SMA, EMA, MACD against http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:moving_averages</li>
@@ -251,6 +255,7 @@
                     <li>Handle local storage exceeded error (QuotaExceededError) correctly by removing oldest data (by refactororing lastDataCacheCheckDate to lastDataCheckDate)</li>
                     <li>Remember last TA parameters by saving them locale storage for symbol</li>
                     <li>Add procentage on y axis 2 for price plot</li>
+                    <li>Make it possible to add arbitrary amount of SMA EMA curves (Maybe refactor the current ta fast and slow?)</li>
                 </ul>
             </div>
 
