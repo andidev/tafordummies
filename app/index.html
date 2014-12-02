@@ -315,6 +315,14 @@
 
         <script type="text/javascript">
             $(function () {
+                // Do not reset time period to all when escape is pressed and menu is open
+                $( ".btn-group" ).keydown(function(event) {
+                    if ($('.btn-group.open .dropdown-toggle').length > 0) {
+                        $('.btn-group.open .dropdown-toggle').dropdown('toggle');
+                        $(':focus').blur();
+                        event.stopPropagation();
+                    }
+                });
                 console.time("loadingtime");
                 viewModel = new ViewModel();
                 ko.applyBindings(viewModel);
