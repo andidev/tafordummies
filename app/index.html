@@ -191,8 +191,8 @@
                     </div>
                     <div id="ta-footer" class="col-md-12">
                         <div class="pull-left">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default" data-bind="click: changeTimePeriodToAll, css: {active: timePeriod() === 'all'}">All</button>
+                            <div id="time-periods" class="btn-group">
+                                <button id="time-period-all-button" type="button" class="btn btn-default" data-bind="click: changeTimePeriodToAll, css: {active: timePeriod() === 'all'}">All</button>
                                 <button type="button" class="btn btn-default" data-bind="click: changeTimePeriodTo10Years, css: {active: timePeriod() === '10years'}">10 Years</button>
                                 <button type="button" class="btn btn-default" data-bind="click: changeTimePeriodTo3Years, css: {active: timePeriod() === '3years'}">3 Years</button>
                                 <button type="button" class="btn btn-default" data-bind="click: changeTimePeriodToYear, css: {active: timePeriod() === 'year'}">Year</button>

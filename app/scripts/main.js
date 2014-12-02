@@ -965,6 +965,9 @@ function ViewModel() {
             return false;
         } else if (keyCode === 27) { // Escape
             log.trace('Escape key pressed');
+            if ($(':focus').parents('#time-periods').length) {
+                $('#time-period-all-button').focus();
+            }
             self.changeTimePeriodToAll();
             return false;
         } else if (keyCode === 8) { // Backspace
