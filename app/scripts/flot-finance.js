@@ -355,6 +355,8 @@
 
     var adjustSplits = function (data) {
         log.trace('Adjusting splits to data', data);
+        var splitData = [];
+        splitData[data.length - 1] = [data[data.length - 1][0].clone(), data[data.length - 1][1]];
         var previousPrice = data[data.length - 1][1];
         var previousDate = data[data.length - 1][0];
         var adjustFactor = 1;
@@ -366,10 +368,12 @@
             previousPrice = data[i][1];
             previousDate = data[i][0];
             if (adjustFactor !== 1) {
-                data[i][1] = data[i][1] * adjustFactor;
+                splitData[i] = [data[i][0].clone(), data[i][1] * adjustFactor];
+            } else {
+                splitData[i] = [data[i][0].clone(), data[i][1]];
             }
         }
-        return data;
+        return splitData;
     };
 
     var convertToFlotFormat = function (arg1, arg2) {
