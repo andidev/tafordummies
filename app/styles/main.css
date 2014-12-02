@@ -89,3 +89,10 @@ body {
     left: 50%;
     margin-left: -50px;
 }
+.btn-default:focus {
+  background-color: #ffffff;
+}
+.btn-default:active,
+.btn-default.active {
+  background-color: rgb(235, 235, 235);
+}
