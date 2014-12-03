@@ -187,7 +187,11 @@
      */
     flotFinance.fn.convertYahooFinanceToFlotFormat = cached(function (column) {
         log.trace('Converting Yahoo Finance to Flot format');
-        var returnvalue = $.map(this.yahooFinanceData, function (value) {
+        var returnvalue = $.map(this.yahooFinanceData, function (value, index) {
+            // Remove holidays which are stored with no volume
+            if (value.volume === '000') {
+                return null;
+            }
             return [[moment(value.date), parseFloat(value[column])]];
         }).reverse();
         return returnvalue;
