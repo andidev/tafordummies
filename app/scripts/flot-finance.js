@@ -167,14 +167,14 @@
     });
 
     /**
-     * Get the MACD histogram
+     * Get the MACD divergence
      *
      * @return     {Array} the MACD curve
      */
-    flotFinance.fn.getMacdHistogram = cached(function (nSlow, nFast, nSignal, scale, splitDetection) {
+    flotFinance.fn.getMacdDivergence = cached(function (nSlow, nFast, nSignal, scale, splitDetection) {
         var data = this.getClosePrice(scale, splitDetection);
         var macdTA = this.getMacdTA(nSlow, nFast, nSignal, scale, splitDetection);
-        data = convertToFlotFormat(macdTA.histogram.asArray(), data);
+        data = convertToFlotFormat(macdTA.divergence.asArray(), data);
         return data;
     });
 

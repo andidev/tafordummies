@@ -157,8 +157,8 @@ function ViewModel() {
             lineWidth: 1
         }
     });
-    self.macdHistogram = ko.observable({
-        label: 'Histogram',
+    self.macdDivergence = ko.observable({
+        label: 'Divergence',
         data: [],
         color: 'rgba(56, 174, 17, 0.2)',
         shadowSize: 1,
@@ -281,12 +281,12 @@ function ViewModel() {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverVolumeFormatted, visible: hoverVolume"></span>';
                 } else if (label === 'RSI(' + self.rsiPeriod() + ')') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverRsiFormatted, visible: hoverRsi"></span>';
-                } else if (label === 'Histogram') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdFormatted, visible: hoverMacd"></span>';
+                } else if (label === 'Divergence') {
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdDivergenceFormatted, visible: hoverMacdDivergence"></span>';
                 } else if (label === 'MACD(' + self.macdFastPeriod() + ',' + self.macdSlowPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdSignalFormatted, visible: hoverMacdSignal"></span>';
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdFormatted, visible: hoverMacd"></span>';
                 } else if (label === 'Signal(' + self.macdSignalPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdHistogramFormatted, visible: hoverMacdHistogram"></span>';
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdSignalFormatted, visible: hoverMacdSignal"></span>';
                 } else {
                     return label;
                 }
@@ -1061,9 +1061,9 @@ function ViewModel() {
     self.hoverMacdSignalFormatted = ko.computed(function() {
         return formatPrice(self.hoverMacdSignal());
     });
-    self.hoverMacdHistogram = ko.observable();
-    self.hoverMacdHistogramFormatted = ko.computed(function() {
-        return formatPrice(self.hoverMacdHistogram());
+    self.hoverMacdDivergence = ko.observable();
+    self.hoverMacdDivergenceFormatted = ko.computed(function() {
+        return formatPrice(self.hoverMacdDivergence());
     });
     self.hoverDate = ko.observable();
     self.hoverDateFormatted = ko.computed(function() {
@@ -1129,8 +1129,8 @@ function ViewModel() {
                     self.hoverRsi(self.rsiPlotArgs.series[0].data[priceInfoIndex][1]);
                 }
                 if (self.showMacd() && self.$macdPlot) {
-                    self.hoverMacd(self.macdPlotArgs.series[0].data[priceInfoIndex][1]);
-                    self.hoverMacdHistogram(self.macdPlotArgs.series[1].data[priceInfoIndex][1]);
+                    self.hoverMacdDivergence(self.macdPlotArgs.series[0].data[priceInfoIndex][1]);
+                    self.hoverMacd(self.macdPlotArgs.series[1].data[priceInfoIndex][1]);
                     self.hoverMacdSignal(self.macdPlotArgs.series[2].data[priceInfoIndex][1]);
                 }
                 self.hoverDate(date);
@@ -1160,7 +1160,7 @@ function ViewModel() {
             if (self.showMacd() && self.$macdPlot) {
                 self.$macdPlot.clearCrosshair();
                 self.hoverMacd('');
-                self.hoverMacdHistogram('');
+                self.hoverMacdDivergence('');
                 self.hoverMacdSignal('');
             }
             self.$plot.unhighlight(0, self.previousPriceInfoIndex);
@@ -1320,9 +1320,9 @@ function ViewModel() {
         self.macdSignal().data = self.flotFinanceSymbol().getMacdSignal(self.macdFastPeriod(), self.macdSlowPeriod(), self.macdSignalPeriod(), self.computeScale(), self.enableSplitDetection());
         self.macdPlotArgs.series.push(self.macdSignal());
 
-        // Calculate MACD Histogram
-        self.macdHistogram().data = self.flotFinanceSymbol().getMacdHistogram(self.macdFastPeriod(), self.macdSlowPeriod(), self.macdSignalPeriod(), self.computeScale(), self.enableSplitDetection());
-        self.macdPlotArgs.series.push(self.macdHistogram());
+        // Calculate MACD Divergence
+        self.macdDivergence().data = self.flotFinanceSymbol().getMacdDivergence(self.macdFastPeriod(), self.macdSlowPeriod(), self.macdSignalPeriod(), self.computeScale(), self.enableSplitDetection());
+        self.macdPlotArgs.series.push(self.macdDivergence());
 
         var stop = moment().valueOf();
         var executionTime = stop - start;
@@ -1397,7 +1397,7 @@ function ViewModel() {
                 self.macdPlotArgs.options.xaxis.tickColor = 'transparent';
             }
 
-            self.macdPlotArgs.series = [self.macdHistogram(), self.macd(), self.macdSignal()];
+            self.macdPlotArgs.series = [self.macdDivergence(), self.macd(), self.macdSignal()];
             $('#macd-plot').css('margin-top', '-26px');
             $('#macd-plot').slideDown('fast', function() {
                 self.$macdPlot = $.plot(this, self.macdPlotArgs.series, self.macdPlotArgs.options);
@@ -1518,7 +1518,7 @@ function ViewModel() {
         self.macdPlotArgs.options.yaxes[0].max = yaxisLeftMinMax.max;
 
         // Find yaxis min/max for right yaxis
-        var yaxisRightMinMax = findYaxisMinMax(self.macdHistogram(), self.fromDate(), self.toDate());
+        var yaxisRightMinMax = findYaxisMinMax(self.macdDivergence(), self.fromDate(), self.toDate());
         yaxisRightMinMax = addPaddingsToYaxisMinMax(yaxisRightMinMax, self.settings.paddingFactor);
 
         // Update yaxis min/max for right yaxis
@@ -1638,15 +1638,15 @@ function ViewModel() {
             if (value[0].valueOf() < self.plotArgs.options.xaxis.min.valueOf() || value[0].valueOf() > self.plotArgs.options.xaxis.max.valueOf()) {
                 return true;
             }
-            if (index === 0 || self.macdHistogram().data[index][1] === null) {
+            if (index === 0 || self.macdDivergence().data[index][1] === null) {
                 return true;
             }
             if (lastMacd === undefined) {
-                lastMacd = self.macdHistogram().data[index][1];
+                lastMacd = self.macdDivergence().data[index][1];
                 return true;
             }
 
-            macd = self.macdHistogram().data[index][1];
+            macd = self.macdDivergence().data[index][1];
             if (lastMacd < 0 && macd > 0) {
                 log.trace('positive trend detected');
                 if (money !== 0) {
@@ -1663,7 +1663,7 @@ function ViewModel() {
                     log.trace('sold for price ' + value[1] + ' on ' + value[0].format() + ' with profit ' + numeral(profit).format('0.00%'));
                 }
             }
-            lastMacd = self.macdHistogram().data[index][1];
+            lastMacd = self.macdDivergence().data[index][1];
         });
         self.profit(profit);
     };
