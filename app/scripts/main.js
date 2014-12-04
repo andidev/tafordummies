@@ -1397,6 +1397,9 @@ function ViewModel() {
                 self.macdPlotArgs.options.xaxis.tickColor = 'transparent';
             }
 
+            self.macd().label = 'MACD(' + self.macdFastPeriod() + ',' + self.macdSlowPeriod() + ')';
+            self.macdSignal().label = 'Signal(' + self.macdSignalPeriod() + ')';
+
             self.macdPlotArgs.series = [self.macdDivergence(), self.macd(), self.macdSignal()];
             $('#macd-plot').css('margin-top', '-26px');
             $('#macd-plot').slideDown('fast', function() {
