@@ -1,0 +1,60 @@
+.navbar-tafordummies {
+    background-color: rgba(51, 120, 190, 0.8);
+    border-color: rgba(51, 120, 190, 0.09);
+}
+.navbar-tafordummies .navbar-brand {
+    color: white;
+}
+.navbar-tafordummies .navbar-brand:hover, .navbar-tafordummies .navbar-brand:focus {
+    color: lightblue;
+}
+.navbar-tafordummies .navbar-text {
+    color: white;
+}
+.navbar-tafordummies .navbar-nav > li > a {
+    color: white;
+}
+.navbar-tafordummies .navbar-nav > li > a:hover, .navbar-tafordummies .navbar-nav > li > a:focus {
+    color: lightblue;
+    background-color: rgba(51, 120, 190, 0.9    );
+}
+.navbar-tafordummies .navbar-nav > .active > a, .navbar-tafordummies .navbar-nav > .active > a:hover, .navbar-tafordummies .navbar-nav > .active > a:focus {
+    color: lightblue;
+    background-color: rgba(51, 120, 190, 0.09);
+}
+.navbar-tafordummies .navbar-nav > .open > a, .navbar-tafordummies .navbar-nav > .open > a:hover, .navbar-tafordummies .navbar-nav > .open > a:focus {
+    color: lightblue;
+    background-color: rgba(51, 120, 190, 0.09);
+}
+.navbar-tafordummies .navbar-toggle {
+    border-color: rgba(51, 120, 190, 0.09);
+}
+.navbar-tafordummies .navbar-toggle:hover, .navbar-tafordummies .navbar-toggle:focus {
+    background-color: rgba(51, 120, 190, 0.09);
+}
+.navbar-tafordummies .navbar-toggle .icon-bar {
+    background-color: white;
+}
+.navbar-tafordummies .navbar-collapse,
+.navbar-tafordummies .navbar-form {
+    border-color: white;
+}
+.navbar-tafordummies .navbar-link {
+    color: white;
+}
+.navbar-tafordummies .navbar-link:hover {
+    color: lightblue;
+}
+
+@media (max-width: 767px) {
+    .navbar-tafordummies .navbar-nav .open .dropdown-menu > li > a {
+        color: white;
+    }
+    .navbar-tafordummies .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-tafordummies .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: lightblue;
+    }
+    .navbar-tafordummies .navbar-nav .open .dropdown-menu > .active > a, .navbar-tafordummies .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-tafordummies .navbar-nav .open .dropdown-menu > .active > a:focus {
+        color: lightblue;
+        background-color: rgba(51, 120, 190, 0.09);
+    }
+}
