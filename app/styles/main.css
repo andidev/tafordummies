@@ -107,5 +107,11 @@ body {
 
 /* Select2 colors */
 .select2-results .select2-highlighted {
-    background: rgba(51, 120, 190, 1);;
+    background: rgba(51, 120, 190, 1);
+}
+
+/* Bootstrap Slider colors */
+.slider-handle {
+    background-color: rgba(51, 120, 190, 0.8);
+    background-image: none;
 }
