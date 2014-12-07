@@ -1,3 +1,4 @@
+/* Custom navbar */
 .navbar-tafordummies {
     background-color: rgba(51, 120, 190, 0.8);
     border-color: rgba(51, 120, 190, 0.09);
@@ -57,4 +58,9 @@
         color: lightblue;
         background-color: rgba(51, 120, 190, 0.09);
     }
+}
+
+/* Text bold class */
+.text-bold {
+    font-weight: bold;
 }
