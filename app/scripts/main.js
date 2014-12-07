@@ -1081,6 +1081,14 @@ function ViewModel() {
             var priceInfoIndex = self.findClosestDatapoint(pos.x);
             if (priceInfoIndex !== self.previousPriceInfoIndex) {
                 log.trace('Showing price info');
+                if (self.price().data[priceInfoIndex][0].isBefore(self.fromDate())) {
+                    // Do not hover dates before from date
+                    priceInfoIndex = self.findClosestDatapoint(self.fromDate());
+                }
+                if (self.price().data[priceInfoIndex][0].isAfter(self.toDate())) {
+                    // Do not hover dates after to date
+                    priceInfoIndex = self.findClosestDatapoint(self.toDate());
+                }
                 self.$plot.unhighlight(0, self.previousPriceInfoIndex);
                 var date = self.plotArgs.series[0].data[priceInfoIndex][0];
                 var price = self.plotArgs.series[0].data[priceInfoIndex][1];
