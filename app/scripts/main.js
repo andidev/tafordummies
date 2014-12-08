@@ -242,8 +242,8 @@ function ViewModel() {
                 position: 'right',
                 reserveSpace: true,
                 labelWidth: 30,
-                color: 'rgba(56, 174, 17, 0.5)',
-                tickColor: 'rgba(56, 174, 17, 0.5)',
+                color: 'rgba(10, 100, 0, 0.33)',
+                tickColor: 'rgba(10, 100, 0, 0.33)',
                 tickFormatter: function(value, axis){
                     return formatPrice(value, axis.tickDecimals);
                 }
