@@ -64,3 +64,10 @@
 .text-bold {
     font-weight: bold;
 }
+.text-large {
+    font-size: 28px;
+}
+.hr-thin {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
