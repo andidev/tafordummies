@@ -263,6 +263,9 @@ function ViewModel() {
             autoHighlight: false
         },
         legend: {
+            labelBoxBorderColor: 'transparent',
+            backgroundColor: 'transparent',
+            noColumns: 1,
             position: 'nw',
             labelFormatter: function(label) {
                 if (label === self.symbolName()) {
@@ -278,7 +281,7 @@ function ViewModel() {
                 } else if (label === self.taSlowType() + '(' + self.taSlowestPeriod() + ')') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverTaSlowestFormatted, visible: hoverTaSlowest"></span>';
                 } else if (label === 'Volume') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverVolumeFormatted, visible: hoverVolume"></span>';
+                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverVolumeFormatted, visible: hoverVolume && hasVolume"></span>';
                 } else if (label === 'RSI(' + self.rsiPeriod() + ')') {
                     return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverRsiFormatted, visible: hoverRsi"></span>';
                 } else if (label === 'Divergence') {
@@ -1076,102 +1079,98 @@ function ViewModel() {
             return formatDate(self.hoverDate());
         }
     });
+
     self.showPriceInfo = function(viewModel, event, pos) {
         if (self.$plot) {
             var priceInfoIndex = self.findClosestDatapoint(pos.x);
-            if (priceInfoIndex !== self.previousPriceInfoIndex) {
-                log.trace('Showing price info');
-                if (self.price().data[priceInfoIndex][0].isBefore(self.fromDate())) {
-                    // Do not hover dates before from date
-                    priceInfoIndex = self.findClosestDatapoint(self.fromDate());
-                }
-                if (self.price().data[priceInfoIndex][0].isAfter(self.toDate())) {
-                    // Do not hover dates after to date
-                    priceInfoIndex = self.findClosestDatapoint(self.toDate());
-                }
-                self.$plot.unhighlight(0, self.previousPriceInfoIndex);
-                var date = self.plotArgs.series[0].data[priceInfoIndex][0];
-                var price = self.plotArgs.series[0].data[priceInfoIndex][1];
-                var priceToTheLeft = priceInfoIndex > 0 ? self.plotArgs.series[0].data[priceInfoIndex - 1][1] : null;
+            if (priceInfoIndex === self.previousPriceInfoIndex) {
+                // No changes to update
+                return;
+            }
+            log.trace('Showing price info');
+            if (self.price().data[priceInfoIndex][0].isBefore(self.fromDate())) {
+                // Do not hover dates before from date
+                priceInfoIndex = self.findClosestDatapoint(self.fromDate());
+            }
+            if (self.price().data[priceInfoIndex][0].isAfter(self.toDate())) {
+                // Do not hover dates after to date
+                priceInfoIndex = self.findClosestDatapoint(self.toDate());
+            }
+            self.$plot.unhighlight(0, self.previousPriceInfoIndex);
+            var date = self.plotArgs.series[0].data[priceInfoIndex][0];
+            var price = self.plotArgs.series[0].data[priceInfoIndex][1];
+            var priceToTheLeft = priceInfoIndex > 0 ? self.plotArgs.series[0].data[priceInfoIndex - 1][1] : null;
 
-                // Lock the crosshair to the closest data point being hovered
-                self.$plot.lockCrosshair({
+            // Lock the crosshair to the closest data point being hovered
+            self.$plot.lockCrosshair({
+                x: date,
+                y: price
+            });
+            if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
+                self.$volumePlot.lockCrosshair({
                     x: date,
                     y: price
                 });
-                if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
-                    self.$volumePlot.lockCrosshair({
-                        x: date,
-                        y: price
-                    });
-                }
-                if (self.showRsi() && self.$rsiPlot) {
-                    self.$rsiPlot.lockCrosshair({
-                        x: date,
-                        y: price
-                    });
-                }
-                if (self.showMacd() && self.$macdPlot) {
-                    self.$macdPlot.lockCrosshair({
-                        x: date,
-                        y: price
-                    });
-                }
-                self.$plot.highlight(0, priceInfoIndex);
-
-                var percent = null;
-                if (priceToTheLeft !== null) {
-                    percent = (price - priceToTheLeft) / priceToTheLeft;
-                }
-                self.hoverPercent(percent);
-                self.hoverPrice(price);
-                self.hoverTaFastest(self.plotArgs.series[1].data[priceInfoIndex][1]);
-                self.hoverTaFast(self.plotArgs.series[2].data[priceInfoIndex][1]);
-                self.hoverTaSlow(self.plotArgs.series[3].data[priceInfoIndex][1]);
-                self.hoverTaSlower(self.plotArgs.series[4].data[priceInfoIndex][1]);
-                self.hoverTaSlowest(self.plotArgs.series[5].data[priceInfoIndex][1]);
-                if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
-                    self.hoverVolume(self.volumePlotArgs.series[0].data[priceInfoIndex][1]);
-                }
-                if (self.showRsi() && self.$rsiPlot) {
-                    self.hoverRsi(self.rsiPlotArgs.series[0].data[priceInfoIndex][1]);
-                }
-                if (self.showMacd() && self.$macdPlot) {
-                    self.hoverMacdDivergence(self.macdPlotArgs.series[0].data[priceInfoIndex][1]);
-                    self.hoverMacd(self.macdPlotArgs.series[1].data[priceInfoIndex][1]);
-                    self.hoverMacdSignal(self.macdPlotArgs.series[2].data[priceInfoIndex][1]);
-                }
-                self.hoverDate(date);
-                $('#hover-info').show();
-                self.previousPriceInfoIndex = priceInfoIndex;
             }
+            if (self.showRsi() && self.$rsiPlot) {
+                self.$rsiPlot.lockCrosshair({
+                    x: date,
+                    y: price
+                });
+            }
+            if (self.showMacd() && self.$macdPlot) {
+                self.$macdPlot.lockCrosshair({
+                    x: date,
+                    y: price
+                });
+            }
+            self.$plot.highlight(0, priceInfoIndex);
+
+            var percent = null;
+            if (priceToTheLeft !== null) {
+                percent = (price - priceToTheLeft) / priceToTheLeft;
+            }
+            self.hoverPercent(percent);
+            self.hoverPrice(price);
+            self.hoverTaFastest(self.plotArgs.series[1].data[priceInfoIndex][1]);
+            self.hoverTaFast(self.plotArgs.series[2].data[priceInfoIndex][1]);
+            self.hoverTaSlow(self.plotArgs.series[3].data[priceInfoIndex][1]);
+            self.hoverTaSlower(self.plotArgs.series[4].data[priceInfoIndex][1]);
+            self.hoverTaSlowest(self.plotArgs.series[5].data[priceInfoIndex][1]);
+            if (self.hasVolume() && self.$volumePlot) {
+                self.hoverVolume(self.volumePlotArgs.series[0].data[priceInfoIndex][1]);
+            }
+            if (self.showRsi() && self.$rsiPlot) {
+                self.hoverRsi(self.rsiPlotArgs.series[0].data[priceInfoIndex][1]);
+            }
+            if (self.showMacd() && self.$macdPlot) {
+                self.hoverMacdDivergence(self.macdPlotArgs.series[0].data[priceInfoIndex][1]);
+                self.hoverMacd(self.macdPlotArgs.series[1].data[priceInfoIndex][1]);
+                self.hoverMacdSignal(self.macdPlotArgs.series[2].data[priceInfoIndex][1]);
+            }
+            self.hoverDate(date);
+            $('#hover-info').fadeIn(200);
+            self.previousPriceInfoIndex = priceInfoIndex;
         }
     };
-
-    self.hidePriceInfo = function() {
+    self.hidePriceInfo = function(viewModel, event) {
         if (self.$plot) {
+            if ($('#hover-info').is(event.toElement)) {
+                // Do not hide hover info if it is hovered
+                return;
+            }
             self.$plot.clearCrosshair();
-            self.hoverPrice('');
-            self.hoverTaFastest('');
-            self.hoverTaFast('');
-            self.hoverTaSlow('');
-            self.hoverTaSlower('');
-            self.hoverTaSlowest('');
+            self.$plot.unhighlight(0, self.previousPriceInfoIndex);
             if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
                 self.$volumePlot.clearCrosshair();
-                self.hoverVolume('');
             }
             if (self.showRsi() && self.$rsiPlot) {
                 self.$rsiPlot.clearCrosshair();
-                self.hoverRsi('');
             }
             if (self.showMacd() && self.$macdPlot) {
                 self.$macdPlot.clearCrosshair();
-                self.hoverMacd('');
-                self.hoverMacdDivergence('');
-                self.hoverMacdSignal('');
             }
-            self.$plot.unhighlight(0, self.previousPriceInfoIndex);
+            $('#hover-info').stop(true, true);
             $('#hover-info').hide();
             self.previousPriceInfoIndex = null;
         }
@@ -1226,19 +1225,37 @@ function ViewModel() {
         self.plot();
         $('#progress-info').fadeOut('slow');
         $('#ta-plots').mousemove(function (event) {
-            var distanceToPlotRight = $(window).width() - (event.pageX + 10);
-            var plotHoverWidth = $('#hover-info').outerWidth();
-            if (distanceToPlotRight < plotHoverWidth) {
-                $('#hover-info').css({
-                    top: event.pageY + 10 - $(window).scrollTop(),
-                    left: $(window).width() - $('#hover-info').outerWidth()
-                });
-            } else {
-                $('#hover-info').removeAttr('right').css({
-                    top: event.pageY + 10 - $(window).scrollTop(),
-                    left: event.pageX + 10
-                });
-            }
+            var mouseOffsetX = 40;
+            var mouseOffsetY = -40;
+            var hoverInfoWidth = $('#hover-info').outerWidth();
+
+            var type = 'right';
+            if (type === 'left') {
+                var distanceToPlotLeft = event.clientX - mouseOffsetX;
+                if (distanceToPlotLeft < hoverInfoWidth) {
+                    $('#hover-info').css({
+                        top: event.clientY + mouseOffsetY,
+                        left: event.clientX + mouseOffsetX
+                    });
+                } else {
+                    $('#hover-info').css({
+                        top: event.clientY + mouseOffsetY,
+                        left: event.clientX - (hoverInfoWidth + mouseOffsetX)
+                    });
+                }
+            } else if (type === 'right') {
+                var distanceToPlotRight = $(window).width() - (event.clientX + mouseOffsetX);
+                if (distanceToPlotRight < hoverInfoWidth) {
+                    $('#hover-info').css({
+                        top: event.clientY + mouseOffsetY,
+                        left: event.clientX - (mouseOffsetX + hoverInfoWidth)
+                    });
+                } else {
+                    $('#hover-info').css({
+                        top: event.clientY + mouseOffsetY,
+                        left: event.clientX + mouseOffsetX
+                    });
+                }            }
         });
     };
 
@@ -1390,9 +1407,10 @@ function ViewModel() {
             self.plotArgs.options.xaxis.font = null;
         }
         self.$plot = $.plot(self.plotArgs.placeholder, self.plotArgs.series, self.plotArgs.options);
-        $('#plot').find('.legend').each(function (index, element) {
-            ko.applyBindings(self, element);
-        });
+        $('#hover-info-plot').html($('#plot .legend tbody').clone());
+        $('#plot .legend-label-value').remove();
+        ko.applyBindings(self, $('#plot .legend')[0]);
+        ko.applyBindings(self, $('#hover-info-plot tbody')[0]);
     };
 
     self.plotMacd = function() {
@@ -1413,9 +1431,10 @@ function ViewModel() {
             $('#macd-plot').slideDown('fast', function() {
                 self.$macdPlot = $.plot(this, self.macdPlotArgs.series, self.macdPlotArgs.options);
                 self.updateProfit();
-                $(this).find('.legend').each(function (index, element) {
-                    ko.applyBindings(self, element);
-                });
+                $('#hover-info-macd-plot').html($('#macd-plot .legend tbody').clone());
+                $('#macd-plot .legend-label-value').remove();
+                ko.applyBindings(self, $('#macd-plot .legend')[0]);
+                ko.applyBindings(self, $('#hover-info-macd-plot tbody')[0]);
             });
         } else {
             $('#macd-plot').slideUp('fast', function() {
@@ -1453,9 +1472,10 @@ function ViewModel() {
             $('#volume-plot').css('margin-top', '-26px');
             $('#volume-plot').slideDown('fast', function() {
                 self.$volumePlot = $.plot(this, self.volumePlotArgs.series, self.volumePlotArgs.options);
-                $(this).find('.legend').each(function (index, element) {
-                    ko.applyBindings(self, element);
-                });
+                $('#hover-info-volume-plot').html($('#volume-plot .legend tbody').clone());
+                $('#volume-plot .legend-label-value').remove();
+                ko.applyBindings(self, $('#volume-plot .legend')[0]);
+                ko.applyBindings(self, $('#hover-info-volume-plot tbody')[0]);
             });
         } else {
             $('#volume-plot').slideUp('fast', function() {
@@ -1478,13 +1498,15 @@ function ViewModel() {
             } else {
                 self.rsiPlotArgs.options.xaxis.tickColor = 'transparent';
             }
+            self.rsi().label = 'RSI(' + self.rsiPeriod() + ')';
             self.rsiPlotArgs.series = [self.rsi()];
             $('#rsi-plot').css('margin-top', '-26px');
             $('#rsi-plot').slideDown('fast', function() {
                 self.$rsiPlot = $.plot(this, self.rsiPlotArgs.series, self.rsiPlotArgs.options);
-                $(this).find('.legend').each(function (index, element) {
-                    ko.applyBindings(self, element);
-                });
+                $('#hover-info-rsi-plot').html($('#rsi-plot .legend tbody').clone());
+                $('#rsi-plot .legend-label-value').remove();
+                ko.applyBindings(self, $('#rsi-plot .legend')[0]);
+                ko.applyBindings(self, $('#hover-info-rsi-plot tbody')[0]);
             });
         } else {
             $('#rsi-plot').slideUp('fast', function() {
@@ -1510,7 +1532,11 @@ function ViewModel() {
         yaxisMinMax = addPaddingsToYaxisMinMax(yaxisMinMax, self.settings.paddingFactor);
 
         // Update yaxis min/max
-        self.plotArgs.options.yaxes[0].min = yaxisMinMax.min;
+        if (yaxisMinMax.min < 0) {
+            self.plotArgs.options.yaxes[0].min = 0;
+        } else {
+            self.plotArgs.options.yaxes[0].min = yaxisMinMax.min;
+        }
         self.plotArgs.options.yaxes[0].max = yaxisMinMax.max;
     };
 

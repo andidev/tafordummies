@@ -114,7 +114,7 @@
     flotFinance.fn.getRsi = cached(function (n, scale, splitDetection) {
         var data = this.getClosePrice(scale, splitDetection);
         var priceTA = this.getPriceTA(scale, splitDetection);
-        data = convertToFlotFormat(priceTA.rsi(n).asArray(), data);
+        data = convertToFlotFormat(priceTA.rsi(n, false).asArray(), data);
         return data;
     });
 

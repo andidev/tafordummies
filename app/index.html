@@ -69,7 +69,7 @@
 
         <div class="container">
 
-            <div id="examples" class="row">
+            <div id="ta-container" class="row">
                 <div class="col-md-12">
                     <div id="ta-header" class="col-md-12">
                         <div class="pull-left">
@@ -188,7 +188,26 @@
                         <div id="volume-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
                         <div id="rsi-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
                         <div id="macd-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
-                        <div id="hover-info"><span data-bind="css: hoverPercentColorClass"><i class="fa" data-bind="css: hoverPercentArrowClass"></i> <strong data-bind="html: hoverPercentFormatted()"></strong></span> <strong class="text-info" data-bind="text: hoverPriceFormatted"></strong> <strong class="text-muted" data-bind="text: hoverDateFormatted"></strong></div>
+                        <div id="hover-info">
+                            <div id="hover-date" class="text-center text-muted text-bold" data-bind="text: hoverDateFormatted"></div>
+                            <div id="hover-percent" class="text-center text-bold text-large" data-bind="css: hoverPercentColorClass"><i class="fa" data-bind="css: hoverPercentArrowClass"></i> <span data-bind="html: hoverPercentFormatted()"></span></div>
+                            <div>
+                                <hr class="hr-thin"/>
+                                <table id="hover-info-plot"></table>
+                            </div>
+                            <div data-bind="visible: hasVolume() && showVolume()">
+                                <hr class="hr-thin"/>
+                                <table id="hover-info-volume-plot"></table>
+                            </div>
+                            <div data-bind="visible: showRsi">
+                                <hr class="hr-thin"/>
+                                <table id="hover-info-rsi-plot"></table>
+                            </div>
+                            <div data-bind="visible: showMacd">
+                                <hr class="hr-thin"/>
+                                <table id="hover-info-macd-plot"></table>
+                            </div>
+                        </div>
                     </div>
                     <div id="ta-footer" class="col-md-12">
                         <div class="pull-left">
@@ -247,13 +266,11 @@
                 <ul>
                     <li>Fix initialization of timePeriod, startDate, fromDate + other url parameters</li>
                     <li>Refactor startDate fromDate logic/bounce logic</li>
-                    <li>Move legend values into hover info div</li>
                     <li>Make it impossible to zoom more than two days with keys</li>
                     <li>Fix price curve not showing in plot if zooming 3 - 2 days (update min max problem)</li>
                     <li>create custom ticks for dates that show years when only months are visible</li>
                     <li>highligt highest/lowest points in plot</li>
-                    <li>Verify SMA, EMA, MACD against http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:moving_averages</li>
-                    <li>Verify SMA, EMA, MACD, RSI against other sites</li>
+                    <li>Verify SMA, EMA, MACD, RSI against yahoo finance</li>
                     <li>Handle local storage exceeded error (QuotaExceededError) correctly by removing oldest data (by refactororing lastDataCacheCheckDate to lastDataCheckDate)</li>
                     <li>Remember last TA parameters by saving them locale storage for symbol</li>
                     <li>Add procentage on y axis 2 for price plot</li>
