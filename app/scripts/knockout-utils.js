@@ -2,7 +2,7 @@
 /* global ko */
 
 ko.bindingHandlers.visibleSlideRight = {
-    init: function(element, valueAccessor) {
+    init: function (element, valueAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());
 
         var $element = $(element);
@@ -13,7 +13,7 @@ ko.bindingHandlers.visibleSlideRight = {
             $element.hide();
         }
     },
-    update: function(element, valueAccessor) {
+    update: function (element, valueAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());
 
         var $element = $(element);
@@ -22,15 +22,15 @@ ko.bindingHandlers.visibleSlideRight = {
         var isCurrentlyVisible = element.style.display !== 'none';
 
         if (value && !isCurrentlyVisible) {
-             $element.toggle('slide', {direction: 'left'}, 'fast');
+            $element.toggle('slide', {direction: 'left'}, 'fast');
         } else if ((!value) && isCurrentlyVisible) {
-             $element.toggle('slide', {direction: 'left'}, 'fast');
+            $element.toggle('slide', {direction: 'left'}, 'fast');
         }
     }
 };
 
 ko.bindingHandlers.visibleSlideDown = {
-    init: function(element, valueAccessor) {
+    init: function (element, valueAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());
 
         var $element = $(element);
@@ -41,7 +41,7 @@ ko.bindingHandlers.visibleSlideDown = {
             $element.hide();
         }
     },
-    update: function(element, valueAccessor, allBindingsAccessor) {
+    update: function (element, valueAccessor, allBindingsAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());
 
         var $element = $(element);

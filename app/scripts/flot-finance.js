@@ -98,7 +98,7 @@
      */
     flotFinance.fn.hasVolume = cached(function () {
         var firstVolume = this.yahooFinanceData[0].volume;
-        var lastVolume = this.yahooFinanceData[this.yahooFinanceData.length-1].volume;
+        var lastVolume = this.yahooFinanceData[this.yahooFinanceData.length - 1].volume;
         if (firstVolume === '000' && lastVolume === '000') {
             return false;
         } else {

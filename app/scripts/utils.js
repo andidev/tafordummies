@@ -1,10 +1,10 @@
 'use strict';
- /* global log */
- /* exported async */
- /* exported defaultValue */
- /* exported defaultBooleanValue */
- /* exported defaultNumberValue */
- 
+/* global log */
+/* exported async */
+/* exported defaultValue */
+/* exported defaultBooleanValue */
+/* exported defaultNumberValue */
+
 function defaultValue(defaultVal, data) {
     if (data === undefined) {
         return defaultVal;

@@ -3,7 +3,7 @@
 /* exported formatDate */
 /* exported formatLongDate */
 
-function formatDate(date){
+function formatDate(date) {
     if (date === undefined || date === null || date === '') {
         return '';
     }
@@ -26,7 +26,7 @@ function formatDate(date){
     }
 }
 
-function formatLongDate(date){
+function formatLongDate(date) {
     if (date === undefined || date === null || date === '') {
         return '';
     }

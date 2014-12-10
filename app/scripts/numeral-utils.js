@@ -16,7 +16,7 @@ numeral.language('custom', {
         billion: 'b',
         trillion: 't'
     },
-    ordinal : function () {
+    ordinal: function () {
         return '.';
     },
     currency: {

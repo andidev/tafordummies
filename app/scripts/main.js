@@ -35,9 +35,9 @@ function ViewModel() {
         {id: '^VIX', text: 'VOLATILITY S&P-500'}
     ]);
     self.symbol = ko.observable();
-    self.symbolName = ko.computed(function() {
+    self.symbolName = ko.computed(function () {
         var symbolName = self.symbol();
-        $.each(self.symbols(), function(index, symbol) {
+        $.each(self.symbols(), function (index, symbol) {
             if (symbol.id === self.symbol()) {
                 symbolName = symbol.text;
                 return;
@@ -45,7 +45,7 @@ function ViewModel() {
         });
         return symbolName;
     });
-    self.flotFinanceSymbol = ko.computed(function() {
+    self.flotFinanceSymbol = ko.computed(function () {
         if (self.symbol()) {
             return flotFinance(self.symbol());
         }
@@ -61,7 +61,7 @@ function ViewModel() {
     });
     self.showTaFast = ko.observable(defaultBooleanValue(true, url.param('showTaFast')));
     self.taFastType = ko.observable(defaultValue('SMA', url.param('taFastType')));
-    self.taFastTypeOpposite = ko.computed(function(){
+    self.taFastTypeOpposite = ko.computed(function () {
         if (self.taFastType() === 'EMA') {
             return 'SMA';
         } else {
@@ -93,7 +93,7 @@ function ViewModel() {
 
     self.showTaSlow = ko.observable(defaultBooleanValue(true, url.param('showTaSlow')));
     self.taSlowType = ko.observable(defaultValue('SMA', url.param('taSlowType')));
-    self.taSlowTypeOpposite = ko.computed(function(){
+    self.taSlowTypeOpposite = ko.computed(function () {
         if (self.taSlowType() === 'EMA') {
             return 'SMA';
         } else {
@@ -171,7 +171,7 @@ function ViewModel() {
         }
 
     });
-    self.hasVolume = ko.computed(function() {
+    self.hasVolume = ko.computed(function () {
         if (self.flotFinanceSymbol()) {
             return self.flotFinanceSymbol().hasVolume();
         }
@@ -205,7 +205,7 @@ function ViewModel() {
     self.timePeriod = ko.observable(defaultValue('3years', url.param('timePeriod')));
     self.zoomHistory = ko.observableArray([]);
     self.toDate = ko.observable();
-    self.toDateFormatted = ko.computed(function() {
+    self.toDateFormatted = ko.computed(function () {
         if (self.toDate() === undefined) {
             return '';
         }
@@ -213,7 +213,7 @@ function ViewModel() {
         return formatDate(self.toDate());
     });
     self.fromDate = ko.observable();
-    self.fromDateFormatted = ko.computed(function() {
+    self.fromDateFormatted = ko.computed(function () {
         if (self.fromDate() === undefined) {
             return '';
         }
@@ -235,7 +235,7 @@ function ViewModel() {
                 position: 'left',
                 reserveSpace: true,
                 labelWidth: 30,
-                tickFormatter: function(value, axis){
+                tickFormatter: function (value, axis) {
                     return formatPrice(value, axis.tickDecimals);
                 }
             }, {
@@ -244,7 +244,7 @@ function ViewModel() {
                 labelWidth: 30,
                 color: 'rgba(10, 100, 0, 0.33)',
                 tickColor: 'rgba(10, 100, 0, 0.33)',
-                tickFormatter: function(value, axis){
+                tickFormatter: function (value, axis) {
                     return formatPrice(value, axis.tickDecimals);
                 }
             }
@@ -267,7 +267,7 @@ function ViewModel() {
             backgroundColor: 'transparent',
             noColumns: 1,
             position: 'nw',
-            labelFormatter: function(label) {
+            labelFormatter: function (label) {
                 if (label === self.symbolName()) {
                     return '<span class="legend-label">' + label + '</span> <span class="legend-label-value" data-bind="text: hoverPriceFormatted, visible: hoverPrice"></span>';
                 } else if (label === self.taFastType() + '(' + self.taFastestPeriod() + ')') {
@@ -356,10 +356,10 @@ function ViewModel() {
     self.$rsiPlot = null;
 
     self.percent = ko.observable(0);
-    self.percentFormatted = ko.computed(function() {
+    self.percentFormatted = ko.computed(function () {
         return formatPercent(self.percent());
     });
-    self.percentArrowClass = ko.computed(function() {
+    self.percentArrowClass = ko.computed(function () {
         if (self.percent() > 0) {
             return 'fa-arrow-up';
         } else if (self.percent() < 0) {
@@ -368,7 +368,7 @@ function ViewModel() {
             return 'fa-arrow-right';
         }
     });
-    self.percentColorClass = ko.computed(function() {
+    self.percentColorClass = ko.computed(function () {
         if (self.percent() > 0) {
             return 'text-success';
         } else if (self.percent() < 0) {
@@ -378,18 +378,18 @@ function ViewModel() {
         }
     });
     self.highest = ko.observable(0);
-    self.highestFormatted = ko.computed(function() {
+    self.highestFormatted = ko.computed(function () {
         return formatPrice(self.highest());
     });
     self.lowest = ko.observable(0);
-    self.lowestFormatted = ko.computed(function() {
+    self.lowestFormatted = ko.computed(function () {
         return formatPrice(self.lowest());
     });
     self.profit = ko.observable();
-    self.profitFormatted = ko.computed(function() {
+    self.profitFormatted = ko.computed(function () {
         return formatPercent(self.profit());
     });
-    self.profitColorClass = ko.computed(function() {
+    self.profitColorClass = ko.computed(function () {
         if (self.profit() > 0) {
             return 'text-success';
         } else if (self.profit() < 0) {
@@ -400,7 +400,7 @@ function ViewModel() {
     });
 
     // Behaviors
-    self.changeScaleToAuto = function() {
+    self.changeScaleToAuto = function () {
         if (self.scale() !== 'auto') {
             log.info('Changing scale to Auto');
             self.scale('auto');
@@ -408,7 +408,7 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.changeScaleToDays = function() {
+    self.changeScaleToDays = function () {
         if (self.scale() !== 'days') {
             log.info('Changing scale to Days');
             self.scale('days');
@@ -416,7 +416,7 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.changeScaleToWeeks = function() {
+    self.changeScaleToWeeks = function () {
         if (self.scale() !== 'weeks') {
             log.info('Changing scale to Weeks');
             self.scale('weeks');
@@ -424,7 +424,7 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.changeScaleToMonths = function() {
+    self.changeScaleToMonths = function () {
         if (self.scale() !== 'months') {
             log.info('Changing scale to Months');
             self.scale('months');
@@ -432,7 +432,7 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.changeScaleToYears = function() {
+    self.changeScaleToYears = function () {
         if (self.scale() !== 'years') {
             log.info('Changing scale to Years');
             self.scale('years');
@@ -441,7 +441,7 @@ function ViewModel() {
         }
     };
 
-    self.changeTimePeriodToAll = function() {
+    self.changeTimePeriodToAll = function () {
         log.info('Changing time period to All');
         self.zoomHistory.push({
             fromDate: self.fromDate().clone(),
@@ -454,7 +454,7 @@ function ViewModel() {
         self.processData();
         self.plot();
     };
-    self.changeTimePeriodTo10Years = function() {
+    self.changeTimePeriodTo10Years = function () {
         log.info('Changing time period to 10 Years');
         self.zoomHistory.push({
             fromDate: self.fromDate().clone(),
@@ -467,7 +467,7 @@ function ViewModel() {
         self.processData();
         self.plot();
     };
-    self.changeTimePeriodTo3Years = function() {
+    self.changeTimePeriodTo3Years = function () {
         log.info('Changing time period to 3 Years');
         self.zoomHistory.push({
             fromDate: self.fromDate().clone(),
@@ -480,7 +480,7 @@ function ViewModel() {
         self.processData();
         self.plot();
     };
-    self.changeTimePeriodToYear = function() {
+    self.changeTimePeriodToYear = function () {
         log.info('Changing time period to Year');
         self.zoomHistory.push({
             fromDate: self.fromDate().clone(),
@@ -493,7 +493,7 @@ function ViewModel() {
         self.processData();
         self.plot();
     };
-    self.changeTimePeriodTo3Months = function() {
+    self.changeTimePeriodTo3Months = function () {
         log.info('Changing time period to 3 Month');
         self.zoomHistory.push({
             fromDate: self.fromDate().clone(),
@@ -506,7 +506,7 @@ function ViewModel() {
         self.processData();
         self.plot();
     };
-    self.changeTimePeriodToMonth = function() {
+    self.changeTimePeriodToMonth = function () {
         log.info('Changing time period to Month');
         self.zoomHistory.push({
             fromDate: self.fromDate().clone(),
@@ -519,7 +519,7 @@ function ViewModel() {
         self.processData();
         self.plot();
     };
-    self.changeTimePeriodToWeek = function() {
+    self.changeTimePeriodToWeek = function () {
         log.info('Changing time period to Week');
         self.zoomHistory.push({
             fromDate: self.fromDate().clone(),
@@ -533,7 +533,7 @@ function ViewModel() {
         self.plot();
     };
 
-    self.toggleVolume = function() {
+    self.toggleVolume = function () {
         if (self.showVolume() === true) {
             log.info('Hiding Volume');
             self.showVolume(false);
@@ -543,7 +543,7 @@ function ViewModel() {
         }
         self.plot();
     };
-    self.toggleRsi = function() {
+    self.toggleRsi = function () {
         if (self.showRsi() === true) {
             log.info('Hiding RSI');
             self.showRsi(false);
@@ -553,7 +553,7 @@ function ViewModel() {
         }
         self.plot();
     };
-    self.toggleSplitDetection = function() {
+    self.toggleSplitDetection = function () {
         if (self.enableSplitDetection() === false) {
             log.info('Enabling Split Detection');
             self.enableSplitDetection(true);
@@ -564,7 +564,7 @@ function ViewModel() {
         self.processData();
         self.plot();
     };
-    self.toggleTaFast = function() {
+    self.toggleTaFast = function () {
         if (self.showTaFast() === true) {
             log.info('Hiding TA Fast ' + self.taFastType() + '(' + self.taFastestPeriod() + ',' + self.taFastPeriod() + ')');
             self.showTaFast(false);
@@ -574,7 +574,7 @@ function ViewModel() {
         }
         self.plot();
     };
-    self.toggleTaFastType = function() {
+    self.toggleTaFastType = function () {
         if (self.taFastType() === 'EMA') {
             log.info('Changing TA Fast Type to SMA');
             self.taFastType('SMA');
@@ -585,7 +585,7 @@ function ViewModel() {
         self.processData();
         self.plot();
     };
-    self.toggleTaSlow = function() {
+    self.toggleTaSlow = function () {
         if (self.showTaSlow() === true) {
             log.info('Hiding TA Slow ' + self.taSlowType() + '(' + self.taSlowPeriod() + ',' + self.taSlowerPeriod() + ',' + self.taSlowestPeriod() + ')');
             self.showTaSlow(false);
@@ -595,7 +595,7 @@ function ViewModel() {
         }
         self.plot();
     };
-    self.toggleTaSlowType = function() {
+    self.toggleTaSlowType = function () {
         if (self.taSlowType() === 'EMA') {
             log.info('Changing TA Slow Type to SMA');
             self.taSlowType('SMA');
@@ -606,7 +606,7 @@ function ViewModel() {
         self.processData();
         self.plot();
     };
-    self.toggleMacd = function() {
+    self.toggleMacd = function () {
         if (self.showMacd() === true) {
             log.info('Hiding MACD(' + self.macdFastPeriod() + ',' + self.macdSlowPeriod() + ',' + self.macdSignalPeriod() + ')');
             self.showMacd(false);
@@ -618,7 +618,7 @@ function ViewModel() {
     };
 
 
-    self.slideRsi = function(viewModel, event) {
+    self.slideRsi = function (viewModel, event) {
         log.trace('Sliding RSI');
         var newPeriod = event.value;
         if (self.rsiPeriod() !== newPeriod) {
@@ -628,7 +628,7 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.slideTaFastest = function(viewModel, event) {
+    self.slideTaFastest = function (viewModel, event) {
         log.trace('Sliding TA Fastest');
         var newPeriod = event.value;
         if (self.taFastestPeriod() !== newPeriod) {
@@ -638,7 +638,7 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.slideTaFast = function(viewModel, event) {
+    self.slideTaFast = function (viewModel, event) {
         log.trace('Sliding TA Fast');
         var newPeriod = event.value;
         if (self.taFastPeriod() !== newPeriod) {
@@ -648,7 +648,7 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.slideTaSlow = function(viewModel, event) {
+    self.slideTaSlow = function (viewModel, event) {
         log.trace('Sliding TA Slow');
         var newPeriod = event.value;
         if (self.taSlowPeriod() !== newPeriod) {
@@ -658,7 +658,7 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.slideTaSlower = function(viewModel, event) {
+    self.slideTaSlower = function (viewModel, event) {
         log.trace('Sliding TA Slower');
         var newPeriod = event.value;
         if (self.taSlowerPeriod() !== newPeriod) {
@@ -668,7 +668,7 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.slideTaSlowest = function(viewModel, event) {
+    self.slideTaSlowest = function (viewModel, event) {
         log.trace('Sliding TA Slowest');
         var newPeriod = event.value;
         if (self.taSlowestPeriod() !== newPeriod) {
@@ -678,7 +678,7 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.slideMacdFast = function(viewModel, event) {
+    self.slideMacdFast = function (viewModel, event) {
         log.trace('Sliding MACD Fast');
         var newPeriod = event.value;
         if (self.macdFastPeriod() !== newPeriod) {
@@ -688,7 +688,7 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.slideMacdSlow = function(viewModel, event) {
+    self.slideMacdSlow = function (viewModel, event) {
         log.trace('Sliding MACD Slow');
         var newPeriod = event.value;
         if (self.macdSlowPeriod() !== newPeriod) {
@@ -698,7 +698,7 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.slideMacdSignal = function(viewModel, event) {
+    self.slideMacdSignal = function (viewModel, event) {
         log.trace('Sliding MACD Signal');
         var newPeriod = event.value;
         if (self.macdSignalPeriod() !== newPeriod) {
@@ -709,7 +709,7 @@ function ViewModel() {
         }
     };
 
-    self.updateFromDate = function(date) {
+    self.updateFromDate = function (date) {
         log.trace('Updating from date');
         var bouncedMillis = null;
         var minDate = self.price().data[0][0];
@@ -720,7 +720,7 @@ function ViewModel() {
         self.fromDate(date);
         return bouncedMillis;
     };
-    self.updateToDate = function(date) {
+    self.updateToDate = function (date) {
         log.trace('Updating to date');
         var bouncedMillis = null;
         var maxDate = self.price().data[self.price().data.length - 1][0];
@@ -732,7 +732,7 @@ function ViewModel() {
         return bouncedMillis;
     };
 
-    self.changeFromDate = function(viewModel, event) {
+    self.changeFromDate = function (viewModel, event) {
         var isFromDateUpdated = !moment(event.date).isSame(self.fromDate());
         if (isFromDateUpdated) {
             $('#from-date').datepicker('hide'); // Close datepicker manually since autoclose: true setting does not seem to work for datepicker
@@ -743,7 +743,7 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.changeToDate = function(viewModel, event) {
+    self.changeToDate = function (viewModel, event) {
         var isToDateUpdated = !moment(event.date).isSame(self.toDate());
         if (isToDateUpdated) {
             $('#to-date').datepicker('hide'); // Close datepicker manually since autoclose: true setting does not seem to work for datepicker
@@ -757,27 +757,27 @@ function ViewModel() {
 
     self.zoomSelectionFrom = null;
     self.zoomSelectionTo = null;
-    self.mouseDown = function(viewModel, event) {
+    self.mouseDown = function (viewModel, event) {
         log.trace('Mouse key pressed, which = ' + event.which);
         if (event.which === 1) {
             log.trace('Left mouse key pressed');
             self.zoomSelectionFrom = event.clientX;
         }
     };
-    self.mouseMove = function(viewModel, event) {
+    self.mouseMove = function (viewModel, event) {
         if (event.which === 1) {
             log.trace('Mouse is moved with left mouse key pressed');
             self.zoomSelectionTo = event.clientX;
         }
     };
-    self.zoomSelection = function(viewModel, event, ranges) {
+    self.zoomSelection = function (viewModel, event, ranges) {
         log.trace('Zooming selection');
         var zoomDirection = (self.zoomSelectionTo - self.zoomSelectionFrom) < 0 ? 'left' : 'right';
         var fromIndex = self.findClosestDatapoint(ranges.xaxis.from);
         var toIndex = self.findClosestDatapoint(ranges.xaxis.to);
         if (zoomDirection === 'left') {
             self.undoZoom();
-        } else if (zoomDirection === 'right'){
+        } else if (zoomDirection === 'right') {
             if ((toIndex - fromIndex) >= 2) {
                 self.zoomHistory.push({
                     fromDate: self.fromDate().clone(),
@@ -807,7 +807,7 @@ function ViewModel() {
             }
         }
     };
-    self.syncSelectionInPlot = function(viewModel, event, ranges) {
+    self.syncSelectionInPlot = function (viewModel, event, ranges) {
         if (ranges !== null) {
             if (event.currentTarget.id !== 'plot') {
                 self.$plot.setSelection(ranges, true);
@@ -830,7 +830,7 @@ function ViewModel() {
         }
     };
 
-    self.scrollPanZoom = _.throttle(function(viewModel, event) {
+    self.scrollPanZoom = _.throttle(function (viewModel, event) {
         if (event.ctrlKey) {
             log.debug('Scroll zooming');
             var SCROLL_ZOOM_THRESHOLD = 2;
@@ -847,7 +847,7 @@ function ViewModel() {
         }
         return true;
     });
-    self.undoZoom = function() {
+    self.undoZoom = function () {
         log.info('Undoing zoom', self.zoomHistory());
         var lastZoomHistory = self.zoomHistory.pop();
         if (lastZoomHistory !== undefined) {
@@ -858,7 +858,7 @@ function ViewModel() {
             self.plot();
         }
     };
-    self.zoomOut = function() {
+    self.zoomOut = function () {
         log.info('Zooming out ' + getDeltaForTimePeriod(12).value + ' ' + getDeltaForTimePeriod(12).timeUnit);
         self.zoomHistory.push({
             fromDate: self.fromDate().clone(),
@@ -878,7 +878,7 @@ function ViewModel() {
         self.processData();
         self.plot();
     };
-    self.zoomIn = function() {
+    self.zoomIn = function () {
         log.info('Zooming in ' + getDeltaForTimePeriod(14).value + ' ' + getDeltaForTimePeriod(14).timeUnit);
         self.zoomHistory.push({
             fromDate: self.fromDate().clone(),
@@ -899,7 +899,7 @@ function ViewModel() {
         self.plot();
     };
 
-    self.panLeft = function() {
+    self.panLeft = function () {
         log.info('Panning left');
         self.zoomHistory.push({
             fromDate: self.fromDate().clone(),
@@ -917,7 +917,7 @@ function ViewModel() {
         self.processData();
         self.plot();
     };
-    self.panRight = function() {
+    self.panRight = function () {
         log.info('Panning right');
         self.zoomHistory.push({
             fromDate: self.fromDate().clone(),
@@ -936,7 +936,7 @@ function ViewModel() {
         self.plot();
     };
     self.ctrlKeyDown = false;
-    self.keyboardShortcutsHandler = _.throttle(function(viewModel, event) {
+    self.keyboardShortcutsHandler = _.throttle(function (viewModel, event) {
         if (event.target.tagName === 'INPUT') {
             return true;
         }
@@ -969,9 +969,9 @@ function ViewModel() {
         } else if (keyCode === 27) { // Escape
             log.trace('Escape key pressed');
             if ($('.datepicker-dropdown:visible').length) {
-                 $('#from-date').datepicker('hide');
-                 $('#to-date').datepicker('hide');
-                 return false;
+                $('#from-date').datepicker('hide');
+                $('#to-date').datepicker('hide');
+                return false;
             }
             if ($('#time-periods :focus').length) {
                 $('#time-period-all-button').focus();
@@ -990,7 +990,7 @@ function ViewModel() {
         }
         return true;
     });
-    self.resetCtrlKeyDown = _.throttle(function(viewModel, event) {
+    self.resetCtrlKeyDown = _.throttle(function (viewModel, event) {
         var keyCode = (event.which ? event.which : event.keyCode);
         if (keyCode === 17) { // Ctrl
             log.debug('Ctrl key released');
@@ -1003,10 +1003,10 @@ function ViewModel() {
 
     self.previousPriceInfoIndex = null;
     self.hoverPercent = ko.observable('');
-    self.hoverPercentFormatted = ko.computed(function() {
+    self.hoverPercentFormatted = ko.computed(function () {
         return formatPercent(self.hoverPercent());
     });
-    self.hoverPercentArrowClass = ko.computed(function() {
+    self.hoverPercentArrowClass = ko.computed(function () {
         if (self.hoverPercent() > 0) {
             return 'fa-arrow-up';
         } else if (self.hoverPercent() < 0) {
@@ -1015,7 +1015,7 @@ function ViewModel() {
             return 'fa-arrow-right';
         }
     });
-    self.hoverPercentColorClass = ko.computed(function() {
+    self.hoverPercentColorClass = ko.computed(function () {
         if (self.hoverPercent() > 0) {
             return 'text-success';
         } else if (self.hoverPercent() < 0) {
@@ -1025,51 +1025,51 @@ function ViewModel() {
         }
     });
     self.hoverPrice = ko.observable();
-    self.hoverPriceFormatted = ko.computed(function() {
+    self.hoverPriceFormatted = ko.computed(function () {
         return formatPrice(self.hoverPrice());
     });
     self.hoverTaFastest = ko.observable();
-    self.hoverTaFastestFormatted = ko.computed(function() {
+    self.hoverTaFastestFormatted = ko.computed(function () {
         return formatPrice(self.hoverTaFastest());
     });
     self.hoverTaFast = ko.observable();
-    self.hoverTaFastFormatted = ko.computed(function() {
+    self.hoverTaFastFormatted = ko.computed(function () {
         return formatPrice(self.hoverTaFast());
     });
     self.hoverTaSlow = ko.observable();
-    self.hoverTaSlowFormatted = ko.computed(function() {
+    self.hoverTaSlowFormatted = ko.computed(function () {
         return formatPrice(self.hoverTaSlow());
     });
     self.hoverTaSlower = ko.observable();
-    self.hoverTaSlowerFormatted = ko.computed(function() {
+    self.hoverTaSlowerFormatted = ko.computed(function () {
         return formatPrice(self.hoverTaSlower());
     });
     self.hoverTaSlowest = ko.observable();
-    self.hoverTaSlowestFormatted = ko.computed(function() {
+    self.hoverTaSlowestFormatted = ko.computed(function () {
         return formatPrice(self.hoverTaSlowest());
     });
     self.hoverVolume = ko.observable();
-    self.hoverVolumeFormatted = ko.computed(function() {
+    self.hoverVolumeFormatted = ko.computed(function () {
         return formatNumber(self.hoverVolume());
     });
     self.hoverRsi = ko.observable();
-    self.hoverRsiFormatted = ko.computed(function() {
+    self.hoverRsiFormatted = ko.computed(function () {
         return formatPrice(self.hoverRsi());
     });
     self.hoverMacd = ko.observable();
-    self.hoverMacdFormatted = ko.computed(function() {
+    self.hoverMacdFormatted = ko.computed(function () {
         return formatPrice(self.hoverMacd());
     });
     self.hoverMacdSignal = ko.observable();
-    self.hoverMacdSignalFormatted = ko.computed(function() {
+    self.hoverMacdSignalFormatted = ko.computed(function () {
         return formatPrice(self.hoverMacdSignal());
     });
     self.hoverMacdDivergence = ko.observable();
-    self.hoverMacdDivergenceFormatted = ko.computed(function() {
+    self.hoverMacdDivergenceFormatted = ko.computed(function () {
         return formatPrice(self.hoverMacdDivergence());
     });
     self.hoverDate = ko.observable();
-    self.hoverDateFormatted = ko.computed(function() {
+    self.hoverDateFormatted = ko.computed(function () {
         if (self.hoverDate() === undefined) {
             return '';
         } else if (self.ctrlKeyDown) {
@@ -1080,7 +1080,7 @@ function ViewModel() {
         }
     });
 
-    self.showPriceInfo = function(viewModel, event, pos) {
+    self.showPriceInfo = function (viewModel, event, pos) {
         if (self.$plot) {
             var priceInfoIndex = self.findClosestDatapoint(pos.x);
             if (priceInfoIndex === self.previousPriceInfoIndex) {
@@ -1153,7 +1153,7 @@ function ViewModel() {
             self.previousPriceInfoIndex = priceInfoIndex;
         }
     };
-    self.hidePriceInfo = function(viewModel, event) {
+    self.hidePriceInfo = function (viewModel, event) {
         if (self.$plot) {
             if ($('#hover-info').is(event.toElement)) {
                 // Do not hide hover info if it is hovered
@@ -1177,19 +1177,19 @@ function ViewModel() {
     };
 
     // Functions
-    self.init = function() {
+    self.init = function () {
         self.symbol(defaultValue('^OMX', url.param('symbol')));
         $('#symbol').select2({
             width: '200px',
-            data: function() {
+            data: function () {
                 var data = [];
-                $(self.symbols()).each(function(index, symbol) {
+                $(self.symbols()).each(function (index, symbol) {
                     data.push(symbol);
                 });
                 return {text: 'text', results: data};
             },
-            createSearchChoice: function(term, data) {
-                if ($(data).filter(function() {
+            createSearchChoice: function (term, data) {
+                if ($(data).filter(function () {
                     return this.text.localeCompare(term) === 0;
                 }).length === 0) {
                     return {id: term, text: term};
@@ -1255,11 +1255,12 @@ function ViewModel() {
                         top: event.clientY + mouseOffsetY,
                         left: event.clientX + mouseOffsetX
                     });
-                }            }
+                }
+            }
         });
     };
 
-    self.processData = function() {
+    self.processData = function () {
         log.debug('Processing data');
         var start = moment().valueOf();
 
@@ -1354,7 +1355,7 @@ function ViewModel() {
         log.debug('Processing data data took ' + executionTime + ' milliseconds');
     };
 
-    self.plot = function() {
+    self.plot = function () {
         log.debug('Plotting');
         var start = moment().valueOf();
         self.plotMain();
@@ -1366,7 +1367,7 @@ function ViewModel() {
         log.debug('Plotting took ' + executionTime + ' milliseconds');
     };
 
-    self.plotMain = function() {
+    self.plotMain = function () {
         log.debug('Plotting Main');
         self.updatePlotAxisMinAndMax();
         self.updatePercentAndHighestAndLowest();
@@ -1413,7 +1414,7 @@ function ViewModel() {
         ko.applyBindings(self, $('#hover-info-plot tbody')[0]);
     };
 
-    self.plotMacd = function() {
+    self.plotMacd = function () {
         log.debug('Plotting MACD');
         self.updateMacdPlotAxisMinAndMax();
         if (self.showMacd()) {
@@ -1428,7 +1429,7 @@ function ViewModel() {
 
             self.macdPlotArgs.series = [self.macdDivergence(), self.macd(), self.macdSignal()];
             $('#macd-plot').css('margin-top', '-26px');
-            $('#macd-plot').slideDown('fast', function() {
+            $('#macd-plot').slideDown('fast', function () {
                 self.$macdPlot = $.plot(this, self.macdPlotArgs.series, self.macdPlotArgs.options);
                 self.updateProfit();
                 $('#hover-info-macd-plot').html($('#macd-plot .legend tbody').clone());
@@ -1437,13 +1438,13 @@ function ViewModel() {
                 ko.applyBindings(self, $('#hover-info-macd-plot tbody')[0]);
             });
         } else {
-            $('#macd-plot').slideUp('fast', function() {
+            $('#macd-plot').slideUp('fast', function () {
                 $('#macd-plot').html('');
             });
         }
     };
 
-    self.plotVolume = function() {
+    self.plotVolume = function () {
         log.debug('Plotting Volume');
         self.updateVolumePlotAxisMinAndMax();
         if (self.showMacd() || self.showRsi()) {
@@ -1470,7 +1471,7 @@ function ViewModel() {
 
             self.volumePlotArgs.series = [self.volume()];
             $('#volume-plot').css('margin-top', '-26px');
-            $('#volume-plot').slideDown('fast', function() {
+            $('#volume-plot').slideDown('fast', function () {
                 self.$volumePlot = $.plot(this, self.volumePlotArgs.series, self.volumePlotArgs.options);
                 $('#hover-info-volume-plot').html($('#volume-plot .legend tbody').clone());
                 $('#volume-plot .legend-label-value').remove();
@@ -1478,13 +1479,13 @@ function ViewModel() {
                 ko.applyBindings(self, $('#hover-info-volume-plot tbody')[0]);
             });
         } else {
-            $('#volume-plot').slideUp('fast', function() {
+            $('#volume-plot').slideUp('fast', function () {
                 $('#volume-plot').html('');
             });
         }
     };
 
-    self.plotRsi = function() {
+    self.plotRsi = function () {
         log.debug('Plotting RSI');
         self.updateRsiPlotAxisMinAndMax();
         if (self.showMacd()) {
@@ -1501,7 +1502,7 @@ function ViewModel() {
             self.rsi().label = 'RSI(' + self.rsiPeriod() + ')';
             self.rsiPlotArgs.series = [self.rsi()];
             $('#rsi-plot').css('margin-top', '-26px');
-            $('#rsi-plot').slideDown('fast', function() {
+            $('#rsi-plot').slideDown('fast', function () {
                 self.$rsiPlot = $.plot(this, self.rsiPlotArgs.series, self.rsiPlotArgs.options);
                 $('#hover-info-rsi-plot').html($('#rsi-plot .legend tbody').clone());
                 $('#rsi-plot .legend-label-value').remove();
@@ -1509,13 +1510,13 @@ function ViewModel() {
                 ko.applyBindings(self, $('#hover-info-rsi-plot tbody')[0]);
             });
         } else {
-            $('#rsi-plot').slideUp('fast', function() {
+            $('#rsi-plot').slideUp('fast', function () {
                 $('#rsi-plot').html('');
             });
         }
     };
 
-    self.updatePlotAxisMinAndMax = function() {
+    self.updatePlotAxisMinAndMax = function () {
         log.trace('updatePlotAxisMinAndMax()');
         // Update xaxis min/max
         self.plotArgs.options.xaxis.min = self.fromDate();
@@ -1540,7 +1541,7 @@ function ViewModel() {
         self.plotArgs.options.yaxes[0].max = yaxisMinMax.max;
     };
 
-    self.updateMacdPlotAxisMinAndMax = function() {
+    self.updateMacdPlotAxisMinAndMax = function () {
         log.trace('updateMacdPlotAxisMinAndMax()');
         // Update xaxis min/max
         self.macdPlotArgs.options.xaxis.min = self.fromDate();
@@ -1563,7 +1564,7 @@ function ViewModel() {
         self.macdPlotArgs.options.yaxes[1].max = yaxisRightMinMax.max;
     };
 
-    self.updateVolumePlotAxisMinAndMax = function() {
+    self.updateVolumePlotAxisMinAndMax = function () {
         log.trace('updateVolumePlotAxisMinAndMax()');
         // Update xaxis min/max
         self.volumePlotArgs.options.xaxis.min = self.fromDate();
@@ -1578,14 +1579,14 @@ function ViewModel() {
         self.volumePlotArgs.options.yaxes[0].max = yaxisLeftMinMax.max;
     };
 
-    self.updateRsiPlotAxisMinAndMax = function() {
+    self.updateRsiPlotAxisMinAndMax = function () {
         log.trace('updateRsiPlotAxisMinAndMax()');
         // Update xaxis min/max
         self.rsiPlotArgs.options.xaxis.min = self.fromDate();
         self.rsiPlotArgs.options.xaxis.max = self.toDate();
-   };
+    };
 
-    self.findClosestDatapoint = function(date) {
+    self.findClosestDatapoint = function (date) {
         log.trace('findClosestDatapoint()');
         var data = self.plotArgs.series[0].data;
         var minIndex = 0;
@@ -1620,7 +1621,7 @@ function ViewModel() {
 
     self.highestIndex = null;
     self.lowestIndex = null;
-    self.updatePercentAndHighestAndLowest = function() {
+    self.updatePercentAndHighestAndLowest = function () {
         log.trace('updateLowestAndHighest()');
 
         // Find highest and lowest
@@ -1629,7 +1630,7 @@ function ViewModel() {
         var highest;
         var lowest;
         var data = self.plotArgs.series[0].data;
-        $.each(data, function(index, value) {
+        $.each(data, function (index, value) {
             if (first === undefined && value[0].valueOf() >= self.plotArgs.options.xaxis.min.valueOf()) {
                 first = value[1];
             }
@@ -1661,7 +1662,7 @@ function ViewModel() {
         self.lowest(lowest);
     };
 
-    self.updateProfit = function() {
+    self.updateProfit = function () {
         log.trace('updateProfit()');
 
         // Find highest and lowest
@@ -1671,7 +1672,7 @@ function ViewModel() {
         var money = 1000;
         var profit;
         var data = self.plotArgs.series[0].data;
-        $.each(data, function(index, value) {
+        $.each(data, function (index, value) {
             if (value[0].valueOf() < self.plotArgs.options.xaxis.min.valueOf() || value[0].valueOf() > self.plotArgs.options.xaxis.max.valueOf()) {
                 return true;
             }

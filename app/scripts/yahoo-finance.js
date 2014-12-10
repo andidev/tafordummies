@@ -148,7 +148,7 @@
     yahooFinance.fn.isDataCacheEmpty = function () {
         log.trace('Is data cache empty?');
         if (this.getDataCache() === null) {
-            log.trace('Yes', dataCacheKeyNameSpace + this.symbol + '.data',  this.getDataCache());
+            log.trace('Yes', dataCacheKeyNameSpace + this.symbol + '.data', this.getDataCache());
             return true;
         } else {
             log.trace('No');
@@ -165,10 +165,10 @@
         log.trace('Is data cache out of date?');
         var lastDataCacheDate = moment(this.getDataCache()[0].date);
         if (lastDataCacheDate.isBefore(mostRecentWorkingDay())) {
-            log.trace('Yes', dataCacheKeyNameSpace + this.symbol + '.data',  this.getDataCache());
+            log.trace('Yes', dataCacheKeyNameSpace + this.symbol + '.data', this.getDataCache());
             return true;
         } else {
-            log.trace('No', dataCacheKeyNameSpace + this.symbol + '.data',  this.getDataCache());
+            log.trace('No', dataCacheKeyNameSpace + this.symbol + '.data', this.getDataCache());
             return false;
         }
     };
@@ -243,7 +243,7 @@
             async: false,
             dataType: 'json',
             crossDomain: true
-        }).done(function(data) {
+        }).done(function (data) {
             if (data.query.results !== null && data.query.results.row !== undefined) {
                 if (data.query.results.row.length > 1) {
                     data.query.results.row.shift(); // remove descriptions
@@ -268,9 +268,9 @@
                     alert('diagnostics.warning = ' + data.query.diagnostics.warning);
                 }
             }
-        }).fail(function() {
+        }).fail(function () {
             alert('Error downloading data');
-        }).always(function() {
+        }).always(function () {
 
         });
 
