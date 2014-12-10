@@ -830,7 +830,7 @@ function ViewModel() {
     };
 
     self.scrollPanZoom = _.throttle(function (viewModel, event) {
-        if (event.ctrlKey) {
+        if (event.altKey) {
             log.debug('Scroll zooming');
             var SCROLL_ZOOM_THRESHOLD = 2;
             if (event.originalEvent.wheelDeltaY < -SCROLL_ZOOM_THRESHOLD) {
@@ -934,7 +934,7 @@ function ViewModel() {
         self.processData();
         self.plot();
     };
-    self.ctrlKeyDown = false;
+    self.altKeyDown = false;
     self.keyboardShortcutsHandler = _.throttle(function (viewModel, event) {
         if (event.target.tagName === 'INPUT') {
             return true;
@@ -981,19 +981,19 @@ function ViewModel() {
             log.trace('Backspace key pressed');
             self.undoZoom();
             return false;
-        } else if (keyCode === 17) { // Ctrl
-            log.trace('Ctrl key pressed');
-            self.ctrlKeyDown = true;
+        } else if (keyCode === 18) { // Alt
+            log.trace('Alt key pressed');
+            self.altKeyDown = true;
             self.hoverDate(self.hoverDate()); // Refresh hover date
             return true;
         }
         return true;
     });
-    self.resetCtrlKeyDown = _.throttle(function (viewModel, event) {
+    self.resetAltKeyDown = _.throttle(function (viewModel, event) {
         var keyCode = (event.which ? event.which : event.keyCode);
-        if (keyCode === 17) { // Ctrl
-            log.debug('Ctrl key released');
-            self.ctrlKeyDown = false;
+        if (keyCode === 18) { // Alt
+            log.debug('Alt key released');
+            self.altKeyDown = false;
             self.hoverDate(self.hoverDate()); // Refresh hover date
             return true;
         }
@@ -1071,7 +1071,7 @@ function ViewModel() {
     self.hoverDateFormatted = ko.computed(function () {
         if (self.hoverDate() === undefined) {
             return '';
-        } else if (self.ctrlKeyDown) {
+        } else if (self.altKeyDown) {
             // Show detailed format
             return formatLongDate(self.hoverDate());
         } else {
