@@ -17,7 +17,6 @@
 /* global addPaddingsToYaxisMinMax */
 /* global findYaxisMinMax */
 /* exported ViewModel */
-
 function ViewModel() {
     var self = this;
     var url = $.url();
@@ -1258,6 +1257,40 @@ function ViewModel() {
                 }
             }
         });
+
+        // Do not reset time period to all when escape is pressed and menu is open
+        $('.btn-group').keydown(function (event) {
+            if ($('.btn-group.open .dropdown-toggle').length > 0) {
+                $('.btn-group.open .dropdown-toggle').dropdown('toggle');
+                $(':focus').blur();
+                event.stopPropagation();
+            }
+        });
+
+        $('.slider').slider({
+            handle: 'square',
+            tooltip: 'hide'
+        });
+
+        $('#from-to-date').datepicker({
+            format: 'yyyy-mm-dd',
+            todayBtn: 'linked',
+            calendarWeeks: true,
+            autoclose: true, // Closing datepicker manually since autoclose: true setting does not seem to work for datepicker
+            todayHighlight: true
+        });
+        $('#from-date-button').on('click', function () {
+            $('#from-date').datepicker('show');
+        });
+        $('#to-date-button').on('click', function () {
+            $('#to-date').datepicker('show');
+        });
+
+        $(document).on('click', '.dropdown-menu', function (e) {
+            if($(this).hasClass('dropdown-menu-keep-open')) {
+                e.stopPropagation();
+            }
+        });
     };
 
     self.processData = function () {
@@ -1832,3 +1865,9 @@ function ViewModel() {
         return getZoomOutDeltaForTimePeriod();
     }
 }
+
+console.time('loadingtime');
+var viewModel = new ViewModel();
+ko.applyBindings(viewModel);
+viewModel.init();
+console.timeEnd('loadingtime');

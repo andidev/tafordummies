@@ -294,48 +294,5 @@
         <script src="scripts/utils.js"></script>
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
-
-        <script type="text/javascript">
-            $(function () {
-                // Do not reset time period to all when escape is pressed and menu is open
-                $( ".btn-group" ).keydown(function(event) {
-                    if ($('.btn-group.open .dropdown-toggle').length > 0) {
-                        $('.btn-group.open .dropdown-toggle').dropdown('toggle');
-                        $(':focus').blur();
-                        event.stopPropagation();
-                    }
-                });
-                console.time("loadingtime");
-                viewModel = new ViewModel();
-                ko.applyBindings(viewModel);
-                viewModel.init();
-
-                $('.slider').slider({
-                    handle: 'square',
-                    tooltip: 'hide'
-                });
-//                $("#from-date").attr("value", viewModel.fromDate().format("yyyy-mm-dd"));
-//                $("#to-date").attr("value", viewModel.toDate().format("yyyy-mm-dd"));
-                $('#from-to-date').datepicker({
-                    format: "yyyy-mm-dd",
-                    todayBtn: "linked",
-                    calendarWeeks: true,
-                    autoclose: true,  // Closing datepicker manually since autoclose: true setting does not seem to work for datepicker
-                    todayHighlight: true
-                });
-                $('#from-date-button').on('click', function (ev) {
-                    $('#from-date').datepicker('show');
-                })
-                $('#to-date-button').on('click', function (ev) {
-                    $('#to-date').datepicker('show');
-                });
-
-                $(document).on('click', '.dropdown-menu', function (e) {
-                    $(this).hasClass('dropdown-menu-keep-open') && e.stopPropagation(); // This replace if conditional.
-                });
-
-                console.timeEnd("loadingtime");
-            });
-        </script>
     </body>
 </html>
