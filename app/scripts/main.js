@@ -58,6 +58,8 @@ function ViewModel() {
             fillColor: 'rgba(51, 120, 190, 0.09)'
         }
     });
+
+    // TA Fast
     self.showTaFast = ko.observable(defaultBooleanValue(true, url.param('showTaFast')));
     self.taFastType = ko.observable(defaultValue('SMA', url.param('taFastType')));
     self.taFastTypeOpposite = ko.computed(function () {
@@ -90,6 +92,7 @@ function ViewModel() {
         }
     });
 
+    // TA Slow
     self.showTaSlow = ko.observable(defaultBooleanValue(true, url.param('showTaSlow')));
     self.taSlowType = ko.observable(defaultValue('SMA', url.param('taSlowType')));
     self.taSlowTypeOpposite = ko.computed(function () {
@@ -132,6 +135,40 @@ function ViewModel() {
             lineWidth: 1
         }
     });
+
+    // Volume
+    self.hasVolume = ko.computed(function () {
+        if (self.flotFinanceSymbol()) {
+            return self.flotFinanceSymbol().hasVolume();
+        }
+    });
+    self.showVolume = ko.observable(defaultBooleanValue(true, url.param('showVolume')));
+    self.volume = ko.observable({
+        label: 'Volume',
+        data: [],
+        color: 'grey',
+        shadowSize: 1,
+        bars: {
+            show: true,
+            align: 'center'
+        }
+    });
+
+    // RSI
+    self.showRsi = ko.observable(defaultBooleanValue(false, url.param('showRsi')));
+    self.rsiPeriod = ko.observable(defaultNumberValue(14, url.param('rsiPeriod')));
+    self.rsi = ko.observable({
+        label: 'RSI(' + self.rsiPeriod() + ')',
+        data: [],
+        color: 'rgba(51, 120, 190, 1)',
+        shadowSize: 1,
+        lines: {
+            show: true,
+            lineWidth: 1
+        }
+    });
+
+    // MACD
     self.showMacd = ko.observable(defaultBooleanValue(false, url.param('showMacd')));
     self.macdFastPeriod = ko.observable(defaultNumberValue(12, url.param('macdFastPeriod')));
     self.macdSlowPeriod = ko.observable(defaultNumberValue(26, url.param('macdSlowPeriod')));
@@ -170,34 +207,7 @@ function ViewModel() {
         }
 
     });
-    self.hasVolume = ko.computed(function () {
-        if (self.flotFinanceSymbol()) {
-            return self.flotFinanceSymbol().hasVolume();
-        }
-    });
-    self.showVolume = ko.observable(defaultBooleanValue(true, url.param('showVolume')));
-    self.volume = ko.observable({
-        label: 'Volume',
-        data: [],
-        color: 'grey',
-        shadowSize: 1,
-        bars: {
-            show: true,
-            align: 'center'
-        }
-    });
-    self.showRsi = ko.observable(defaultBooleanValue(false, url.param('showRsi')));
-    self.rsiPeriod = ko.observable(defaultNumberValue(14, url.param('rsiPeriod')));
-    self.rsi = ko.observable({
-        label: 'RSI(' + self.rsiPeriod() + ')',
-        data: [],
-        color: 'rgba(51, 120, 190, 1)',
-        shadowSize: 1,
-        lines: {
-            show: true,
-            lineWidth: 1
-        }
-    });
+
     self.enableSplitDetection = ko.observable(defaultBooleanValue(false, url.param('enableSplitDetection')));
     self.scale = ko.observable(defaultValue('days', url.param('scale')));
     self.scaleTimePeriodAll = ko.observable('days');
@@ -301,22 +311,6 @@ function ViewModel() {
         series: [],
         options: jQuery.extend(true, {}, self.commonPlotOptions)
     };
-    self.macdPlotArgs = {
-        placeholder: $('#macd-plot'),
-        series: [],
-        options: jQuery.extend(true, {
-            grid: {
-                markings: [{
-                        color: 'rgba(51, 120, 190, 0.2)',
-                        lineWidth: 1,
-                        yaxis: {from: 0, to: 0}
-                    }, {
-                        color: 'rgba(56, 174, 17, 0.15)',
-                        lineWidth: 1,
-                        y2axis: {from: 0, to: 0}
-                    }]
-            }}, self.commonPlotOptions)
-    };
     self.volumePlotArgs = {
         placeholder: $('#volume-plot'),
         series: [],
@@ -349,10 +343,26 @@ function ViewModel() {
             }
         }, self.commonPlotOptions)
     };
+    self.macdPlotArgs = {
+        placeholder: $('#macd-plot'),
+        series: [],
+        options: jQuery.extend(true, {
+            grid: {
+                markings: [{
+                        color: 'rgba(51, 120, 190, 0.2)',
+                        lineWidth: 1,
+                        yaxis: {from: 0, to: 0}
+                    }, {
+                        color: 'rgba(56, 174, 17, 0.15)',
+                        lineWidth: 1,
+                        y2axis: {from: 0, to: 0}
+                    }]
+            }}, self.commonPlotOptions)
+    };
     self.$plot = null;
-    self.$macdPlot = null;
     self.$volumePlot = null;
     self.$rsiPlot = null;
+    self.$macdPlot = null;
 
     self.percent = ko.observable(0);
     self.percentFormatted = ko.computed(function () {
@@ -399,6 +409,7 @@ function ViewModel() {
     });
 
     // Behaviors
+    /* Change Scale */
     self.changeScaleToAuto = function () {
         if (self.scale() !== 'auto') {
             log.info('Changing scale to Auto');
@@ -440,6 +451,7 @@ function ViewModel() {
         }
     };
 
+    /* Change Time Period */
     self.changeTimePeriodToAll = function () {
         log.info('Changing time period to All');
         self.zoomHistory.push({
@@ -532,37 +544,7 @@ function ViewModel() {
         self.plot();
     };
 
-    self.toggleVolume = function () {
-        if (self.showVolume() === true) {
-            log.info('Hiding Volume');
-            self.showVolume(false);
-        } else {
-            log.info('Showing Volume');
-            self.showVolume(true);
-        }
-        self.plot();
-    };
-    self.toggleRsi = function () {
-        if (self.showRsi() === true) {
-            log.info('Hiding RSI');
-            self.showRsi(false);
-        } else {
-            log.info('Showing RSI');
-            self.showRsi(true);
-        }
-        self.plot();
-    };
-    self.toggleSplitDetection = function () {
-        if (self.enableSplitDetection() === false) {
-            log.info('Enabling Split Detection');
-            self.enableSplitDetection(true);
-        } else {
-            log.info('Disabling Split Detection');
-            self.enableSplitDetection(false);
-        }
-        self.processData();
-        self.plot();
-    };
+    /* Toggle */
     self.toggleTaFast = function () {
         if (self.showTaFast() === true) {
             log.info('Hiding TA Fast ' + self.taFastType() + '(' + self.taFastestPeriod() + ',' + self.taFastPeriod() + ')');
@@ -605,6 +587,26 @@ function ViewModel() {
         self.processData();
         self.plot();
     };
+    self.toggleVolume = function () {
+        if (self.showVolume() === true) {
+            log.info('Hiding Volume');
+            self.showVolume(false);
+        } else {
+            log.info('Showing Volume');
+            self.showVolume(true);
+        }
+        self.plot();
+    };
+    self.toggleRsi = function () {
+        if (self.showRsi() === true) {
+            log.info('Hiding RSI');
+            self.showRsi(false);
+        } else {
+            log.info('Showing RSI');
+            self.showRsi(true);
+        }
+        self.plot();
+    };
     self.toggleMacd = function () {
         if (self.showMacd() === true) {
             log.info('Hiding MACD(' + self.macdFastPeriod() + ',' + self.macdSlowPeriod() + ',' + self.macdSignalPeriod() + ')');
@@ -615,18 +617,19 @@ function ViewModel() {
         }
         self.plot();
     };
-
-
-    self.slideRsi = function (viewModel, event) {
-        log.trace('Sliding RSI');
-        var newPeriod = event.value;
-        if (self.rsiPeriod() !== newPeriod) {
-            log.info('Updating RSI to RSI(' + newPeriod + ')');
-            self.rsiPeriod(newPeriod);
-            self.processData();
-            self.plot();
+    self.toggleSplitDetection = function () {
+        if (self.enableSplitDetection() === false) {
+            log.info('Enabling Split Detection');
+            self.enableSplitDetection(true);
+        } else {
+            log.info('Disabling Split Detection');
+            self.enableSplitDetection(false);
         }
+        self.processData();
+        self.plot();
     };
+
+    /* Slide */
     self.slideTaFastest = function (viewModel, event) {
         log.trace('Sliding TA Fastest');
         var newPeriod = event.value;
@@ -673,6 +676,16 @@ function ViewModel() {
         if (self.taSlowestPeriod() !== newPeriod) {
             log.info('Updating TA Slowest to ' + self.taSlowType() + '(' + newPeriod + ')');
             self.taSlowestPeriod(newPeriod);
+            self.processData();
+            self.plot();
+        }
+    };
+    self.slideRsi = function (viewModel, event) {
+        log.trace('Sliding RSI');
+        var newPeriod = event.value;
+        if (self.rsiPeriod() !== newPeriod) {
+            log.info('Updating RSI to RSI(' + newPeriod + ')');
+            self.rsiPeriod(newPeriod);
             self.processData();
             self.plot();
         }
@@ -1356,16 +1369,6 @@ function ViewModel() {
         self.price().label = self.symbolName();
         self.plotArgs.series.push(self.price());
 
-        // Get Volume
-        if (self.flotFinanceSymbol().hasVolume()) {
-            self.volume().data = self.flotFinanceSymbol().getVolume(self.computeScale(), self.enableSplitDetection());
-            self.volumePlotArgs.series.push(self.volume());
-        }
-
-        // Get RSI
-        self.rsi().data = self.flotFinanceSymbol().getRsi(self.rsiPeriod(), self.computeScale(), self.enableSplitDetection());
-        self.rsiPlotArgs.series.push(self.rsi());
-
         // Calculate TA Fastest
         if (self.taFastType() === 'EMA') {
             self.taFastest().data = self.flotFinanceSymbol().getEmaPrice(self.taFastestPeriod(), self.computeScale(), self.enableSplitDetection());
@@ -1406,6 +1409,16 @@ function ViewModel() {
         }
         self.plotArgs.series.push(self.taSlowest());
 
+        // Get Volume
+        if (self.flotFinanceSymbol().hasVolume()) {
+            self.volume().data = self.flotFinanceSymbol().getVolume(self.computeScale(), self.enableSplitDetection());
+            self.volumePlotArgs.series.push(self.volume());
+        }
+
+        // Get RSI
+        self.rsi().data = self.flotFinanceSymbol().getRsi(self.rsiPeriod(), self.computeScale(), self.enableSplitDetection());
+        self.rsiPlotArgs.series.push(self.rsi());
+
         // Calculate MACD
         self.macd().data = self.flotFinanceSymbol().getMacd(self.macdFastPeriod(), self.macdSlowPeriod(), self.macdSignalPeriod(), self.computeScale(), self.enableSplitDetection());
         self.macdPlotArgs.series.push(self.macd());
@@ -1427,9 +1440,9 @@ function ViewModel() {
         log.debug('Plotting');
         var start = moment().valueOf();
         self.plotMain();
-        self.plotMacd();
         self.plotVolume();
         self.plotRsi();
+        self.plotMacd();
         var stop = moment().valueOf();
         var executionTime = stop - start;
         log.debug('Plotting took ' + executionTime + ' milliseconds');
@@ -1480,36 +1493,6 @@ function ViewModel() {
         $('#plot .legend-label-value').remove();
         ko.applyBindings(self, $('#plot .legend')[0]);
         ko.applyBindings(self, $('#hover-info-plot tbody')[0]);
-    };
-
-    self.plotMacd = function () {
-        log.debug('Plotting MACD');
-        self.updateMacdPlotAxisMinAndMax();
-        if (self.showMacd()) {
-            if (self.settings.showXaxisTicksInGrid) {
-                self.macdPlotArgs.options.xaxis.tickColor = null;
-            } else {
-                self.macdPlotArgs.options.xaxis.tickColor = 'transparent';
-            }
-
-            self.macd().label = 'MACD(' + self.macdFastPeriod() + ',' + self.macdSlowPeriod() + ')';
-            self.macdSignal().label = 'Signal(' + self.macdSignalPeriod() + ')';
-
-            self.macdPlotArgs.series = [self.macdDivergence(), self.macd(), self.macdSignal()];
-            $('#macd-plot').css('margin-top', '-26px');
-            $('#macd-plot').slideDown('fast', function () {
-                self.$macdPlot = $.plot(this, self.macdPlotArgs.series, self.macdPlotArgs.options);
-                self.updateProfit();
-                $('#hover-info-macd-plot').html($('#macd-plot .legend tbody').clone());
-                $('#macd-plot .legend-label-value').remove();
-                ko.applyBindings(self, $('#macd-plot .legend')[0]);
-                ko.applyBindings(self, $('#hover-info-macd-plot tbody')[0]);
-            });
-        } else {
-            $('#macd-plot').slideUp('fast', function () {
-                $('#macd-plot').html('');
-            });
-        }
     };
 
     self.plotVolume = function () {
@@ -1580,6 +1563,36 @@ function ViewModel() {
         } else {
             $('#rsi-plot').slideUp('fast', function () {
                 $('#rsi-plot').html('');
+            });
+        }
+    };
+
+    self.plotMacd = function () {
+        log.debug('Plotting MACD');
+        self.updateMacdPlotAxisMinAndMax();
+        if (self.showMacd()) {
+            if (self.settings.showXaxisTicksInGrid) {
+                self.macdPlotArgs.options.xaxis.tickColor = null;
+            } else {
+                self.macdPlotArgs.options.xaxis.tickColor = 'transparent';
+            }
+
+            self.macd().label = 'MACD(' + self.macdFastPeriod() + ',' + self.macdSlowPeriod() + ')';
+            self.macdSignal().label = 'Signal(' + self.macdSignalPeriod() + ')';
+
+            self.macdPlotArgs.series = [self.macdDivergence(), self.macd(), self.macdSignal()];
+            $('#macd-plot').css('margin-top', '-26px');
+            $('#macd-plot').slideDown('fast', function () {
+                self.$macdPlot = $.plot(this, self.macdPlotArgs.series, self.macdPlotArgs.options);
+                self.updateProfit();
+                $('#hover-info-macd-plot').html($('#macd-plot .legend tbody').clone());
+                $('#macd-plot .legend-label-value').remove();
+                ko.applyBindings(self, $('#macd-plot .legend')[0]);
+                ko.applyBindings(self, $('#hover-info-macd-plot tbody')[0]);
+            });
+        } else {
+            $('#macd-plot').slideUp('fast', function () {
+                $('#macd-plot').html('');
             });
         }
     };
