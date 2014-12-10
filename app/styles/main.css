@@ -42,6 +42,18 @@ body {
     width: 145px;
 }
 
+.dropdown-menu .fa-check {
+    padding-top: 2px;
+}
+
+.dropdown-menu-item-keyboard-shortcut {
+    float: right;
+    color: #eee; 
+    padding-right: 5px;
+}
+.dropdown-menu li:hover .dropdown-menu-item-keyboard-shortcut {
+    color: white;
+}
 
 
 /* Flot Tick Labels */
