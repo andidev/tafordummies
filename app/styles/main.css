@@ -31,6 +31,19 @@ body {
 
 
 
+/* Bootstrap Dropdown-menu Dimentions */
+.dropdown-menu {
+    width: 200px;
+}
+.dropdown-menu-item-slider {
+    padding-left: 25px;
+}
+.dropdown-menu-item-slider .slider {
+    width: 145px;
+}
+
+
+
 /* Flot Tick Labels */
 .flot-tick-label {
     color: #999999;
