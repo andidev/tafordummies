@@ -6,6 +6,8 @@ body {
     text-align: center;
 }
 
+
+
 /* Plot Dimensions */
 #plot {
     width: 100%;
@@ -25,6 +27,20 @@ body {
     width: 100%;
     height: 200px;
     display: none;
+}
+
+
+
+/* Flot Tick Labels */
+.flot-tick-label {
+    color: #999999;
+    font-size: 14px;
+}
+#plot .flot-y-axis .flot-tick-label {
+    color: #31708f;
+}
+#macd-plot .flot-y2-axis .flot-tick-label {
+    color: rgba(10, 100, 0, 0.33);
 }
 
 

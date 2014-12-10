@@ -1,4 +1,4 @@
-/* Custom navbar */
+/* Custom Navbar */
 .navbar-tafordummies {
     background-color: rgba(51, 120, 190, 0.8);
     border-color: rgba(51, 120, 190, 0.09);
@@ -60,13 +60,17 @@
     }
 }
 
-/* Text bold class */
+/* Text bold Class */
 .text-bold {
     font-weight: bold;
 }
+
+/* Text large Class */
 .text-large {
     font-size: 28px;
 }
+
+/* Horizontal Ruler Thin Class */
 .hr-thin {
     margin-top: 10px;
     margin-bottom: 10px;

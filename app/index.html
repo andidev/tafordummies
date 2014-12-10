@@ -22,23 +22,6 @@
         <link rel="stylesheet" href="styles/main.css">
         <link rel="stylesheet" href="styles/bootstrap-addons.css">
         <!-- endbuild -->
-
-        <style type="text/css">
-            .flot-tick-label {
-                color: #999999;
-                font-size: 14px;
-            }
-            #plot .flot-y-axis .flot-tick-label {
-                color: #31708f;
-            }
-            .flot-x-axis .flot-tick-label {
-                color: #999999;
-            }
-            #macd-plot .flot-y2-axis .flot-tick-label {
-                color: rgba(10, 100, 0, 0.33);
-            }
-
-        </style>
     </head>
 
     <body data-bind="event: { keydown: keyboardShortcutsHandler, keyup: resetCtrlKeyDown }">
@@ -223,20 +206,6 @@
                         </div>
                         <div class="pull-right">
                             <div class="btn-group">
-                                <!--
-                                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                                    <span class="caret"></span>
-                                                                    <span class="sr-only">Toggle Dropdown</span>
-                                                                </button>
-                                                                <ul class="dropdown-menu" role="menu" style="width:200px;">
-                                                                    <li><a href="#" data-sbind="click: changeFromTimeToAll">All</a></li>
-                                                                    <li><a href="#" data-sbind="click: changeFromTimeTo3Years">3 Years Ago</a></li>
-                                                                    <li><a href="#" data-sbind="click: changeFromTimeToYear">A Year Ago</a></li>
-                                                                    <li><a href="#" data-sbind="click: changeFromTimeTo3Months">3 Months Ago</a></li>
-                                                                    <li><a href="#" data-sbind="click: changeFromTimeToMonth">A Month Ago</a></li>
-                                                                    <li><a href="#" data-sbind="click: changeFromTimeToWeek">A Week Ago</a></li>
-                                                                </ul>
-                                -->
                                 <div id="from-to-date" class="input-daterange input-group">
                                     <a id="from-date-button" class="btn btn-default form-control" data-bind="text: fromDateFormatted()"></a>
                                     <input id="from-date" type="text" class="btn btn-default form-control" name="start" data-bind="event: {changeDate: changeFromDate}"/>
@@ -244,18 +213,7 @@
                                     <input id="to-date" type="text" class="btn btn-default form-control" name="end" data-bind="event: {changeDate: changeToDate}"/>
                                     <a id="to-date-button" class="btn btn-default form-control" data-bind="text: toDateFormatted()"></a>
                                 </div>
-                                <!--
-                                                                <div id="from-to-date" class="input-daterange input-group" style="width: 250px;">
-                                                                    <input type="text" class="btn btn-default form-control" name="start" data-bind="value: formatDate(fromDate())"/>
-                                                                    <span class="input-group-addon">to</span>
-                                                                    <input type="text" class="btn btn-default form-control" name="end" data-bind="value: formatDate(toDate())"/>
-                                                                </div>
-                                -->
                             </div>
-                            <!--
-                                                      <input id="from-date" class="btn btn-default" type="button" type="text" class="form-control" data-bind="value: xaxisMinDate().toString('yyyy-MM-dd')"/>
-                                                      <input id="to-date" class="btn btn-default" type="button" type="text" class="form-control" data-bind="value: xaxisMaxDate().toString('yyyy-MM-dd')"/>
-                            -->
                         </div>
                     </div>
                 </div>
