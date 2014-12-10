@@ -167,7 +167,7 @@
                         </div>
                     </div>
                     <div id="ta-plots" class="col-md-12">
-                        <div id="plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo, mousewheel: scrollPanZoom}"></div>
+                        <div id="main-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo, mousewheel: scrollPanZoom}"></div>
                         <div id="volume-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
                         <div id="rsi-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
                         <div id="macd-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
@@ -176,7 +176,7 @@
                             <div id="hover-percent" class="text-center text-bold text-large" data-bind="css: hoverPercentColorClass"><i class="fa" data-bind="css: hoverPercentArrowClass"></i> <span data-bind="html: hoverPercentFormatted()"></span></div>
                             <div>
                                 <hr class="hr-thin"/>
-                                <table id="hover-info-plot"></table>
+                                <table id="hover-info-main-plot"></table>
                             </div>
                             <div data-bind="visible: hasVolume() && showVolume()">
                                 <hr class="hr-thin"/>

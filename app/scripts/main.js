@@ -306,8 +306,8 @@ function ViewModel() {
         },
         highlightColor: '#428bca'
     };
-    self.plotArgs = {
-        placeholder: $('#plot'),
+    self.mainPlotArgs = {
+        placeholder: $('#main-plot'),
         series: [],
         options: jQuery.extend(true, {}, self.commonPlotOptions)
     };
@@ -359,7 +359,7 @@ function ViewModel() {
                     }]
             }}, self.commonPlotOptions)
     };
-    self.$plot = null;
+    self.$mainPlot = null;
     self.$volumePlot = null;
     self.$rsiPlot = null;
     self.$macdPlot = null;
@@ -807,7 +807,7 @@ function ViewModel() {
             }
         }
         if (ranges !== null) {
-            self.$plot.clearSelection();
+            self.$mainPlot.clearSelection();
             if (self.showMacd()) {
                 self.$macdPlot.clearSelection();
             }
@@ -821,8 +821,8 @@ function ViewModel() {
     };
     self.syncSelectionInPlot = function (viewModel, event, ranges) {
         if (ranges !== null) {
-            if (event.currentTarget.id !== 'plot') {
-                self.$plot.setSelection(ranges, true);
+            if (event.currentTarget.id !== 'main-plot') {
+                self.$mainPlot.setSelection(ranges, true);
             }
             if (event.currentTarget.id !== 'volume-plot') {
                 if (self.showVolume() && self.hasVolume()) {
@@ -1125,7 +1125,7 @@ function ViewModel() {
     });
 
     self.showPriceInfo = function (viewModel, event, pos) {
-        if (self.$plot) {
+        if (self.$mainPlot) {
             var priceInfoIndex = self.findClosestDatapoint(pos.x);
             if (priceInfoIndex === self.previousPriceInfoIndex) {
                 // No changes to update
@@ -1140,13 +1140,13 @@ function ViewModel() {
                 // Do not hover dates after to date
                 priceInfoIndex = self.findClosestDatapoint(self.toDate());
             }
-            self.$plot.unhighlight(0, self.previousPriceInfoIndex);
-            var date = self.plotArgs.series[0].data[priceInfoIndex][0];
-            var price = self.plotArgs.series[0].data[priceInfoIndex][1];
-            var priceToTheLeft = priceInfoIndex > 0 ? self.plotArgs.series[0].data[priceInfoIndex - 1][1] : null;
+            self.$mainPlot.unhighlight(0, self.previousPriceInfoIndex);
+            var date = self.mainPlotArgs.series[0].data[priceInfoIndex][0];
+            var price = self.mainPlotArgs.series[0].data[priceInfoIndex][1];
+            var priceToTheLeft = priceInfoIndex > 0 ? self.mainPlotArgs.series[0].data[priceInfoIndex - 1][1] : null;
 
             // Lock the crosshair to the closest data point being hovered
-            self.$plot.lockCrosshair({
+            self.$mainPlot.lockCrosshair({
                 x: date,
                 y: price
             });
@@ -1168,7 +1168,7 @@ function ViewModel() {
                     y: price
                 });
             }
-            self.$plot.highlight(0, priceInfoIndex);
+            self.$mainPlot.highlight(0, priceInfoIndex);
 
             var percent = null;
             if (priceToTheLeft !== null) {
@@ -1176,11 +1176,11 @@ function ViewModel() {
             }
             self.hoverPercent(percent);
             self.hoverPrice(price);
-            self.hoverTaFastest(self.plotArgs.series[1].data[priceInfoIndex][1]);
-            self.hoverTaFast(self.plotArgs.series[2].data[priceInfoIndex][1]);
-            self.hoverTaSlow(self.plotArgs.series[3].data[priceInfoIndex][1]);
-            self.hoverTaSlower(self.plotArgs.series[4].data[priceInfoIndex][1]);
-            self.hoverTaSlowest(self.plotArgs.series[5].data[priceInfoIndex][1]);
+            self.hoverTaFastest(self.mainPlotArgs.series[1].data[priceInfoIndex][1]);
+            self.hoverTaFast(self.mainPlotArgs.series[2].data[priceInfoIndex][1]);
+            self.hoverTaSlow(self.mainPlotArgs.series[3].data[priceInfoIndex][1]);
+            self.hoverTaSlower(self.mainPlotArgs.series[4].data[priceInfoIndex][1]);
+            self.hoverTaSlowest(self.mainPlotArgs.series[5].data[priceInfoIndex][1]);
             if (self.hasVolume() && self.$volumePlot) {
                 self.hoverVolume(self.volumePlotArgs.series[0].data[priceInfoIndex][1]);
             }
@@ -1198,13 +1198,13 @@ function ViewModel() {
         }
     };
     self.hidePriceInfo = function (viewModel, event) {
-        if (self.$plot) {
+        if (self.$mainPlot) {
             if ($('#hover-info').is(event.toElement)) {
                 // Do not hide hover info if it is hovered
                 return;
             }
-            self.$plot.clearCrosshair();
-            self.$plot.unhighlight(0, self.previousPriceInfoIndex);
+            self.$mainPlot.clearCrosshair();
+            self.$mainPlot.unhighlight(0, self.previousPriceInfoIndex);
             if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
                 self.$volumePlot.clearCrosshair();
             }
@@ -1345,7 +1345,7 @@ function ViewModel() {
         log.debug('Processing data');
         var start = moment().valueOf();
 
-        self.plotArgs.series = [];
+        self.mainPlotArgs.series = [];
         self.price().data = self.flotFinanceSymbol().getClosePrice(self.computeScale(), self.enableSplitDetection());
 
         if (self.scale() === 'auto' && self.timePeriod() === 'all') {
@@ -1367,7 +1367,7 @@ function ViewModel() {
 
         // Get Price
         self.price().label = self.symbolName();
-        self.plotArgs.series.push(self.price());
+        self.mainPlotArgs.series.push(self.price());
 
         // Calculate TA Fastest
         if (self.taFastType() === 'EMA') {
@@ -1375,7 +1375,7 @@ function ViewModel() {
         } else {
             self.taFastest().data = self.flotFinanceSymbol().getSmaPrice(self.taFastestPeriod(), self.computeScale(), self.enableSplitDetection());
         }
-        self.plotArgs.series.push(self.taFastest());
+        self.mainPlotArgs.series.push(self.taFastest());
 
         // Calculate TA Fast
         if (self.taFastType() === 'EMA') {
@@ -1383,7 +1383,7 @@ function ViewModel() {
         } else {
             self.taFast().data = self.flotFinanceSymbol().getSmaPrice(self.taFastPeriod(), self.computeScale(), self.enableSplitDetection());
         }
-        self.plotArgs.series.push(self.taFast());
+        self.mainPlotArgs.series.push(self.taFast());
 
         // Calculate TA Slow
         if (self.taSlowType() === 'EMA') {
@@ -1391,7 +1391,7 @@ function ViewModel() {
         } else {
             self.taSlow().data = self.flotFinanceSymbol().getSmaPrice(self.taSlowPeriod(), self.computeScale(), self.enableSplitDetection());
         }
-        self.plotArgs.series.push(self.taSlow());
+        self.mainPlotArgs.series.push(self.taSlow());
 
         // Calculate TA Slower
         if (self.taSlowType() === 'EMA') {
@@ -1399,7 +1399,7 @@ function ViewModel() {
         } else {
             self.taSlower().data = self.flotFinanceSymbol().getSmaPrice(self.taSlowerPeriod(), self.computeScale(), self.enableSplitDetection());
         }
-        self.plotArgs.series.push(self.taSlower());
+        self.mainPlotArgs.series.push(self.taSlower());
 
         // Calculate TA Slowest
         if (self.taSlowType() === 'EMA') {
@@ -1407,7 +1407,7 @@ function ViewModel() {
         } else {
             self.taSlowest().data = self.flotFinanceSymbol().getSmaPrice(self.taSlowestPeriod(), self.computeScale(), self.enableSplitDetection());
         }
-        self.plotArgs.series.push(self.taSlowest());
+        self.mainPlotArgs.series.push(self.taSlowest());
 
         // Get Volume
         if (self.flotFinanceSymbol().hasVolume()) {
@@ -1479,20 +1479,20 @@ function ViewModel() {
             self.taSlowest().label = null;
         }
         if (self.settings.showXaxisTicksInGrid) {
-            self.plotArgs.options.xaxis.tickColor = null;
+            self.mainPlotArgs.options.xaxis.tickColor = null;
         } else {
-            self.plotArgs.options.xaxis.tickColor = 'transparent';
+            self.mainPlotArgs.options.xaxis.tickColor = 'transparent';
         }
         if (self.showMacd() || (self.showVolume() && self.hasVolume()) || self.showRsi()) {
-            self.plotArgs.options.xaxis.font = {color: 'transparent'};
+            self.mainPlotArgs.options.xaxis.font = {color: 'transparent'};
         } else {
-            self.plotArgs.options.xaxis.font = null;
+            self.mainPlotArgs.options.xaxis.font = null;
         }
-        self.$plot = $.plot(self.plotArgs.placeholder, self.plotArgs.series, self.plotArgs.options);
-        $('#hover-info-plot').html($('#plot .legend tbody').clone());
-        $('#plot .legend-label-value').remove();
-        ko.applyBindings(self, $('#plot .legend')[0]);
-        ko.applyBindings(self, $('#hover-info-plot tbody')[0]);
+        self.$mainPlot = $.plot(self.mainPlotArgs.placeholder, self.mainPlotArgs.series, self.mainPlotArgs.options);
+        $('#hover-info-main-plot').html($('#main-plot .legend tbody').clone());
+        $('#main-plot .legend-label-value').remove();
+        ko.applyBindings(self, $('#main-plot .legend')[0]);
+        ko.applyBindings(self, $('#hover-info-main-plot tbody')[0]);
     };
 
     self.plotVolume = function () {
@@ -1600,8 +1600,8 @@ function ViewModel() {
     self.updatePlotAxisMinAndMax = function () {
         log.trace('updatePlotAxisMinAndMax()');
         // Update xaxis min/max
-        self.plotArgs.options.xaxis.min = self.fromDate();
-        self.plotArgs.options.xaxis.max = self.toDate();
+        self.mainPlotArgs.options.xaxis.min = self.fromDate();
+        self.mainPlotArgs.options.xaxis.max = self.toDate();
 
         // Find yaxis min/max
         var yaxisMinMax = findYaxisMinMax(self.price(), self.fromDate(), self.toDate());
@@ -1615,11 +1615,11 @@ function ViewModel() {
 
         // Update yaxis min/max
         if (yaxisMinMax.min < 0) {
-            self.plotArgs.options.yaxes[0].min = 0;
+            self.mainPlotArgs.options.yaxes[0].min = 0;
         } else {
-            self.plotArgs.options.yaxes[0].min = yaxisMinMax.min;
+            self.mainPlotArgs.options.yaxes[0].min = yaxisMinMax.min;
         }
-        self.plotArgs.options.yaxes[0].max = yaxisMinMax.max;
+        self.mainPlotArgs.options.yaxes[0].max = yaxisMinMax.max;
     };
 
     self.updateMacdPlotAxisMinAndMax = function () {
@@ -1669,7 +1669,7 @@ function ViewModel() {
 
     self.findClosestDatapoint = function (date) {
         log.trace('findClosestDatapoint()');
-        var data = self.plotArgs.series[0].data;
+        var data = self.mainPlotArgs.series[0].data;
         var minIndex = 0;
         var maxIndex = data.length - 1;
         var currentIndex;
@@ -1710,17 +1710,17 @@ function ViewModel() {
         var last;
         var highest;
         var lowest;
-        var data = self.plotArgs.series[0].data;
+        var data = self.mainPlotArgs.series[0].data;
         $.each(data, function (index, value) {
-            if (first === undefined && value[0].valueOf() >= self.plotArgs.options.xaxis.min.valueOf()) {
+            if (first === undefined && value[0].valueOf() >= self.mainPlotArgs.options.xaxis.min.valueOf()) {
                 first = value[1];
             }
-            if (value[0].valueOf() <= self.plotArgs.options.xaxis.max.valueOf()) {
+            if (value[0].valueOf() <= self.mainPlotArgs.options.xaxis.max.valueOf()) {
                 last = value[1];
             }
 
             // Check if value is within current time period
-            if (value[0].valueOf() >= self.plotArgs.options.xaxis.min.valueOf() && value[0].valueOf() <= self.plotArgs.options.xaxis.max.valueOf()) {
+            if (value[0].valueOf() >= self.mainPlotArgs.options.xaxis.min.valueOf() && value[0].valueOf() <= self.mainPlotArgs.options.xaxis.max.valueOf()) {
                 // Set initial min/max values
                 if (highest === undefined) {
                     highest = value[1];
@@ -1752,9 +1752,9 @@ function ViewModel() {
         var stocks = 0;
         var money = 1000;
         var profit;
-        var data = self.plotArgs.series[0].data;
+        var data = self.mainPlotArgs.series[0].data;
         $.each(data, function (index, value) {
-            if (value[0].valueOf() < self.plotArgs.options.xaxis.min.valueOf() || value[0].valueOf() > self.plotArgs.options.xaxis.max.valueOf()) {
+            if (value[0].valueOf() < self.mainPlotArgs.options.xaxis.min.valueOf() || value[0].valueOf() > self.mainPlotArgs.options.xaxis.max.valueOf()) {
                 return true;
             }
             if (index === 0 || self.macdDivergence().data[index][1] === null) {
