@@ -1292,10 +1292,13 @@ function ViewModel() {
 
         // Do not reset time period to all when escape is pressed and menu is open
         $('.btn-group').keydown(function (event) {
-            if ($('.btn-group.open .dropdown-toggle').length > 0) {
-                $('.btn-group.open .dropdown-toggle').dropdown('toggle');
-                $(':focus').blur();
-                event.stopPropagation();
+            var keyCode = (event.which ? event.which : event.keyCode);
+            if (keyCode === 27) { // Escape key
+                if ($('.btn-group.open .dropdown-toggle').length > 0) {
+                    $('.btn-group.open .dropdown-toggle').dropdown('toggle');
+                    $(':focus').blur();
+                    event.stopPropagation();
+                }
             }
         });
 
