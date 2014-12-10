@@ -965,6 +965,38 @@ function ViewModel() {
             log.trace('Plus sign key pressed');
             self.zoomIn();
             return false;
+        } else if (keyCode === 86) { // V key
+            log.trace('V key pressed');
+            self.toggleVolume();
+            return false;
+        } else if (keyCode === 82) { // R key
+            log.trace('R key pressed');
+            self.toggleRsi();
+            return false;
+        } else if (keyCode === 70) { // F key
+            if (event.altKey) {
+                log.trace('Alt + F key pressed');
+                self.toggleTaFastType();
+                return false;
+            } else {
+                log.trace('F key pressed');
+                self.toggleTaFast();
+                return false;
+            }
+        } else if (keyCode === 83) { // S key
+            if (event.altKey) {
+                log.trace('Alt + S key pressed');
+                self.toggleTaSlowType();
+                return false;
+            } else {
+                log.trace('S key pressed');
+                self.toggleTaSlow();
+                return false;
+            }
+        } else if (keyCode === 77) { // M key
+            log.trace('M key pressed');
+            self.toggleMacd();
+            return false;
         } else if (keyCode === 27) { // Escape
             log.trace('Escape key pressed');
             if ($('.datepicker-dropdown:visible').length) {
