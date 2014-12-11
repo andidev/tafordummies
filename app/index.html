@@ -172,23 +172,134 @@
                         <div id="rsi-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
                         <div id="macd-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
                         <div id="hover-info">
-                            <div id="hover-date" class="text-center text-muted text-bold" data-bind="text: hoverDateFormatted"></div>
-                            <div id="hover-percent" class="text-center text-bold text-large" data-bind="css: hoverPercentColorClass"><i class="fa" data-bind="css: hoverPercentArrowClass"></i> <span data-bind="html: hoverPercentFormatted()"></span></div>
+                            <div id="hover-date" class="text-center text-muted text-bold" data-bind="text: hoverDateFormatted">23 May 2012</div>
+                            <div id="hover-percent" class="text-center text-bold text-large text-success" data-bind="css: hoverPercentColorClass"><i class="fa fa-arrow-up" data-bind="css: hoverPercentArrowClass"></i> <span data-bind="html: hoverPercentFormatted()">1,03%</span></div>
                             <div>
-                                <hr class="hr-thin"/>
-                                <table id="hover-info-main-plot"></table>
+                                <hr class="hr-thin">
+                                <table id="hover-info-main-plot">
+                                    <tbody>
+                                        <tr>
+                                            <td class="legend-color-box">
+                                                <div style="border:1px solid transparent;padding:1px">
+                                                    <div style="width:4px;height:0;border:5px solid rgba(51, 120, 190, 1);overflow:hidden"></div>
+                                                </div>
+                                            </td>
+                                            <td class="legend-label">Black Pearl Resources</span></td>
+                                            <td class="legend-value" data-bind="text: hoverPriceFormatted, visible: hoverPrice">3,92</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="legend-color-box">
+                                                <div style="border:1px solid transparent;padding:1px">
+                                                    <div style="width:4px;height:0;border:5px solid rgba(51, 120, 190, 0.4);overflow:hidden"></div>
+                                                </div>
+                                            </td>
+                                            <td class="legend-label">SMA(5)</span></td>
+                                            <td class="legend-value" data-bind="text: hoverTaFastestFormatted, visible: hoverTaFastest">3,81</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="legend-color-box">
+                                                <div style="border:1px solid transparent;padding:1px">
+                                                    <div style="width:4px;height:0;border:5px solid rgba(178, 56, 59, 0.4);overflow:hidden"></div>
+                                                </div>
+                                            </td>
+                                            <td class="legend-label">SMA(14)</span></td>
+                                            <td class="legend-value" data-bind="text: hoverTaFastFormatted, visible: hoverTaFast">3,87</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="legend-color-box">
+                                                <div style="border:1px solid transparent;padding:1px">
+                                                    <div style="width:4px;height:0;border:5px solid rgba(0, 0, 0, 0.4);overflow:hidden"></div>
+                                                </div>
+                                            </td>
+                                            <td class="legend-label">SMA(50)</span></td>
+                                            <td class="legend-value" data-bind="text: hoverTaSlowFormatted, visible: hoverTaSlow">4,06</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="legend-color-box">
+                                                <div style="border:1px solid transparent;padding:1px">
+                                                    <div style="width:4px;height:0;border:5px solid rgba(0, 0, 0, 0.2);overflow:hidden"></div>
+                                                </div>
+                                            </td>
+                                            <td class="legend-label">SMA(100)</span></td>
+                                            <td class="legend-value" data-bind="text: hoverTaSlowerFormatted, visible: hoverTaSlower">4,41</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="legend-color-box">
+                                                <div style="border:1px solid transparent;padding:1px">
+                                                    <div style="width:4px;height:0;border:5px solid rgba(0, 0, 0, 0.1);overflow:hidden"></div>
+                                                </div>
+                                            </td>
+                                            <td class="legend-label">SMA(200)</span></td>
+                                            <td class="legend-value" data-bind="text: hoverTaSlowestFormatted, visible: hoverTaSlowest">4,47</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <div data-bind="visible: hasVolume() && showVolume()">
-                                <hr class="hr-thin"/>
-                                <table id="hover-info-volume-plot"></table>
+                                <hr class="hr-thin">
+                                <table id="hover-info-volume-plot">
+                                    <tbody>
+                                        <tr>
+                                            <td class="legend-color-box">
+                                                <div style="border:1px solid transparent;padding:1px">
+                                                    <div style="width:4px;height:0;border:5px solid grey;overflow:hidden"></div>
+                                                </div>
+                                            </td>
+                                            <td class="legend-label">Volume</span></td>
+                                            <td class="legend-value" data-bind="text: hoverVolumeFormatted, visible: hoverVolume && hasVolume">782 700</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <div data-bind="visible: showRsi">
-                                <hr class="hr-thin"/>
-                                <table id="hover-info-rsi-plot"></table>
+                                <hr class="hr-thin">
+                                <table id="hover-info-rsi-plot">
+                                    <tbody>
+                                        <tr>
+                                            <td class="legend-color-box">
+                                                <div style="border:1px solid transparent;padding:1px">
+                                                    <div style="width:4px;height:0;border:5px solid rgba(51, 120, 190, 1);overflow:hidden"></div>
+                                                </div>
+                                            </td>
+                                            <td class="legend-label">RSI(14)</span></td>
+                                            <td class="legend-value" data-bind="text: hoverRsiFormatted, visible: hoverRsi">47,81</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <div data-bind="visible: showMacd">
-                                <hr class="hr-thin"/>
-                                <table id="hover-info-macd-plot"></table>
+                                <hr class="hr-thin">
+                                <table id="hover-info-macd-plot">
+                                    <tbody>
+                                        <tr>
+                                            <td class="legend-color-box">
+                                                <div style="border:1px solid transparent;padding:1px">
+                                                    <div style="width:4px;height:0;border:5px solid rgba(56, 174, 17, 0.2);overflow:hidden"></div>
+                                                </div>
+                                            </td>
+                                            <td class="legend-label">Divergence</span></td>
+                                            <td class="legend-value" data-bind="text: hoverMacdDivergenceFormatted, visible: hoverMacdDivergence">0,00</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="legend-color-box">
+                                                <div style="border:1px solid transparent;padding:1px">
+                                                    <div style="width:4px;height:0;border:5px solid rgba(51, 120, 190, 0.4);overflow:hidden"></div>
+                                                </div>
+                                            </td>
+                                            <td class="legend-label">MACD(12,26)</span></td>
+                                            <td class="legend-value" data-bind="text: hoverMacdFormatted, visible: hoverMacd">-0,08</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="legend-color-box">
+                                                <div style="border:1px solid transparent;padding:1px">
+                                                    <div style="width:4px;height:0;border:5px solid rgba(178, 56, 59, 0.4);overflow:hidden"></div>
+                                                </div>
+                                            </td>
+                                            <td class="legend-label">Signal(9)</span></td>
+                                            <td class="legend-value" data-bind="text: hoverMacdSignalFormatted, visible: hoverMacdSignal">-0,08</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

@@ -275,34 +275,7 @@ function ViewModel() {
             labelBoxBorderColor: 'transparent',
             backgroundColor: 'transparent',
             noColumns: 1,
-            position: 'nw',
-            labelFormatter: function (label) {
-                if (label === self.symbolName()) {
-                    return '<span class="legend-label">' + label + '</span> <span class="legend-label-value" data-bind="text: hoverPriceFormatted, visible: hoverPrice"></span>';
-                } else if (label === self.taFastType() + '(' + self.taFastestPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverTaFastestFormatted, visible: hoverTaFastest"></span>';
-                } else if (label === self.taFastType() + '(' + self.taFastPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverTaFastFormatted, visible: hoverTaFast"></span>';
-                } else if (label === self.taSlowType() + '(' + self.taSlowPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverTaSlowFormatted, visible: hoverTaSlow"></span>';
-                } else if (label === self.taSlowType() + '(' + self.taSlowerPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverTaSlowerFormatted, visible: hoverTaSlower"></span>';
-                } else if (label === self.taSlowType() + '(' + self.taSlowestPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverTaSlowestFormatted, visible: hoverTaSlowest"></span>';
-                } else if (label === 'Volume') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverVolumeFormatted, visible: hoverVolume && hasVolume"></span>';
-                } else if (label === 'RSI(' + self.rsiPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverRsiFormatted, visible: hoverRsi"></span>';
-                } else if (label === 'Divergence') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdDivergenceFormatted, visible: hoverMacdDivergence"></span>';
-                } else if (label === 'MACD(' + self.macdFastPeriod() + ',' + self.macdSlowPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdFormatted, visible: hoverMacd"></span>';
-                } else if (label === 'Signal(' + self.macdSignalPeriod() + ')') {
-                    return '<span class="legend-label">' + label + '</span>  <span class="legend-label-value" data-bind="text: hoverMacdSignalFormatted, visible: hoverMacdSignal"></span>';
-                } else {
-                    return label;
-                }
-            }
+            position: 'nw'
         },
         highlightColor: '#428bca'
     };
@@ -1489,10 +1462,6 @@ function ViewModel() {
             self.mainPlotArgs.options.xaxis.font = null;
         }
         self.$mainPlot = $.plot(self.mainPlotArgs.placeholder, self.mainPlotArgs.series, self.mainPlotArgs.options);
-        $('#hover-info-main-plot').html($('#main-plot .legend tbody').clone());
-        $('#main-plot .legend-label-value').remove();
-        ko.applyBindings(self, $('#main-plot .legend')[0]);
-        ko.applyBindings(self, $('#hover-info-main-plot tbody')[0]);
     };
 
     self.plotVolume = function () {
@@ -1524,10 +1493,6 @@ function ViewModel() {
             $('#volume-plot').css('margin-top', '-26px');
             $('#volume-plot').slideDown('fast', function () {
                 self.$volumePlot = $.plot(this, self.volumePlotArgs.series, self.volumePlotArgs.options);
-                $('#hover-info-volume-plot').html($('#volume-plot .legend tbody').clone());
-                $('#volume-plot .legend-label-value').remove();
-                ko.applyBindings(self, $('#volume-plot .legend')[0]);
-                ko.applyBindings(self, $('#hover-info-volume-plot tbody')[0]);
             });
         } else {
             $('#volume-plot').slideUp('fast', function () {
@@ -1555,10 +1520,6 @@ function ViewModel() {
             $('#rsi-plot').css('margin-top', '-26px');
             $('#rsi-plot').slideDown('fast', function () {
                 self.$rsiPlot = $.plot(this, self.rsiPlotArgs.series, self.rsiPlotArgs.options);
-                $('#hover-info-rsi-plot').html($('#rsi-plot .legend tbody').clone());
-                $('#rsi-plot .legend-label-value').remove();
-                ko.applyBindings(self, $('#rsi-plot .legend')[0]);
-                ko.applyBindings(self, $('#hover-info-rsi-plot tbody')[0]);
             });
         } else {
             $('#rsi-plot').slideUp('fast', function () {
@@ -1585,10 +1546,6 @@ function ViewModel() {
             $('#macd-plot').slideDown('fast', function () {
                 self.$macdPlot = $.plot(this, self.macdPlotArgs.series, self.macdPlotArgs.options);
                 self.updateProfit();
-                $('#hover-info-macd-plot').html($('#macd-plot .legend tbody').clone());
-                $('#macd-plot .legend-label-value').remove();
-                ko.applyBindings(self, $('#macd-plot .legend')[0]);
-                ko.applyBindings(self, $('#hover-info-macd-plot tbody')[0]);
             });
         } else {
             $('#macd-plot').slideUp('fast', function () {

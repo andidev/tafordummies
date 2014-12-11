@@ -102,23 +102,23 @@ body {
     padding-bottom: 8px;
 }
 
-td.legendColorBox > div > div {
+.legendColorBox {
+    padding-left: 0px;
+}
+
+.legendColorBox > div > div {
     margin-top: 1px;
     margin-right: 2px;
     border-radius: 50%;
 }
 
-.legend-label {
-    display: block;
-    float: left;
+.legendLabel {
     padding-left: 5px;
     font-weight: bold;
     font-size: 14px;
 }
 
-.legend-label-value {
-    display: block;
-    float: right;
+.legendValue {
     vertical-align: baseline;
     padding-left: 20px;
     text-align: right;
@@ -144,6 +144,31 @@ td.legendColorBox > div > div {
     width: 100%;
 }
 
+.legend-color-box {
+    padding-left: 0px;
+    width: 16px;
+}
+
+.legend-color-box > div > div {
+    margin-top: 1px;
+    margin-right: 2px;
+    border-radius: 50%;
+}
+
+.legend-label {
+    padding-left: 5px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.legend-value {
+    vertical-align: baseline;
+    padding-left: 20px;
+    text-align: right;
+    color: #31708f;
+    font-weight: bold;
+    font-size: 14px;
+}
 
 
 /* Datepicker */
