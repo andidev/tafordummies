@@ -336,15 +336,6 @@ function ViewModel() {
     self.$macdPlot = null;
 
     self.percent = ko.observable(0);
-    self.percentArrowClass = ko.computed(function () {
-        if (self.percent() > 0) {
-            return 'fa-arrow-up';
-        } else if (self.percent() < 0) {
-            return 'fa-arrow-down';
-        } else {
-            return 'fa-arrow-right';
-        }
-    });
     self.percentColorClass = ko.computed(function () {
         if (self.percent() > 0) {
             return 'text-success';
@@ -1006,15 +997,6 @@ function ViewModel() {
 
     self.previousPriceInfoIndex = null;
     self.hoverPercent = ko.observable('');
-    self.hoverPercentArrowClass = ko.computed(function () {
-        if (self.hoverPercent() > 0) {
-            return 'fa-arrow-up';
-        } else if (self.hoverPercent() < 0) {
-            return 'fa-arrow-down';
-        } else {
-            return 'fa-arrow-right';
-        }
-    });
     self.hoverPercentColorClass = ko.computed(function () {
         if (self.hoverPercent() > 0) {
             return 'text-success';

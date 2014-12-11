@@ -4,6 +4,7 @@
 /* exported defaultValue */
 /* exported defaultBooleanValue */
 /* exported defaultNumberValue */
+/* exported faArrowClass */
 
 function defaultValue(defaultVal, data) {
     if (data === undefined) {
@@ -49,4 +50,14 @@ function async(f) {
             }
         }, 1);
     };
+}
+
+function faArrowClass(number) {
+    if (number > 0) {
+        return 'fa-arrow-up';
+    } else if (number < 0) {
+        return 'fa-arrow-down';
+    } else {
+        return 'fa-arrow-right';
+    }
 }
