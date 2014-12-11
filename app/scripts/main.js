@@ -12,7 +12,6 @@
 /* global formatDate */
 /* global formatLongDate */
 /* global formatNumber */
-/* global formatPercent */
 /* global addPaddingsToYaxisMinMax */
 /* global findYaxisMinMax */
 /* exported ViewModel */
@@ -337,9 +336,6 @@ function ViewModel() {
     self.$macdPlot = null;
 
     self.percent = ko.observable(0);
-    self.percentFormatted = ko.computed(function () {
-        return formatPercent(self.percent());
-    });
     self.percentArrowClass = ko.computed(function () {
         if (self.percent() > 0) {
             return 'fa-arrow-up';
@@ -359,17 +355,8 @@ function ViewModel() {
         }
     });
     self.highest = ko.observable(0);
-    self.highestFormatted = ko.computed(function () {
-        return formatNumber(self.highest());
-    });
     self.lowest = ko.observable(0);
-    self.lowestFormatted = ko.computed(function () {
-        return formatNumber(self.lowest());
-    });
     self.profit = ko.observable();
-    self.profitFormatted = ko.computed(function () {
-        return formatPercent(self.profit());
-    });
     self.profitColorClass = ko.computed(function () {
         if (self.profit() > 0) {
             return 'text-success';
@@ -1019,9 +1006,6 @@ function ViewModel() {
 
     self.previousPriceInfoIndex = null;
     self.hoverPercent = ko.observable('');
-    self.hoverPercentFormatted = ko.computed(function () {
-        return formatPercent(self.hoverPercent());
-    });
     self.hoverPercentArrowClass = ko.computed(function () {
         if (self.hoverPercent() > 0) {
             return 'fa-arrow-up';
@@ -1041,49 +1025,16 @@ function ViewModel() {
         }
     });
     self.hoverPrice = ko.observable();
-    self.hoverPriceFormatted = ko.computed(function () {
-        return formatNumber(self.hoverPrice());
-    });
     self.hoverTaFastest = ko.observable();
-    self.hoverTaFastestFormatted = ko.computed(function () {
-        return formatNumber(self.hoverTaFastest());
-    });
     self.hoverTaFast = ko.observable();
-    self.hoverTaFastFormatted = ko.computed(function () {
-        return formatNumber(self.hoverTaFast());
-    });
     self.hoverTaSlow = ko.observable();
-    self.hoverTaSlowFormatted = ko.computed(function () {
-        return formatNumber(self.hoverTaSlow());
-    });
     self.hoverTaSlower = ko.observable();
-    self.hoverTaSlowerFormatted = ko.computed(function () {
-        return formatNumber(self.hoverTaSlower());
-    });
     self.hoverTaSlowest = ko.observable();
-    self.hoverTaSlowestFormatted = ko.computed(function () {
-        return formatNumber(self.hoverTaSlowest());
-    });
     self.hoverVolume = ko.observable();
-    self.hoverVolumeFormatted = ko.computed(function () {
-        return formatNumber(self.hoverVolume(), 0);
-    });
     self.hoverRsi = ko.observable();
-    self.hoverRsiFormatted = ko.computed(function () {
-        return formatNumber(self.hoverRsi());
-    });
     self.hoverMacd = ko.observable();
-    self.hoverMacdFormatted = ko.computed(function () {
-        return formatNumber(self.hoverMacd());
-    });
     self.hoverMacdSignal = ko.observable();
-    self.hoverMacdSignalFormatted = ko.computed(function () {
-        return formatNumber(self.hoverMacdSignal());
-    });
     self.hoverMacdDivergence = ko.observable();
-    self.hoverMacdDivergenceFormatted = ko.computed(function () {
-        return formatNumber(self.hoverMacdDivergence());
-    });
     self.hoverDate = ko.observable();
     self.hoverDateFormatted = ko.computed(function () {
         if (self.hoverDate() === undefined) {
