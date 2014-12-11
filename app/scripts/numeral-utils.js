@@ -1,9 +1,8 @@
 'use strict';
 /* global numeral */
 /* exported numeral */
-/* exported formatNumber */
 /* exported formatPercent */
-/* exported formatPrice */
+/* exported formatNumber */
 
 numeral.language('custom', {
     delimiters: {
@@ -25,25 +24,7 @@ numeral.language('custom', {
 });
 numeral.language('custom');
 
-function formatNumber(number) {
-    if (number === undefined || number === null || number === '') {
-        return '';
-    }
-    return numeral(number).format('0,0');
-}
-
-function formatPercent(number) {
-    if (number === undefined || number === null || number === '') {
-        return '';
-    }
-    if (number > 0) {
-        return '&nbsp;' + numeral(number).format('0.00%');
-    } else {
-        return numeral(number).format('0.00%');
-    }
-}
-
-function formatPrice(number, decimals) {
+function formatNumber(number, decimals) {
     if (number === undefined || number === null || number === '') {
         return '';
     }
@@ -55,5 +36,16 @@ function formatPrice(number, decimals) {
         return numeral(number).format('0,0.' + zeros);
     } else {
         return numeral(number).format('0,0.00');
+    }
+}
+
+function formatPercent(number) {
+    if (number === undefined || number === null || number === '') {
+        return '';
+    }
+    if (number > 0) {
+        return '&nbsp;' + numeral(number).format('0.00%');
+    } else {
+        return numeral(number).format('0.00%');
     }
 }
