@@ -4,3 +4,4 @@ dist
 bower_components
 nbproject
 .grunt
+manifest.json
