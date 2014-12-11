@@ -336,27 +336,9 @@ function ViewModel() {
     self.$macdPlot = null;
 
     self.percent = ko.observable(0);
-    self.percentColorClass = ko.computed(function () {
-        if (self.percent() > 0) {
-            return 'text-success';
-        } else if (self.percent() < 0) {
-            return 'text-danger';
-        } else {
-            return '';
-        }
-    });
     self.highest = ko.observable(0);
     self.lowest = ko.observable(0);
     self.profit = ko.observable();
-    self.profitColorClass = ko.computed(function () {
-        if (self.profit() > 0) {
-            return 'text-success';
-        } else if (self.profit() < 0) {
-            return 'text-danger';
-        } else {
-            return '';
-        }
-    });
 
     // Behaviors
     /* Change Scale */
@@ -997,15 +979,6 @@ function ViewModel() {
 
     self.previousPriceInfoIndex = null;
     self.hoverPercent = ko.observable('');
-    self.hoverPercentColorClass = ko.computed(function () {
-        if (self.hoverPercent() > 0) {
-            return 'text-success';
-        } else if (self.hoverPercent() < 0) {
-            return 'text-danger';
-        } else {
-            return '';
-        }
-    });
     self.hoverPrice = ko.observable();
     self.hoverTaFastest = ko.observable();
     self.hoverTaFast = ko.observable();

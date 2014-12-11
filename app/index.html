@@ -58,10 +58,10 @@
                         <div class="pull-left">
                             <ul class="list-inline">
                                 <li><input id="symbol"/></li>
-                                <li data-content="Percent" data-bind="css: percentColorClass"><i class="fa" data-bind="css: faArrowClass(percent())"></i><strong data-bind="html: formatPercent(percent())"></strong></li>
+                                <li data-content="Percent" data-bind="css: textColorClass(percent())"><i class="fa" data-bind="css: faArrowClass(percent())"></i><strong data-bind="html: formatPercent(percent())"></strong></li>
                                 <li class="text-info" data-content="Highest"><i class="fa fa-chevron-up"></i> <strong data-bind="text: formatNumber(highest())"></strong></li>
                                 <li class="text-info" data-content="Lowest"><i class="fa fa-chevron-down text-error"></i> <strong data-bind="text: formatNumber(lowest())"></strong></li>
-                                <li class="text-info" data-content="Profit"><i class="fa fa-dollar"></i><strong data-bind="html: formatPercent(profit()), css: profitColorClass, visible: showMacd"></strong></li>
+                                <li class="text-info" data-content="Profit"><i class="fa fa-dollar"></i><strong data-bind="html: formatPercent(profit()), css: textColorClass(profit()), visible: showMacd"></strong></li>
                             </ul>
                         </div>
                         <div class="pull-right">
@@ -173,7 +173,7 @@
                         <div id="macd-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
                         <div id="hover-info">
                             <div id="hover-date" class="text-center text-muted text-bold" data-bind="text: hoverDateFormatted">23 May 2012</div>
-                            <div id="hover-percent" class="text-center text-bold text-large text-success" data-bind="css: hoverPercentColorClass"><i class="fa" data-bind="css: faArrowClass(hoverPercent())"></i> <span data-bind="html: formatPercent(hoverPercent())">1,03%</span></div>
+                            <div id="hover-percent" class="text-center text-bold text-large text-success" data-bind="css: textColorClass(hoverPercent())"><i class="fa" data-bind="css: faArrowClass(hoverPercent())"></i> <span data-bind="html: formatPercent(hoverPercent())">1,03%</span></div>
                             <div>
                                 <hr class="hr-thin">
                                 <table id="hover-info-main-plot">

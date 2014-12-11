@@ -5,6 +5,7 @@
 /* exported defaultBooleanValue */
 /* exported defaultNumberValue */
 /* exported faArrowClass */
+/* exported textColorClass */
 
 function defaultValue(defaultVal, data) {
     if (data === undefined) {
@@ -59,5 +60,15 @@ function faArrowClass(number) {
         return 'fa-arrow-down';
     } else {
         return 'fa-arrow-right';
+    }
+}
+
+function textColorClass(number) {
+    if (number > 0) {
+        return 'text-success';
+    } else if (number < 0) {
+        return 'text-danger';
+    } else {
+        return '';
     }
 }
