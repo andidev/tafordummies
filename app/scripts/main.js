@@ -1103,7 +1103,7 @@ function ViewModel() {
 
     // Functions
     self.init = function () {
-        self.symbol(defaultValue('^OMX', url.param('symbol')));
+        self.symbol(defaultValue('^GSPC', url.param('symbol')));
         $('#symbol').select2({
             width: '200px',
             data: function () {
