@@ -881,11 +881,14 @@ function ViewModel() {
     };
     self.altKeyDown = false;
     self.keyboardShortcutsHandler = _.throttle(function (viewModel, event) {
-        if (event.target.tagName === 'INPUT') {
+        if (event.metaKey === true || event.ctrlKey === true) { // Ignore Windows or Cmd key or Ctrl key key combination
+            return true;
+        }
+        if (event.target.tagName === 'INPUT') { // Ignore keyboard shortcuts if input is focused
             return true;
         }
         var keyCode = (event.which ? event.which : event.keyCode);
-        log.trace('Handling keyboard shortcuts (keyCode = ' + keyCode + ')');
+        log.trace('Handling keyboard shortcuts (keyCode = ' + keyCode + ')', event);
         if (keyCode === 37) { // Left arrow
             log.trace('Left arrow key pressed');
             self.panLeft();
