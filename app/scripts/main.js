@@ -1213,7 +1213,7 @@ function ViewModel() {
         });
 
         $(document).on('click', '.dropdown-menu', function (e) {
-            if($(this).hasClass('dropdown-menu-keep-open')) {
+            if ($(this).hasClass('dropdown-menu-keep-open')) {
                 e.stopPropagation();
             }
         });
