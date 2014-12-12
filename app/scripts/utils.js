@@ -1,9 +1,11 @@
 'use strict';
 /* global log */
+/* global moment */
 /* exported async */
 /* exported defaultValue */
 /* exported defaultBooleanValue */
 /* exported defaultNumberValue */
+/* exported defaultDate */
 /* exported faArrowClass */
 /* exported textColorClass */
 
@@ -31,6 +33,18 @@ function defaultNumberValue(defaultVal, data) {
         return defaultVal;
     } else {
         return parseInt(data);
+    }
+}
+
+function defaultDate(defaultVal, data) {
+    if (data === undefined) {
+        if (defaultVal !== null) {
+            return moment(defaultVal);
+        } else {
+            return null;
+        }
+    } else {
+        return moment(data);
     }
 }
 

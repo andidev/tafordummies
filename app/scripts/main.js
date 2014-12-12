@@ -9,6 +9,7 @@
 /* global defaultValue */
 /* global defaultBooleanValue */
 /* global defaultNumberValue */
+/* global defaultDate */
 /* global formatDate */
 /* global formatLongDate */
 /* global formatNumber */
@@ -20,7 +21,30 @@ function ViewModel() {
     var url = $.url();
 
     // Data
-    self.debug = ko.observable(defaultBooleanValue(false, url.param('debug')));
+    var defaultParams = {};
+    defaultParams.symbol = '^GSPC';
+    defaultParams.timePeriod = '3years';
+    defaultParams.scale = 'days';
+    defaultParams.showVolume = true;
+    defaultParams.showRsi = false;
+    defaultParams.rsiPeriod = 14;
+    defaultParams.showTaFast = true;
+    defaultParams.taFastestPeriod = 5;
+    defaultParams.taFastPeriod = 14;
+    defaultParams.taFastType = 'SMA';
+    defaultParams.showTaSlow = true;
+    defaultParams.taSlowPeriod = 50;
+    defaultParams.taSlowerPeriod = 100;
+    defaultParams.taSlowestPeriod = 200;
+    defaultParams.taSlowType = 'SMA';
+    defaultParams.showMacd = true;
+    defaultParams.macdFastPeriod = 12;
+    defaultParams.macdSlowPeriod = 26;
+    defaultParams.macdSignalPeriod = 9;
+    defaultParams.enableSplitDetection = false;
+    defaultParams.debug = false;
+
+    self.debug = ko.observable(defaultBooleanValue(defaultParams.debug, url.param('debug')));
     self.symbols = ko.observableArray([
         {id: '^OMX', text: 'OMXS30'},
         {id: 'PXX.TO', text: 'Black Pearl Resources'},
@@ -58,8 +82,8 @@ function ViewModel() {
     });
 
     // TA Fast
-    self.showTaFast = ko.observable(defaultBooleanValue(true, url.param('showTaFast')));
-    self.taFastType = ko.observable(defaultValue('SMA', url.param('taFastType')));
+    self.showTaFast = ko.observable(defaultBooleanValue(defaultParams.showTaFast, url.param('showTaFast')));
+    self.taFastType = ko.observable(defaultValue(defaultParams.taFastType, url.param('taFastType')));
     self.taFastTypeOpposite = ko.computed(function () {
         if (self.taFastType() === 'EMA') {
             return 'SMA';
@@ -67,7 +91,7 @@ function ViewModel() {
             return 'EMA';
         }
     });
-    self.taFastestPeriod = ko.observable(defaultNumberValue(5, url.param('maFastestPeriod')));
+    self.taFastestPeriod = ko.observable(defaultNumberValue(defaultParams.taFastestPeriod, url.param('taFastestPeriod')));
     self.taFastest = ko.observable({
         label: self.taFastType() + '(' + self.taFastestPeriod() + ')',
         data: [],
@@ -78,7 +102,7 @@ function ViewModel() {
             lineWidth: 1
         }
     });
-    self.taFastPeriod = ko.observable(defaultNumberValue(14, url.param('maFastPeriod')));
+    self.taFastPeriod = ko.observable(defaultNumberValue(defaultParams.taFastPeriod, url.param('taFastPeriod')));
     self.taFast = ko.observable({
         label: self.taFastType() + '(' + self.taFastPeriod() + ')',
         data: [],
@@ -91,8 +115,8 @@ function ViewModel() {
     });
 
     // TA Slow
-    self.showTaSlow = ko.observable(defaultBooleanValue(true, url.param('showTaSlow')));
-    self.taSlowType = ko.observable(defaultValue('SMA', url.param('taSlowType')));
+    self.showTaSlow = ko.observable(defaultBooleanValue(defaultParams.showTaSlow, url.param('showTaSlow')));
+    self.taSlowType = ko.observable(defaultValue(defaultParams.taSlowType, url.param('taSlowType')));
     self.taSlowTypeOpposite = ko.computed(function () {
         if (self.taSlowType() === 'EMA') {
             return 'SMA';
@@ -100,7 +124,7 @@ function ViewModel() {
             return 'EMA';
         }
     });
-    self.taSlowPeriod = ko.observable(defaultNumberValue(50, url.param('maSlowPeriod')));
+    self.taSlowPeriod = ko.observable(defaultNumberValue(defaultParams.taSlowPeriod, url.param('taSlowPeriod')));
     self.taSlow = ko.observable({
         label: self.taSlowType() + '(' + self.taSlowPeriod() + ')',
         data: [],
@@ -111,7 +135,7 @@ function ViewModel() {
             lineWidth: 1
         }
     });
-    self.taSlowerPeriod = ko.observable(defaultNumberValue(100, url.param('maSlowerPeriod')));
+    self.taSlowerPeriod = ko.observable(defaultNumberValue(defaultParams.taSlowerPeriod, url.param('taSlowerPeriod')));
     self.taSlower = ko.observable({
         label: self.taSlowType() + '(' + self.taSlowerPeriod() + ')',
         data: [],
@@ -122,7 +146,7 @@ function ViewModel() {
             lineWidth: 1
         }
     });
-    self.taSlowestPeriod = ko.observable(defaultNumberValue(200, url.param('maSlowestPeriod')));
+    self.taSlowestPeriod = ko.observable(defaultNumberValue(defaultParams.taSlowestPeriod, url.param('taSlowestPeriod')));
     self.taSlowest = ko.observable({
         label: self.taSlowType() + '(' + self.taSlowestPeriod() + ')',
         data: [],
@@ -140,7 +164,7 @@ function ViewModel() {
             return self.flotFinanceSymbol().hasVolume();
         }
     });
-    self.showVolume = ko.observable(defaultBooleanValue(true, url.param('showVolume')));
+    self.showVolume = ko.observable(defaultBooleanValue(defaultParams.showVolume, url.param('showVolume')));
     self.volume = ko.observable({
         label: 'Volume',
         data: [],
@@ -153,8 +177,8 @@ function ViewModel() {
     });
 
     // RSI
-    self.showRsi = ko.observable(defaultBooleanValue(false, url.param('showRsi')));
-    self.rsiPeriod = ko.observable(defaultNumberValue(14, url.param('rsiPeriod')));
+    self.showRsi = ko.observable(defaultBooleanValue(defaultParams.showRsi, url.param('showRsi')));
+    self.rsiPeriod = ko.observable(defaultNumberValue(defaultParams.rsiPeriod, url.param('rsiPeriod')));
     self.rsi = ko.observable({
         label: 'RSI(' + self.rsiPeriod() + ')',
         data: [],
@@ -167,9 +191,9 @@ function ViewModel() {
     });
 
     // MACD
-    self.showMacd = ko.observable(defaultBooleanValue(false, url.param('showMacd')));
-    self.macdFastPeriod = ko.observable(defaultNumberValue(12, url.param('macdFastPeriod')));
-    self.macdSlowPeriod = ko.observable(defaultNumberValue(26, url.param('macdSlowPeriod')));
+    self.showMacd = ko.observable(defaultBooleanValue(defaultParams.showMacd, url.param('showMacd')));
+    self.macdFastPeriod = ko.observable(defaultNumberValue(defaultParams.macdFastPeriod, url.param('macdFastPeriod')));
+    self.macdSlowPeriod = ko.observable(defaultNumberValue(defaultParams.macdSlowPeriod, url.param('macdSlowPeriod')));
     self.macd = ko.observable({
         label: 'MACD(' + self.macdFastPeriod() + ',' + self.macdSlowPeriod() + ')',
         data: [],
@@ -180,7 +204,7 @@ function ViewModel() {
             lineWidth: 1
         }
     });
-    self.macdSignalPeriod = ko.observable(defaultNumberValue(9, url.param('macdSignalPeriod')));
+    self.macdSignalPeriod = ko.observable(defaultNumberValue(defaultParams.macdSignalPeriod, url.param('macdSignalPeriod')));
     self.macdSignal = ko.observable({
         label: 'Signal(' + self.macdSignalPeriod() + ')',
         data: [],
@@ -206,22 +230,22 @@ function ViewModel() {
 
     });
 
-    self.enableSplitDetection = ko.observable(defaultBooleanValue(false, url.param('enableSplitDetection')));
-    self.scale = ko.observable(defaultValue('days', url.param('scale')));
+    self.enableSplitDetection = ko.observable(defaultBooleanValue(defaultParams.enableSplitDetection, url.param('enableSplitDetection')));
+    self.scale = ko.observable(defaultValue(defaultParams.scale, url.param('scale')));
     self.scaleTimePeriodAll = ko.observable('days');
-    self.timePeriod = ko.observable(defaultValue('3years', url.param('timePeriod')));
+    self.timePeriod = ko.observable(defaultValue(defaultParams.timePeriod, url.param('timePeriod')));
     self.zoomHistory = ko.observableArray([]);
-    self.toDate = ko.observable();
+    self.toDate = ko.observable(defaultDate(null, url.param('toDate')));
     self.toDateFormatted = ko.computed(function () {
-        if (self.toDate() === undefined) {
+        if (self.toDate() === null) {
             return '';
         }
         $('#to-date').datepicker('setDate', self.toDate().toDate());
         return formatDate(self.toDate());
     });
-    self.fromDate = ko.observable();
+    self.fromDate = ko.observable(defaultDate(null, url.param('fromDate')));
     self.fromDateFormatted = ko.computed(function () {
-        if (self.fromDate() === undefined) {
+        if (self.fromDate() === null) {
             return '';
         }
         $('#from-date').datepicker('setDate', self.fromDate().toDate());
@@ -1235,12 +1259,12 @@ function ViewModel() {
             self.price().data = (self.flotFinanceSymbol().getClosePrice(self.computeScale(), self.enableSplitDetection()));
         }
 
-        if (self.toDate() === undefined) {
+        if (self.toDate() === null) {
             self.toDate(getLastPriceDate());
         } else if (self.toDate().isAfter(getLastPriceDate())) {
             self.toDate(getLastPriceDate());
         }
-        if (self.fromDate() === undefined) {
+        if (self.fromDate() === null) {
             self.fromDate(getFromDateForTimePeriod());
         } else if (self.fromDate().isBefore(getFirstPriceDate())) {
             self.fromDate(getFirstPriceDate());
@@ -1324,6 +1348,7 @@ function ViewModel() {
         self.plotVolume();
         self.plotRsi();
         self.plotMacd();
+        self.updateUrlParameters();
         var stop = moment().valueOf();
         var executionTime = stop - start;
         log.debug('Plotting took ' + executionTime + ' milliseconds');
@@ -1459,6 +1484,88 @@ function ViewModel() {
             $('#macd-plot').slideUp('fast', function () {
                 $('#macd-plot').html('');
             });
+        }
+    };
+
+    self.updateUrlParameters = function () {
+        if (history) {
+            var params = {};
+            if (self.symbol() !== defaultParams.symbol) {
+                params.symbol = self.symbol();
+            }
+            if (self.timePeriod() !== defaultParams.timePeriod) {
+                params.timePeriod = self.timePeriod();
+            }
+            if (self.timePeriod() === 'custom' && self.fromDate() !== defaultParams.fromDate) {
+                params.fromDate = self.fromDate().format('YYYY-MM-DD');
+            }
+            if (self.timePeriod() === 'custom' && self.toDate() !== defaultParams.toDate) {
+                params.toDate = self.toDate().format('YYYY-MM-DD');
+            }
+            if (self.scale() !== defaultParams.scale) {
+                params.scale = self.scale();
+            }
+            if (self.showVolume() !== defaultParams.showVolume) {
+                params.showVolume = self.showVolume();
+            }
+            if (self.showRsi() !== defaultParams.showRsi) {
+                params.showRsi = self.showRsi();
+            }
+            if (self.rsiPeriod() !== defaultParams.rsiPeriod) {
+                params.rsiPeriod = self.rsiPeriod();
+            }
+            if (self.showTaFast() !== defaultParams.showTaFast) {
+                params.showTaFast = self.showTaFast();
+            }
+            if (self.taFastestPeriod() !== defaultParams.taFastestPeriod) {
+                params.taFastestPeriod = self.taFastestPeriod();
+            }
+            if (self.taFastPeriod() !== defaultParams.taFastPeriod) {
+                params.taFastPeriod = self.taFastPeriod();
+            }
+            if (self.taFastType() !== defaultParams.taFastType) {
+                params.taFastType = self.taFastType();
+            }
+            if (self.showTaSlow() !== defaultParams.showTaSlow) {
+                params.showTaSlow = self.showTaSlow();
+            }
+            if (self.taSlowPeriod() !== defaultParams.taSlowPeriod) {
+                params.taSlowPeriod = self.taSlowPeriod();
+            }
+            if (self.taSlowerPeriod() !== defaultParams.taSlowerPeriod) {
+                params.taSlowerPeriod = self.taSlowerPeriod();
+            }
+            if (self.taSlowestPeriod() !== defaultParams.taSlowestPeriod) {
+                params.taSlowestPeriod = self.taSlowestPeriod();
+            }
+            if (self.taSlowType() !== defaultParams.taSlowType) {
+                params.taSlowType = self.taSlowType();
+            }
+            if (self.showMacd() !== defaultParams.showMacd) {
+                params.showMacd = self.showMacd();
+            }
+            if (self.macdFastPeriod() !== defaultParams.macdFastPeriod) {
+                params.macdFastPeriod = self.macdFastPeriod();
+            }
+            if (self.macdSlowPeriod() !== defaultParams.macdSlowPeriod) {
+                params.macdSlowPeriod = self.macdSlowPeriod();
+            }
+            if (self.macdSignalPeriod() !== defaultParams.macdSignalPeriod) {
+                params.macdSignalPeriod = self.macdSignalPeriod();
+            }
+            if (self.enableSplitDetection() !== defaultParams.enableSplitDetection) {
+                params.enableSplitDetection = self.enableSplitDetection();
+            }
+            if (self.debug() !== defaultParams.debug) {
+                params.debug = self.debug();
+            }
+
+            if (_.isEmpty(params)) {
+                params = '/';
+            } else {
+                params = '?' + $.param(params);
+            }
+            history.pushState('page', 'caption', params);
         }
     };
 
@@ -1733,7 +1840,7 @@ function ViewModel() {
             }
             return aWeekAgo;
         } else {
-            if (self.fromDate() === undefined) {
+            if (self.fromDate() === null) {
                 return getFirstPriceDate();
             }
             return self.fromDate().clone();
