@@ -955,7 +955,7 @@ function ViewModel() {
             if ($('#time-periods :focus').length) {
                 $('#time-period-all-button').focus();
             }
-            self.changeTimePeriodToAll();
+            self.changeTimePeriodTo3Years();
             return false;
         } else if (keyCode === 8) { // Backspace
             log.trace('Backspace key pressed');
@@ -1184,7 +1184,7 @@ function ViewModel() {
             }
         });
 
-        // Do not reset time period to all when escape is pressed and menu is open
+        // Do not reset time period when escape is pressed and menu is open
         $('.btn-group').keydown(function (event) {
             var keyCode = (event.which ? event.which : event.keyCode);
             if (keyCode === 27) { // Escape key
