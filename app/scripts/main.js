@@ -1289,6 +1289,16 @@ function ViewModel() {
                 e.stopPropagation();
             }
         });
+
+        // Init slider values
+        $('#taFastestSlider').slider('setValue', self.taFastestPeriod());
+        $('#taFastSlider').slider('setValue', self.taFastPeriod());
+        $('#taSlowSlider').slider('setValue', self.taSlowPeriod());
+        $('#taSlowerSlider').slider('setValue', self.taSlowerPeriod());
+        $('#taSlowestSlider').slider('setValue', self.taSlowestPeriod());
+        $('#macdFastSlider').slider('setValue', self.macdFastPeriod());
+        $('#macdSlowSlider').slider('setValue', self.macdSlowPeriod());
+        $('#macdSignalSlider').slider('setValue', self.macdSignalPeriod());
     };
 
     self.processData = function () {
