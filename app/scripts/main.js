@@ -1158,14 +1158,14 @@ function ViewModel() {
             self.scaleTimePeriodAll('days');
             if (self.timePeriod() === 'custom') {
                 if (self.fromDate().isSame(getFirstPriceDate())) {
-                    self.fromDate(undefined);
+                    self.fromDate(null);
                 }
                 if (self.toDate().isSame(getLastPriceDate())) {
-                    self.toDate(undefined);
+                    self.toDate(null);
                 }
             } else {
-                self.fromDate(undefined);
-                self.toDate(undefined);
+                self.fromDate(null);
+                self.toDate(null);
             }
             self.processData();
             self.plot();
