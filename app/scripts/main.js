@@ -12,6 +12,7 @@
 /* global defaultDate */
 /* global formatDate */
 /* global formatLongDate */
+/* global formatAbrevatedNumber */
 /* global formatNumber */
 /* global addPaddingsToYaxisMinMax */
 /* global findYaxisMinMax */
@@ -312,6 +313,9 @@ function ViewModel() {
         placeholder: $('#volume-plot'),
         series: [],
         options: jQuery.extend(true, {}, self.commonPlotOptions)
+    };
+    self.volumePlotArgs.options.yaxes[0].tickFormatter = function (value) {
+        return formatAbrevatedNumber(value);
     };
     self.rsiPlotArgs = {
         placeholder: $('#rsi-plot'),

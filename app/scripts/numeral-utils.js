@@ -2,6 +2,7 @@
 /* global numeral */
 /* exported numeral */
 /* exported formatPercent */
+/* exported formatAbrevatedNumber */
 /* exported formatNumber */
 
 numeral.language('custom', {
@@ -11,9 +12,9 @@ numeral.language('custom', {
     },
     abbreviations: {
         thousand: 'k',
-        million: 'm',
-        billion: 'b',
-        trillion: 't'
+        million: 'M',
+        billion: 'B',
+        trillion: 'T'
     },
     ordinal: function () {
         return '.';
@@ -37,6 +38,13 @@ function formatNumber(number, decimals) {
     } else {
         return numeral(number).format('0,0.00');
     }
+}
+
+function formatAbrevatedNumber(number) {
+    if (number === undefined || number === null || number === '') {
+        return '';
+    }
+    return numeral(number).format('0,0a');
 }
 
 function formatPercent(number) {
