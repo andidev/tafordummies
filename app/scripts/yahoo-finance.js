@@ -44,7 +44,7 @@
             var toDate;
             var downloadedData;
             if (this.isDataCacheEmpty()) {
-                fromDate = moment('1900-01-01', 'YYYY-MM-DD');
+                fromDate = moment('1980-01-01', 'YYYY-MM-DD');
                 toDate = mostRecentWorkingDay();
                 log.debug('Dowloading data from ' + fromDate.format('YYYY-MM-DD') + ' to ' + toDate.format('YYYY-MM-DD'));
                 log.time('Downloading data');
