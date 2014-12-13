@@ -24,6 +24,8 @@ function ViewModel() {
     var defaultParams = {};
     defaultParams.symbol = '^GSPC';
     defaultParams.timePeriod = '3years';
+    defaultParams.fromDate = null;
+    defaultParams.toDate = null;
     defaultParams.scale = 'days';
     defaultParams.showVolume = true;
     defaultParams.showRsi = false;
@@ -235,7 +237,7 @@ function ViewModel() {
     self.scaleTimePeriodAll = ko.observable('days');
     self.timePeriod = ko.observable(defaultValue(defaultParams.timePeriod, url.param('timePeriod')));
     self.zoomHistory = ko.observableArray([]);
-    self.toDate = ko.observable(defaultDate(null, url.param('toDate')));
+    self.toDate = ko.observable(defaultDate(defaultParams.toDate, url.param('toDate')));
     self.toDateFormatted = ko.computed(function () {
         if (self.toDate() === null) {
             return '';
@@ -243,7 +245,7 @@ function ViewModel() {
         $('#to-date').datepicker('setDate', self.toDate().toDate());
         return formatDate(self.toDate());
     });
-    self.fromDate = ko.observable(defaultDate(null, url.param('fromDate')));
+    self.fromDate = ko.observable(defaultDate(defaultParams.fromDate, url.param('fromDate')));
     self.fromDateFormatted = ko.computed(function () {
         if (self.fromDate() === null) {
             return '';
@@ -372,6 +374,7 @@ function ViewModel() {
             self.scale('auto');
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
     self.changeScaleToDays = function () {
@@ -380,6 +383,7 @@ function ViewModel() {
             self.scale('days');
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
     self.changeScaleToWeeks = function () {
@@ -388,6 +392,7 @@ function ViewModel() {
             self.scale('weeks');
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
     self.changeScaleToMonths = function () {
@@ -396,6 +401,7 @@ function ViewModel() {
             self.scale('months');
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
     self.changeScaleToYears = function () {
@@ -404,6 +410,7 @@ function ViewModel() {
             self.scale('years');
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
 
@@ -420,6 +427,7 @@ function ViewModel() {
         self.fromDate(getFromDateForTimePeriod());
         self.processData();
         self.plot();
+        self.pushState();
     };
     self.changeTimePeriodTo10Years = function () {
         log.info('Changing time period to 10 Years');
@@ -433,6 +441,7 @@ function ViewModel() {
         self.fromDate(getFromDateForTimePeriod());
         self.processData();
         self.plot();
+        self.pushState();
     };
     self.changeTimePeriodTo3Years = function () {
         log.info('Changing time period to 3 Years');
@@ -446,6 +455,7 @@ function ViewModel() {
         self.fromDate(getFromDateForTimePeriod());
         self.processData();
         self.plot();
+        self.pushState();
     };
     self.changeTimePeriodToYear = function () {
         log.info('Changing time period to Year');
@@ -459,6 +469,7 @@ function ViewModel() {
         self.fromDate(getFromDateForTimePeriod());
         self.processData();
         self.plot();
+        self.pushState();
     };
     self.changeTimePeriodTo3Months = function () {
         log.info('Changing time period to 3 Month');
@@ -472,6 +483,7 @@ function ViewModel() {
         self.fromDate(getFromDateForTimePeriod());
         self.processData();
         self.plot();
+        self.pushState();
     };
     self.changeTimePeriodToMonth = function () {
         log.info('Changing time period to Month');
@@ -485,6 +497,7 @@ function ViewModel() {
         self.fromDate(getFromDateForTimePeriod());
         self.processData();
         self.plot();
+        self.pushState();
     };
     self.changeTimePeriodToWeek = function () {
         log.info('Changing time period to Week');
@@ -498,6 +511,7 @@ function ViewModel() {
         self.fromDate(getFromDateForTimePeriod());
         self.processData();
         self.plot();
+        self.pushState();
     };
 
     /* Toggle */
@@ -510,6 +524,7 @@ function ViewModel() {
             self.showTaFast(true);
         }
         self.plot();
+        self.pushState();
     };
     self.toggleTaFastType = function () {
         if (self.taFastType() === 'EMA') {
@@ -521,6 +536,7 @@ function ViewModel() {
         }
         self.processData();
         self.plot();
+        self.pushState();
     };
     self.toggleTaSlow = function () {
         if (self.showTaSlow() === true) {
@@ -531,6 +547,7 @@ function ViewModel() {
             self.showTaSlow(true);
         }
         self.plot();
+        self.pushState();
     };
     self.toggleTaSlowType = function () {
         if (self.taSlowType() === 'EMA') {
@@ -542,6 +559,7 @@ function ViewModel() {
         }
         self.processData();
         self.plot();
+        self.pushState();
     };
     self.toggleVolume = function () {
         if (self.showVolume() === true) {
@@ -552,6 +570,7 @@ function ViewModel() {
             self.showVolume(true);
         }
         self.plot();
+        self.pushState();
     };
     self.toggleRsi = function () {
         if (self.showRsi() === true) {
@@ -562,6 +581,7 @@ function ViewModel() {
             self.showRsi(true);
         }
         self.plot();
+        self.pushState();
     };
     self.toggleMacd = function () {
         if (self.showMacd() === true) {
@@ -572,6 +592,7 @@ function ViewModel() {
             self.showMacd(true);
         }
         self.plot();
+        self.pushState();
     };
     self.toggleSplitDetection = function () {
         if (self.enableSplitDetection() === false) {
@@ -583,6 +604,7 @@ function ViewModel() {
         }
         self.processData();
         self.plot();
+        self.pushState();
     };
 
     /* Slide */
@@ -594,6 +616,7 @@ function ViewModel() {
             self.taFastestPeriod(newPeriod);
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
     self.slideTaFast = function (viewModel, event) {
@@ -604,6 +627,7 @@ function ViewModel() {
             self.taFastPeriod(newPeriod);
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
     self.slideTaSlow = function (viewModel, event) {
@@ -614,6 +638,7 @@ function ViewModel() {
             self.taSlowPeriod(newPeriod);
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
     self.slideTaSlower = function (viewModel, event) {
@@ -624,6 +649,7 @@ function ViewModel() {
             self.taSlowerPeriod(newPeriod);
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
     self.slideTaSlowest = function (viewModel, event) {
@@ -634,6 +660,7 @@ function ViewModel() {
             self.taSlowestPeriod(newPeriod);
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
     self.slideRsi = function (viewModel, event) {
@@ -644,6 +671,7 @@ function ViewModel() {
             self.rsiPeriod(newPeriod);
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
     self.slideMacdFast = function (viewModel, event) {
@@ -654,6 +682,7 @@ function ViewModel() {
             self.macdFastPeriod(newPeriod);
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
     self.slideMacdSlow = function (viewModel, event) {
@@ -664,6 +693,7 @@ function ViewModel() {
             self.macdSlowPeriod(newPeriod);
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
     self.slideMacdSignal = function (viewModel, event) {
@@ -674,6 +704,7 @@ function ViewModel() {
             self.macdSignalPeriod(newPeriod);
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
 
@@ -709,6 +740,7 @@ function ViewModel() {
             self.timePeriod('custom');
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
     self.changeToDate = function (viewModel, event) {
@@ -720,6 +752,7 @@ function ViewModel() {
             self.timePeriod('custom');
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
 
@@ -760,6 +793,7 @@ function ViewModel() {
                 self.timePeriod('custom');
                 self.processData();
                 self.plot();
+                self.pushState();
             }
         }
         if (ranges !== null) {
@@ -824,6 +858,7 @@ function ViewModel() {
             self.timePeriod(lastZoomHistory.timePeriod);
             self.processData();
             self.plot();
+            self.pushState();
         }
     };
     self.zoomOut = function () {
@@ -845,6 +880,7 @@ function ViewModel() {
         self.timePeriod('custom');
         self.processData();
         self.plot();
+        self.pushState();
     };
     self.zoomIn = function () {
         log.info('Zooming in ' + getDeltaForTimePeriod(14).value + ' ' + getDeltaForTimePeriod(14).timeUnit);
@@ -865,6 +901,7 @@ function ViewModel() {
         self.timePeriod('custom');
         self.processData();
         self.plot();
+        self.pushState();
     };
 
     self.panLeft = function () {
@@ -884,6 +921,7 @@ function ViewModel() {
         self.timePeriod('custom');
         self.processData();
         self.plot();
+        self.pushState();
     };
     self.panRight = function () {
         log.info('Panning right');
@@ -902,6 +940,7 @@ function ViewModel() {
         self.timePeriod('custom');
         self.processData();
         self.plot();
+        self.pushState();
     };
     self.altKeyDown = false;
     self.keyboardShortcutsHandler = _.throttle(function (viewModel, event) {
@@ -1169,9 +1208,11 @@ function ViewModel() {
             }
             self.processData();
             self.plot();
+            self.pushState();
         }));
         self.processData();
         self.plot();
+        self.replaceState();
         $('#progress-info').fadeOut('slow');
         $('#ta-plots').mousemove(function (event) {
             var mouseOffsetX = 40;
@@ -1348,7 +1389,6 @@ function ViewModel() {
         self.plotVolume();
         self.plotRsi();
         self.plotMacd();
-        self.updateUrlParameters();
         var stop = moment().valueOf();
         var executionTime = stop - start;
         log.debug('Plotting took ' + executionTime + ' milliseconds');
@@ -1487,86 +1527,172 @@ function ViewModel() {
         }
     };
 
-    self.updateUrlParameters = function () {
+    self.pushState = function () {
         if (history) {
-            var params = {};
-            if (self.symbol() !== defaultParams.symbol) {
-                params.symbol = self.symbol();
-            }
-            if (self.timePeriod() !== defaultParams.timePeriod) {
-                params.timePeriod = self.timePeriod();
-            }
-            if (self.timePeriod() === 'custom' && self.fromDate() !== defaultParams.fromDate) {
-                params.fromDate = self.fromDate().format('YYYY-MM-DD');
-            }
-            if (self.timePeriod() === 'custom' && self.toDate() !== defaultParams.toDate) {
-                params.toDate = self.toDate().format('YYYY-MM-DD');
-            }
-            if (self.scale() !== defaultParams.scale) {
-                params.scale = self.scale();
-            }
-            if (self.showVolume() !== defaultParams.showVolume) {
-                params.showVolume = self.showVolume();
-            }
-            if (self.showRsi() !== defaultParams.showRsi) {
-                params.showRsi = self.showRsi();
-            }
-            if (self.rsiPeriod() !== defaultParams.rsiPeriod) {
-                params.rsiPeriod = self.rsiPeriod();
-            }
-            if (self.showTaFast() !== defaultParams.showTaFast) {
-                params.showTaFast = self.showTaFast();
-            }
-            if (self.taFastestPeriod() !== defaultParams.taFastestPeriod) {
-                params.taFastestPeriod = self.taFastestPeriod();
-            }
-            if (self.taFastPeriod() !== defaultParams.taFastPeriod) {
-                params.taFastPeriod = self.taFastPeriod();
-            }
-            if (self.taFastType() !== defaultParams.taFastType) {
-                params.taFastType = self.taFastType();
-            }
-            if (self.showTaSlow() !== defaultParams.showTaSlow) {
-                params.showTaSlow = self.showTaSlow();
-            }
-            if (self.taSlowPeriod() !== defaultParams.taSlowPeriod) {
-                params.taSlowPeriod = self.taSlowPeriod();
-            }
-            if (self.taSlowerPeriod() !== defaultParams.taSlowerPeriod) {
-                params.taSlowerPeriod = self.taSlowerPeriod();
-            }
-            if (self.taSlowestPeriod() !== defaultParams.taSlowestPeriod) {
-                params.taSlowestPeriod = self.taSlowestPeriod();
-            }
-            if (self.taSlowType() !== defaultParams.taSlowType) {
-                params.taSlowType = self.taSlowType();
-            }
-            if (self.showMacd() !== defaultParams.showMacd) {
-                params.showMacd = self.showMacd();
-            }
-            if (self.macdFastPeriod() !== defaultParams.macdFastPeriod) {
-                params.macdFastPeriod = self.macdFastPeriod();
-            }
-            if (self.macdSlowPeriod() !== defaultParams.macdSlowPeriod) {
-                params.macdSlowPeriod = self.macdSlowPeriod();
-            }
-            if (self.macdSignalPeriod() !== defaultParams.macdSignalPeriod) {
-                params.macdSignalPeriod = self.macdSignalPeriod();
-            }
-            if (self.enableSplitDetection() !== defaultParams.enableSplitDetection) {
-                params.enableSplitDetection = self.enableSplitDetection();
-            }
-            if (self.debug() !== defaultParams.debug) {
-                params.debug = self.debug();
-            }
+            var state = self.getState();
 
-            if (_.isEmpty(params)) {
+            var params;
+            if (_.isEmpty(state)) {
                 params = '/';
             } else {
-                params = '?' + $.param(params);
+                params = '?' + $.param(state);
             }
-            history.pushState('page', 'caption', params);
+            log.trace('pushing state ', state);
+            history.pushState(state, '', params);
+            self.bindOnpopstate();
         }
+    };
+    self.replaceState = function () {
+        if (history) {
+            var state = self.getState();
+
+            var params;
+            if (_.isEmpty(state)) {
+                params = '/';
+            } else {
+                params = '?' + $.param(state);
+            }
+            log.trace('replacing state ', state);
+            history.replaceState(state, '', params);
+        }
+    };
+    self.getState = function () {
+        var state = {};
+        if (self.symbol() !== defaultParams.symbol) {
+            state.symbol = self.symbol();
+        }
+        if (self.timePeriod() !== defaultParams.timePeriod) {
+            state.timePeriod = self.timePeriod();
+        }
+        if (self.timePeriod() === 'custom' && self.fromDate() !== defaultParams.fromDate) {
+            state.fromDate = self.fromDate().format('YYYY-MM-DD');
+        }
+        if (self.timePeriod() === 'custom' && self.toDate() !== defaultParams.toDate) {
+            state.toDate = self.toDate().format('YYYY-MM-DD');
+        }
+        if (self.scale() !== defaultParams.scale) {
+            state.scale = self.scale();
+        }
+        if (self.showVolume() !== defaultParams.showVolume) {
+            state.showVolume = self.showVolume();
+        }
+        if (self.showRsi() !== defaultParams.showRsi) {
+            state.showRsi = self.showRsi();
+        }
+        if (self.rsiPeriod() !== defaultParams.rsiPeriod) {
+            state.rsiPeriod = self.rsiPeriod();
+        }
+        if (self.showTaFast() !== defaultParams.showTaFast) {
+            state.showTaFast = self.showTaFast();
+        }
+        if (self.taFastestPeriod() !== defaultParams.taFastestPeriod) {
+            state.taFastestPeriod = self.taFastestPeriod();
+        }
+        if (self.taFastPeriod() !== defaultParams.taFastPeriod) {
+            state.taFastPeriod = self.taFastPeriod();
+        }
+        if (self.taFastType() !== defaultParams.taFastType) {
+            state.taFastType = self.taFastType();
+        }
+        if (self.showTaSlow() !== defaultParams.showTaSlow) {
+            state.showTaSlow = self.showTaSlow();
+        }
+        if (self.taSlowPeriod() !== defaultParams.taSlowPeriod) {
+            state.taSlowPeriod = self.taSlowPeriod();
+        }
+        if (self.taSlowerPeriod() !== defaultParams.taSlowerPeriod) {
+            state.taSlowerPeriod = self.taSlowerPeriod();
+        }
+        if (self.taSlowestPeriod() !== defaultParams.taSlowestPeriod) {
+            state.taSlowestPeriod = self.taSlowestPeriod();
+        }
+        if (self.taSlowType() !== defaultParams.taSlowType) {
+            state.taSlowType = self.taSlowType();
+        }
+        if (self.showMacd() !== defaultParams.showMacd) {
+            state.showMacd = self.showMacd();
+        }
+        if (self.macdFastPeriod() !== defaultParams.macdFastPeriod) {
+            state.macdFastPeriod = self.macdFastPeriod();
+        }
+        if (self.macdSlowPeriod() !== defaultParams.macdSlowPeriod) {
+            state.macdSlowPeriod = self.macdSlowPeriod();
+        }
+        if (self.macdSignalPeriod() !== defaultParams.macdSignalPeriod) {
+            state.macdSignalPeriod = self.macdSignalPeriod();
+        }
+        if (self.enableSplitDetection() !== defaultParams.enableSplitDetection) {
+            state.enableSplitDetection = self.enableSplitDetection();
+        }
+        if (self.debug() !== defaultParams.debug) {
+            state.debug = self.debug();
+        }
+
+        return state;
+    };
+
+
+    self.bindOnpopstate = function () {
+        window.onpopstate = function (event) {
+            var state = event.state;
+            if (state !== null) {
+                if (defaultValue(defaultParams.symbol, state.symbol) !== self.symbol()) {
+                    log.trace('Loading state for symbol', state);
+                    self.symbol(defaultValue(defaultParams.symbol, state.symbol));
+                    $('#symbol').select2('val', self.symbol());
+                    self.scaleTimePeriodAll('days');
+                    if (self.timePeriod() === 'custom') {
+                        if (self.fromDate().isSame(getFirstPriceDate())) {
+                            self.fromDate(null);
+                        }
+                        if (self.toDate().isSame(getLastPriceDate())) {
+                            self.toDate(null);
+                        }
+                    } else {
+                        self.fromDate(null);
+                        self.toDate(null);
+                    }
+                    self.processData();
+                    self.plot();
+                    log.error(defaultValue(defaultParams.symbol, state.symbol));
+                } else {
+                    // State data available
+                    log.trace('Loading state ', state);
+                    self.timePeriod(defaultValue(defaultParams.timePeriod, state.timePeriod));
+                    self.fromDate(defaultDate(defaultParams.fromDate, state.fromDate));
+                    self.toDate(defaultDate(defaultParams.toDate, state.toDate));
+                    self.scale(defaultValue(defaultParams.scale, state.scale));
+                    self.showVolume(defaultBooleanValue(defaultParams.showVolume, state.showVolume));
+                    self.showRsi(defaultBooleanValue(defaultParams.showRsi, state.showRsi));
+                    self.rsiPeriod(defaultNumberValue(defaultParams.rsiPeriod, state.rsiPeriod));
+                    self.showTaFast(defaultBooleanValue(defaultParams.showTaFast, state.showTaFast));
+                    self.taFastestPeriod(defaultNumberValue(defaultParams.taFastestPeriod, state.taFastestPeriod));
+                    self.taFastPeriod(defaultNumberValue(defaultParams.taFastPeriod, state.taFastPeriod));
+                    self.taFastType(defaultValue(defaultParams.taFastType, state.taFastType));
+                    self.showTaSlow(defaultBooleanValue(defaultParams.showTaSlow, state.showTaSlow));
+                    self.taSlowPeriod(defaultNumberValue(defaultParams.taSlowPeriod, state.taSlowPeriod));
+                    self.taSlowerPeriod(defaultNumberValue(defaultParams.taSlowerPeriod, state.taSlowerPeriod));
+                    self.taSlowestPeriod(defaultNumberValue(defaultParams.taSlowestPeriod, state.taSlowestPeriod));
+                    self.taSlowType(defaultValue(defaultParams.taSlowType, state.taSlowType));
+                    self.showMacd(defaultBooleanValue(defaultParams.showMacd, state.showMacd));
+                    self.macdFastPeriod(defaultNumberValue(defaultParams.macdFastPeriod, state.macdFastPeriod));
+                    self.macdSlowPeriod(defaultNumberValue(defaultParams.macdSlowPeriod, state.macdSlowPeriod));
+                    self.macdSignalPeriod(defaultNumberValue(defaultParams.macdSignalPeriod, state.macdSignalPeriod));
+                    self.enableSplitDetection(defaultBooleanValue(defaultParams.enableSplitDetection, state.enableSplitDetection));
+                    self.debug(defaultBooleanValue(defaultParams.debug, state.debug));
+                    $('#taFastestSlider').slider('setValue', self.taFastestPeriod());
+                    $('#taFastSlider').slider('setValue', self.taFastPeriod());
+                    $('#taSlowSlider').slider('setValue', self.taSlowPeriod());
+                    $('#taSlowerSlider').slider('setValue', self.taSlowerPeriod());
+                    $('#taSlowestSlider').slider('setValue', self.taSlowestPeriod());
+                    $('#macdFastSlider').slider('setValue', self.macdFastPeriod());
+                    $('#macdSlowSlider').slider('setValue', self.macdSlowPeriod());
+                    $('#macdSignalSlider').slider('setValue', self.macdSignalPeriod());
+                    self.processData();
+                    self.plot();
+                }
+            }
+        };
     };
 
     self.updatePlotAxisMinAndMax = function () {
