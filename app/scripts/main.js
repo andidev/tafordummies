@@ -43,7 +43,7 @@ function ViewModel() {
     defaultParams.macdFastPeriod = 12;
     defaultParams.macdSlowPeriod = 26;
     defaultParams.macdSignalPeriod = 9;
-    defaultParams.enableSplitDetection = false;
+    defaultParams.splitDetection = false;
     defaultParams.debug = false;
 
     self.debug = ko.observable(defaultBooleanValue(defaultParams.debug, url.param('debug')));
@@ -232,7 +232,7 @@ function ViewModel() {
 
     });
 
-    self.enableSplitDetection = ko.observable(defaultBooleanValue(defaultParams.enableSplitDetection, url.param('enableSplitDetection')));
+    self.splitDetection = ko.observable(defaultBooleanValue(defaultParams.splitDetection, url.param('splitDetection')));
     self.scale = ko.observable(defaultValue(defaultParams.scale, url.param('scale')));
     self.scaleTimePeriodAll = ko.observable('days');
     self.timePeriod = ko.observable(defaultValue(defaultParams.timePeriod, url.param('timePeriod')));
@@ -595,12 +595,12 @@ function ViewModel() {
         self.pushState();
     };
     self.toggleSplitDetection = function () {
-        if (self.enableSplitDetection() === false) {
+        if (self.splitDetection() === false) {
             log.info('Enabling Split Detection');
-            self.enableSplitDetection(true);
+            self.splitDetection(true);
         } else {
             log.info('Disabling Split Detection');
-            self.enableSplitDetection(false);
+            self.splitDetection(false);
         }
         self.processData();
         self.plot();
@@ -1292,12 +1292,12 @@ function ViewModel() {
         var start = moment().valueOf();
 
         self.mainPlotArgs.series = [];
-        self.price().data = self.flotFinanceSymbol().getClosePrice(self.computeScale(), self.enableSplitDetection());
+        self.price().data = self.flotFinanceSymbol().getClosePrice(self.computeScale(), self.splitDetection());
 
         if (self.scale() === 'auto' && self.timePeriod() === 'all') {
             // Set time period all and reload data
             self.scaleTimePeriodAll(self.computeScaleForZoom(getFirstPriceDate(), getLastPriceDate()));
-            self.price().data = (self.flotFinanceSymbol().getClosePrice(self.computeScale(), self.enableSplitDetection()));
+            self.price().data = (self.flotFinanceSymbol().getClosePrice(self.computeScale(), self.splitDetection()));
         }
 
         if (self.toDate() === null) {
@@ -1317,64 +1317,64 @@ function ViewModel() {
 
         // Calculate TA Fastest
         if (self.taFastType() === 'EMA') {
-            self.taFastest().data = self.flotFinanceSymbol().getEmaPrice(self.taFastestPeriod(), self.computeScale(), self.enableSplitDetection());
+            self.taFastest().data = self.flotFinanceSymbol().getEmaPrice(self.taFastestPeriod(), self.computeScale(), self.splitDetection());
         } else {
-            self.taFastest().data = self.flotFinanceSymbol().getSmaPrice(self.taFastestPeriod(), self.computeScale(), self.enableSplitDetection());
+            self.taFastest().data = self.flotFinanceSymbol().getSmaPrice(self.taFastestPeriod(), self.computeScale(), self.splitDetection());
         }
         self.mainPlotArgs.series.push(self.taFastest());
 
         // Calculate TA Fast
         if (self.taFastType() === 'EMA') {
-            self.taFast().data = self.flotFinanceSymbol().getEmaPrice(self.taFastPeriod(), self.computeScale(), self.enableSplitDetection());
+            self.taFast().data = self.flotFinanceSymbol().getEmaPrice(self.taFastPeriod(), self.computeScale(), self.splitDetection());
         } else {
-            self.taFast().data = self.flotFinanceSymbol().getSmaPrice(self.taFastPeriod(), self.computeScale(), self.enableSplitDetection());
+            self.taFast().data = self.flotFinanceSymbol().getSmaPrice(self.taFastPeriod(), self.computeScale(), self.splitDetection());
         }
         self.mainPlotArgs.series.push(self.taFast());
 
         // Calculate TA Slow
         if (self.taSlowType() === 'EMA') {
-            self.taSlow().data = self.flotFinanceSymbol().getEmaPrice(self.taSlowPeriod(), self.computeScale(), self.enableSplitDetection());
+            self.taSlow().data = self.flotFinanceSymbol().getEmaPrice(self.taSlowPeriod(), self.computeScale(), self.splitDetection());
         } else {
-            self.taSlow().data = self.flotFinanceSymbol().getSmaPrice(self.taSlowPeriod(), self.computeScale(), self.enableSplitDetection());
+            self.taSlow().data = self.flotFinanceSymbol().getSmaPrice(self.taSlowPeriod(), self.computeScale(), self.splitDetection());
         }
         self.mainPlotArgs.series.push(self.taSlow());
 
         // Calculate TA Slower
         if (self.taSlowType() === 'EMA') {
-            self.taSlower().data = self.flotFinanceSymbol().getEmaPrice(self.taSlowerPeriod(), self.computeScale(), self.enableSplitDetection());
+            self.taSlower().data = self.flotFinanceSymbol().getEmaPrice(self.taSlowerPeriod(), self.computeScale(), self.splitDetection());
         } else {
-            self.taSlower().data = self.flotFinanceSymbol().getSmaPrice(self.taSlowerPeriod(), self.computeScale(), self.enableSplitDetection());
+            self.taSlower().data = self.flotFinanceSymbol().getSmaPrice(self.taSlowerPeriod(), self.computeScale(), self.splitDetection());
         }
         self.mainPlotArgs.series.push(self.taSlower());
 
         // Calculate TA Slowest
         if (self.taSlowType() === 'EMA') {
-            self.taSlowest().data = self.flotFinanceSymbol().getEmaPrice(self.taSlowestPeriod(), self.computeScale(), self.enableSplitDetection());
+            self.taSlowest().data = self.flotFinanceSymbol().getEmaPrice(self.taSlowestPeriod(), self.computeScale(), self.splitDetection());
         } else {
-            self.taSlowest().data = self.flotFinanceSymbol().getSmaPrice(self.taSlowestPeriod(), self.computeScale(), self.enableSplitDetection());
+            self.taSlowest().data = self.flotFinanceSymbol().getSmaPrice(self.taSlowestPeriod(), self.computeScale(), self.splitDetection());
         }
         self.mainPlotArgs.series.push(self.taSlowest());
 
         // Get Volume
         if (self.flotFinanceSymbol().hasVolume()) {
-            self.volume().data = self.flotFinanceSymbol().getVolume(self.computeScale(), self.enableSplitDetection());
+            self.volume().data = self.flotFinanceSymbol().getVolume(self.computeScale(), self.splitDetection());
             self.volumePlotArgs.series.push(self.volume());
         }
 
         // Get RSI
-        self.rsi().data = self.flotFinanceSymbol().getRsi(self.rsiPeriod(), self.computeScale(), self.enableSplitDetection());
+        self.rsi().data = self.flotFinanceSymbol().getRsi(self.rsiPeriod(), self.computeScale(), self.splitDetection());
         self.rsiPlotArgs.series.push(self.rsi());
 
         // Calculate MACD
-        self.macd().data = self.flotFinanceSymbol().getMacd(self.macdFastPeriod(), self.macdSlowPeriod(), self.macdSignalPeriod(), self.computeScale(), self.enableSplitDetection());
+        self.macd().data = self.flotFinanceSymbol().getMacd(self.macdFastPeriod(), self.macdSlowPeriod(), self.macdSignalPeriod(), self.computeScale(), self.splitDetection());
         self.macdPlotArgs.series.push(self.macd());
 
         // Calculate MACD Signal
-        self.macdSignal().data = self.flotFinanceSymbol().getMacdSignal(self.macdFastPeriod(), self.macdSlowPeriod(), self.macdSignalPeriod(), self.computeScale(), self.enableSplitDetection());
+        self.macdSignal().data = self.flotFinanceSymbol().getMacdSignal(self.macdFastPeriod(), self.macdSlowPeriod(), self.macdSignalPeriod(), self.computeScale(), self.splitDetection());
         self.macdPlotArgs.series.push(self.macdSignal());
 
         // Calculate MACD Divergence
-        self.macdDivergence().data = self.flotFinanceSymbol().getMacdDivergence(self.macdFastPeriod(), self.macdSlowPeriod(), self.macdSignalPeriod(), self.computeScale(), self.enableSplitDetection());
+        self.macdDivergence().data = self.flotFinanceSymbol().getMacdDivergence(self.macdFastPeriod(), self.macdSlowPeriod(), self.macdSignalPeriod(), self.computeScale(), self.splitDetection());
         self.macdPlotArgs.series.push(self.macdDivergence());
 
         var stop = moment().valueOf();
@@ -1621,8 +1621,8 @@ function ViewModel() {
         if (self.macdSignalPeriod() !== defaultParams.macdSignalPeriod) {
             state.macdSignalPeriod = self.macdSignalPeriod();
         }
-        if (self.enableSplitDetection() !== defaultParams.enableSplitDetection) {
-            state.enableSplitDetection = self.enableSplitDetection();
+        if (self.splitDetection() !== defaultParams.splitDetection) {
+            state.splitDetection = self.splitDetection();
         }
         if (self.debug() !== defaultParams.debug) {
             state.debug = self.debug();
@@ -1678,7 +1678,7 @@ function ViewModel() {
                     self.macdFastPeriod(defaultNumberValue(defaultParams.macdFastPeriod, state.macdFastPeriod));
                     self.macdSlowPeriod(defaultNumberValue(defaultParams.macdSlowPeriod, state.macdSlowPeriod));
                     self.macdSignalPeriod(defaultNumberValue(defaultParams.macdSignalPeriod, state.macdSignalPeriod));
-                    self.enableSplitDetection(defaultBooleanValue(defaultParams.enableSplitDetection, state.enableSplitDetection));
+                    self.splitDetection(defaultBooleanValue(defaultParams.splitDetection, state.splitDetection));
                     self.debug(defaultBooleanValue(defaultParams.debug, state.debug));
                     $('#taFastestSlider').slider('setValue', self.taFastestPeriod());
                     $('#taFastSlider').slider('setValue', self.taFastPeriod());
