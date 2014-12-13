@@ -184,7 +184,7 @@
                                                     <div style="width:4px;height:0;border:5px solid rgba(51, 120, 190, 1);overflow:hidden"></div>
                                                 </div>
                                             </td>
-                                            <td class="legend-label">Black Pearl Resources</span></td>
+                                            <td class="legend-label" data-bind="symbolName">Black Pearl Resources</span></td>
                                             <td class="legend-value" data-bind="text: formatNumber(hoverPrice()), visible: hoverPrice">3,92</span></td>
                                         </tr>
                                         <tr>
@@ -193,7 +193,7 @@
                                                     <div style="width:4px;height:0;border:5px solid rgba(51, 120, 190, 0.4);overflow:hidden"></div>
                                                 </div>
                                             </td>
-                                            <td class="legend-label">SMA(5)</span></td>
+                                            <td class="legend-label" data-bind="text: taFastType() + '(' + taFastestPeriod() + ')'">SMA(5)</span></td>
                                             <td class="legend-value" data-bind="text: formatNumber(hoverTaFastest()), visible: hoverTaFastest">3,81</span></td>
                                         </tr>
                                         <tr>
@@ -202,7 +202,7 @@
                                                     <div style="width:4px;height:0;border:5px solid rgba(178, 56, 59, 0.4);overflow:hidden"></div>
                                                 </div>
                                             </td>
-                                            <td class="legend-label">SMA(14)</span></td>
+                                            <td class="legend-label" data-bind="text: taFastType() + '(' + taFastPeriod() + ')'">SMA(14)</span></td>
                                             <td class="legend-value" data-bind="text: formatNumber(hoverTaFast()), visible: hoverTaFast">3,87</span></td>
                                         </tr>
                                         <tr>
@@ -211,7 +211,7 @@
                                                     <div style="width:4px;height:0;border:5px solid rgba(0, 0, 0, 0.4);overflow:hidden"></div>
                                                 </div>
                                             </td>
-                                            <td class="legend-label">SMA(50)</span></td>
+                                            <td class="legend-label" data-bind="text: taSlowType() + '(' + taSlowPeriod() + ')'">SMA(50)</span></td>
                                             <td class="legend-value" data-bind="text: formatNumber(hoverTaSlow()), visible: hoverTaSlow">4,06</span></td>
                                         </tr>
                                         <tr>
@@ -220,7 +220,7 @@
                                                     <div style="width:4px;height:0;border:5px solid rgba(0, 0, 0, 0.2);overflow:hidden"></div>
                                                 </div>
                                             </td>
-                                            <td class="legend-label">SMA(100)</span></td>
+                                            <td class="legend-label" data-bind="text: taSlowType() + '(' + taSlowerPeriod() + ')'">SMA(100)</span></td>
                                             <td class="legend-value" data-bind="text: formatNumber(hoverTaSlower()), visible: hoverTaSlower">4,41</span></td>
                                         </tr>
                                         <tr>
@@ -229,7 +229,7 @@
                                                     <div style="width:4px;height:0;border:5px solid rgba(0, 0, 0, 0.1);overflow:hidden"></div>
                                                 </div>
                                             </td>
-                                            <td class="legend-label">SMA(200)</span></td>
+                                            <td class="legend-label" data-bind="text: taSlowType() + '(' + taSlowestPeriod() + ')'">SMA(200)</span></td>
                                             <td class="legend-value" data-bind="text: formatNumber(hoverTaSlowest()), visible: hoverTaSlowest">4,47</span></td>
                                         </tr>
                                     </tbody>
@@ -261,7 +261,7 @@
                                                     <div style="width:4px;height:0;border:5px solid rgba(51, 120, 190, 1);overflow:hidden"></div>
                                                 </div>
                                             </td>
-                                            <td class="legend-label">RSI(14)</span></td>
+                                            <td class="legend-label" data-bind="text: 'RSI(' + rsiPeriod() + ')'">RSI(14)</span></td>
                                             <td class="legend-value" data-bind="text: formatNumber(hoverRsi()), visible: hoverRsi">47,81</span></td>
                                         </tr>
                                     </tbody>
@@ -286,7 +286,7 @@
                                                     <div style="width:4px;height:0;border:5px solid rgba(51, 120, 190, 0.4);overflow:hidden"></div>
                                                 </div>
                                             </td>
-                                            <td class="legend-label">MACD(12,26)</span></td>
+                                            <td class="legend-label" data-bind="text: 'MACD(' + macdFastPeriod() + ',' + macdSlowPeriod() + ')'">MACD(12,26)</span></td>
                                             <td class="legend-value" data-bind="text: formatNumber(hoverMacd()), visible: hoverMacd">-0,08</span></td>
                                         </tr>
                                         <tr>
@@ -295,7 +295,7 @@
                                                     <div style="width:4px;height:0;border:5px solid rgba(178, 56, 59, 0.4);overflow:hidden"></div>
                                                 </div>
                                             </td>
-                                            <td class="legend-label">Signal(9)</span></td>
+                                            <td class="legend-label" data-bind="text: 'Signal(' + macdSignalPeriod() + ')'">Signal(9)</span></td>
                                             <td class="legend-value" data-bind="text: formatNumber(hoverMacdSignal()), visible: hoverMacdSignal">-0,08</span></td>
                                         </tr>
                                     </tbody>
