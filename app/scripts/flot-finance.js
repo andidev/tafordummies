@@ -86,7 +86,8 @@
     flotFinance.fn.getVolume = cached(function (scale, splitDetection) {
         var volume = this.convertYahooFinanceToFlotFormat('volume');
         if (splitDetection) {
-            volume = adjustSplits(volume);
+            var price = this.getClosePrice('days', false);
+            volume = adjustSplitsVolume(price, volume);
         }
         return scaleTo(scale, volume, true);
     });
@@ -379,6 +380,29 @@
             }
         }
         return splitData;
+    };
+
+    var adjustSplitsVolume = function (data, volume) {
+        log.trace('Adjusting splits to data', data);
+        var splitVolume = [];
+        splitVolume[volume.length - 1] = [volume[volume.length - 1][0].clone(), volume[volume.length - 1][1]];
+        var previousPrice = data[data.length - 1][1];
+        var previousDate = data[data.length - 1][0];
+        var adjustFactor = 1;
+        for (var i = data.length - 2; i >= 0; i--) {
+            if (Math.round(data[i][1] / previousPrice) >= 2) {
+                log.info('Split found and adjusted between ' + formatDate(data[i][0]) + ' (' + data[i][1] + ') to ' + formatDate(previousDate) + ' (' + previousPrice + ')');
+                adjustFactor = adjustFactor / Math.round(data[i][1] / previousPrice);
+            }
+            previousPrice = data[i][1];
+            previousDate = data[i][0];
+            if (adjustFactor !== 1) {
+                splitVolume[i] = [volume[i][0].clone(), volume[i][1] * adjustFactor];
+            } else {
+                splitVolume[i] = [volume[i][0].clone(), volume[i][1]];
+            }
+        }
+        return splitVolume;
     };
 
     var convertToFlotFormat = function (arg1, arg2) {
