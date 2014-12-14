@@ -1422,6 +1422,7 @@ function ViewModel() {
         $('#taSlowSlider').slider('setValue', self.taSlowPeriod());
         $('#taSlowerSlider').slider('setValue', self.taSlowerPeriod());
         $('#taSlowestSlider').slider('setValue', self.taSlowestPeriod());
+        $('#rsiSlider').slider('setValue', self.rsiPeriod());
         $('#macdFastSlider').slider('setValue', self.macdFastPeriod());
         $('#macdSlowSlider').slider('setValue', self.macdSlowPeriod());
         $('#macdSignalSlider').slider('setValue', self.macdSignalPeriod());
@@ -1824,6 +1825,7 @@ function ViewModel() {
                     $('#taSlowSlider').slider('setValue', self.taSlowPeriod());
                     $('#taSlowerSlider').slider('setValue', self.taSlowerPeriod());
                     $('#taSlowestSlider').slider('setValue', self.taSlowestPeriod());
+                    $('#rsiSlider').slider('setValue', self.rsiPeriod());
                     $('#macdFastSlider').slider('setValue', self.macdFastPeriod());
                     $('#macdSlowSlider').slider('setValue', self.macdSlowPeriod());
                     $('#macdSignalSlider').slider('setValue', self.macdSignalPeriod());

@@ -21,7 +21,7 @@ function defaultBooleanValue(defaultVal, data) {
     if (data === undefined) {
         return defaultVal;
     } else {
-        if (data === 'true') {
+        if (data === 'true' || data === true) {
             return true;
         }
         return false;
