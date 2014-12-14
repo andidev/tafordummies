@@ -24,7 +24,7 @@
         <!-- endbuild -->
     </head>
 
-    <body data-bind="event: { keydown: keyboardShortcutsHandler, keyup: resetAltKeyDown }">
+    <body data-bind="event: { keydown: keyboardShortcutsKeyDownHandler, keyup: keyboardShortcutsKeyUpHandler }">
         <!--[if lt IE 10]>
           <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -306,9 +306,9 @@
                     <div id="ta-footer" class="col-md-12">
                         <div class="pull-left">
                             <div id="time-periods" class="btn-group">
-                                <button id="time-period-all-button" type="button" class="btn btn-default" data-bind="click: changeTimePeriodToAll, css: {active: timePeriod() === 'all'}">All</button>
+                                <button type="button" class="btn btn-default" data-bind="click: changeTimePeriodToAll, css: {active: timePeriod() === 'all'}">All</button>
                                 <button type="button" class="btn btn-default" data-bind="click: changeTimePeriodTo10Years, css: {active: timePeriod() === '10years'}">10 Years</button>
-                                <button type="button" class="btn btn-default" data-bind="click: changeTimePeriodTo3Years, css: {active: timePeriod() === '3years'}">3 Years</button>
+                                <button id="default-time-period-button" type="button" class="btn btn-default" data-bind="click: changeTimePeriodTo3Years, css: {active: timePeriod() === '3years'}">3 Years</button>
                                 <button type="button" class="btn btn-default" data-bind="click: changeTimePeriodToYear, css: {active: timePeriod() === 'year'}">Year</button>
                                 <button type="button" class="btn btn-default" data-bind="click: changeTimePeriodTo3Months, css: {active: timePeriod() === '3months'}">3 Months</button>
                                 <button type="button" class="btn btn-default" data-bind="click: changeTimePeriodToMonth, css: {active: timePeriod() === 'month'}">Month</button>

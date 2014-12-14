@@ -947,105 +947,204 @@ function ViewModel() {
         self.pushState();
     };
     self.altKeyDown = false;
-    self.keyboardShortcutsHandler = _.throttle(function (viewModel, event) {
-        if (event.metaKey === true || event.ctrlKey === true) { // Ignore Windows or Cmd key or Ctrl key key combination
-            return true;
-        }
-        if (event.target.tagName === 'INPUT') { // Ignore keyboard shortcuts if input is focused
-            return true;
-        }
+    self.keyDown = false;
+    $(document).focus(function (e) {
+        self.keyDown = false;
+    });
+    self.ignoreKeyboardShortcut = {};
+    self.keyboardShortcutsKeyUpHandler = function (viewModel, event) {
         var keyCode = (event.which ? event.which : event.keyCode);
+        // Reset the keydown event triggered flag
+        self.keyDown = false;
+
+        // Ignore Windows or Cmd key or Ctrl key key combination
+        if (event.metaKey === true || event.ctrlKey === true) {
+            return true;
+        }
+
+        // Ignore keyboard shortcut if flag is set
+        if (self.ignoreKeyboardShortcut[keyCode] === true) {
+            log.trace('Ignoring keyboard shortcut for keyCode = ' + keyCode, self.ignoreKeyboardShortcut);
+            self.ignoreKeyboardShortcut[keyCode] = false; // Reset flag
+            return true;
+        }
+
         log.trace('Handling keyboard shortcuts (keyCode = ' + keyCode + ')', event);
         if (keyCode === 37) { // Left arrow
-            log.trace('Left arrow key pressed');
+            if ($('.slider-handle:focus').length) {
+                return true;
+            }
+            log.trace('Left arrow key up');
             self.panLeft();
             return false;
         } else if (keyCode === 39) { // Right arrow
-            log.trace('Right arrow key pressed');
+            if ($('.slider-handle:focus').length) {
+                return true;
+            }
+            log.trace('Right arrow key up');
             self.panRight();
             return false;
         } else if (keyCode === 40) { // Down arrow
-            log.trace('Down arrow key pressed');
+            if ($('.slider-handle:focus').length) {
+                return true;
+            }
+            log.trace('Down arrow key up');
             self.zoomOut();
             return false;
         } else if (keyCode === 38) { // Up arrow
-            log.trace('Up arrow key pressed');
+            if ($('.slider-handle:focus').length) {
+                return true;
+            }
+            log.trace('Up arrow key up');
             self.zoomIn();
             return false;
         } else if (keyCode === 189) { // Minus sign
-            log.trace('Minus sign key pressed');
+            log.trace('Minus sign key up');
             self.zoomOut();
             return false;
         } else if (keyCode === 187) { // Plus sign
-            log.trace('Plus sign key pressed');
+            log.trace('Plus sign key up');
             self.zoomIn();
             return false;
         } else if (keyCode === 86) { // V key
-            log.trace('V key pressed');
+            log.trace('V key up');
             self.toggleVolume();
             return false;
         } else if (keyCode === 82) { // R key
-            log.trace('R key pressed');
+            log.trace('R key up');
             self.toggleRsi();
             return false;
         } else if (keyCode === 70) { // F key
             if (event.altKey) {
-                log.trace('Alt + F key pressed');
+                log.trace('Alt + F key up');
                 self.toggleTaFastType();
                 return false;
             } else {
-                log.trace('F key pressed');
+                log.trace('F key up');
                 self.toggleTaFast();
                 return false;
             }
         } else if (keyCode === 83) { // S key
             if (event.altKey) {
-                log.trace('Alt + S key pressed');
+                log.trace('Alt + S key up');
                 self.toggleTaSlowType();
                 return false;
             } else {
-                log.trace('S key pressed');
+                log.trace('S key up');
                 self.toggleTaSlow();
                 return false;
             }
         } else if (keyCode === 77) { // M key
-            log.trace('M key pressed');
+            log.trace('M key up');
             self.toggleMacd();
             return false;
         } else if (keyCode === 27) { // Escape
-            log.trace('Escape key pressed');
-            if ($('.datepicker-dropdown:visible').length) {
-                $('#from-date').datepicker('hide');
-                $('#to-date').datepicker('hide');
+            log.trace('Escape key up');
+            if (self.timePeriod() === '3years') {
                 return false;
             }
             if ($('#time-periods :focus').length) {
-                $('#time-period-all-button').focus();
+                $('#default-time-period-button').focus();
             }
             self.changeTimePeriodTo3Years();
             return false;
         } else if (keyCode === 8) { // Backspace
-            log.trace('Backspace key pressed');
+            log.trace('Backspace key up');
             self.undoZoom();
             return false;
         } else if (keyCode === 18) { // Alt
-            log.trace('Alt key pressed');
-            self.altKeyDown = true;
-            self.hoverDate(self.hoverDate()); // Refresh hover date
-            return true;
-        }
-        return true;
-    });
-    self.resetAltKeyDown = _.throttle(function (viewModel, event) {
-        var keyCode = (event.which ? event.which : event.keyCode);
-        if (keyCode === 18) { // Alt
-            log.debug('Alt key released');
+            log.trace('Alt key up');
             self.altKeyDown = false;
             self.hoverDate(self.hoverDate()); // Refresh hover date
             return true;
         }
         return true;
-    });
+    };
+    self.keyboardShortcutsKeyDownHandler = function (viewModel, event) {
+        // Ignore key down events triggered by long pressing keys
+        if (self.keyDown === true) {
+            return true;
+        }
+        self.keyDown = true;
+
+        var keyCode = (event.which ? event.which : event.keyCode);
+        if (keyCode === 37) { // Left arrow
+            log.trace('Left arrow key down');
+            if (event.target.tagName === 'INPUT') {
+                return true;
+            }
+            return false;
+        } else if (keyCode === 39) { // Right arrow
+            log.trace('Right arrow key down');
+            if (event.target.tagName === 'INPUT') {
+                return true;
+            }
+            return false;
+        } else if (keyCode === 40) { // Down arrow
+            log.trace('Down arrow key down');
+            if (event.target.tagName === 'INPUT') {
+                return true;
+            }
+            return false;
+        } else if (keyCode === 38) { // Up arrow
+            log.trace('Up arrow key down');
+            if (event.target.tagName === 'INPUT') {
+                return true;
+            }
+            return false;
+        } else if (keyCode === 189) { // Minus sign
+            log.trace('Minus sign key down');
+            return true;
+        } else if (keyCode === 187) { // Plus sign
+            log.trace('Plus sign key down');
+            return true;
+        } else if (keyCode === 86) { // V key
+            log.trace('V key down');
+            return true;
+        } else if (keyCode === 82) { // R key
+            log.trace('R key down');
+            return true;
+        } else if (keyCode === 70) { // F key
+            if (event.altKey) {
+                log.trace('Alt + F key down');
+                return true;
+            } else {
+                log.trace('F key down');
+                return true;
+            }
+        } else if (keyCode === 83) { // S key
+            if (event.altKey) {
+                log.trace('Alt + S key down');
+                return true;
+            } else {
+                log.trace('S key down');
+                return true;
+            }
+        } else if (keyCode === 77) { // M key
+            log.trace('M key down');
+            return true;
+        } else if (keyCode === 27) { // Escape
+            log.trace('Escape key down');
+            if ($('.datepicker-dropdown:visible').length) {
+                $('#from-date').datepicker('hide');
+                $('#to-date').datepicker('hide');
+                self.ignoreKeyboardShortcut[keyCode] = true; // Set flag to ignore keyboard shortcut
+                return true;
+            }
+        } else if (keyCode === 8) { // Backspace
+            log.trace('Backspace key down');
+            if (event.target.tagName === 'INPUT') {
+                return true;
+            }
+            return false;
+        } else if (keyCode === 18) { // Alt
+            log.trace('Alt key down');
+            self.altKeyDown = true;
+            self.hoverDate(self.hoverDate()); // Refresh hover date
+            return true;
+        }
+        return true;
+    };
 
     self.previousPriceInfoIndex = null;
     self.hoverPercent = ko.observable('');
@@ -1256,12 +1355,39 @@ function ViewModel() {
         // Do not reset time period when escape is pressed and menu is open
         $('.btn-group').keydown(function (event) {
             var keyCode = (event.which ? event.which : event.keyCode);
-            if (keyCode === 27) { // Escape key
+            if (keyCode === 37) { // Left arrow
+                self.ignoreKeyboardShortcut[keyCode] = true;
+                return true;
+            } else if (keyCode === 39) { // Right arrow
+                self.ignoreKeyboardShortcut[keyCode] = true;
+                return true;
+            } else if (keyCode === 40) { // Down arrow
+                self.ignoreKeyboardShortcut[keyCode] = true;
+                return true;
+            } else if (keyCode === 38) { // Up arrow
+                self.ignoreKeyboardShortcut[keyCode] = true;
+                return true;
+            } else if (keyCode === 189) { // Minus sign
+                self.ignoreKeyboardShortcut[keyCode] = true;
+                return true;
+            } else if (keyCode === 187) { // Plus sign
+                self.ignoreKeyboardShortcut[keyCode] = true;
+                return true;
+            } else if (keyCode === 27) { // Escape key
                 if ($('.btn-group.open .dropdown-toggle').length > 0) {
                     $('.btn-group.open .dropdown-toggle').dropdown('toggle');
                     $(':focus').blur();
-                    event.stopPropagation();
+                    self.ignoreKeyboardShortcut[keyCode] = true;
                 }
+            }
+        });
+
+        // Do not reset time period when escape is pressed and input is focused
+        $('input').keydown(function (event) {
+            if (event.target.tagName === 'INPUT') {
+                var keyCode = (event.which ? event.which : event.keyCode);
+                self.ignoreKeyboardShortcut[keyCode] = true;
+                return true;
             }
         });
 
@@ -1668,7 +1794,6 @@ function ViewModel() {
                     }
                     self.processData();
                     self.plot();
-                    log.error(defaultValue(defaultParams.symbol, state.symbol));
                 } else {
                     // State data available
                     log.trace('Loading state ', state);
