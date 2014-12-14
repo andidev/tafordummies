@@ -1674,12 +1674,12 @@ function ViewModel() {
 
             var params;
             if (_.isEmpty(state)) {
-                params = '/';
+                params = '';
             } else {
                 params = '?' + $.param(state);
             }
             log.trace('pushing state ', state);
-            history.pushState(state, '', params);
+            history.pushState(state, '', url.attr('path') + params);
             self.bindOnpopstate();
         }
     };
@@ -1694,7 +1694,7 @@ function ViewModel() {
                 params = '?' + $.param(state);
             }
             log.trace('replacing state ', state);
-            history.replaceState(state, '', params);
+            history.replaceState(state, '', url.attr('path') + params);
         }
     };
     self.getState = function () {
