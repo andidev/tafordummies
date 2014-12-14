@@ -948,7 +948,7 @@ function ViewModel() {
     };
     self.altKeyDown = false;
     self.keyDown = false;
-    $(document).focus(function (e) {
+    $(document).focus(function () {
         self.keyDown = false;
     });
     self.ignoreKeyboardShortcut = {};
