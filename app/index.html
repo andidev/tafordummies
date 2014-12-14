@@ -184,10 +184,10 @@
                                                     <div style="width:4px;height:0;border:5px solid rgba(51, 120, 190, 1);overflow:hidden"></div>
                                                 </div>
                                             </td>
-                                            <td class="legend-label" data-bind="symbolName">Black Pearl Resources</span></td>
+                                            <td class="legend-label" data-bind="text: symbolName">Black Pearl Resources</span></td>
                                             <td class="legend-value" data-bind="text: formatNumber(hoverPrice()), visible: hoverPrice">3,92</span></td>
                                         </tr>
-                                        <tr>
+                                        <tr data-bind="visible: showTaFast">
                                             <td class="legend-color-box">
                                                 <div style="border:1px solid transparent;padding:1px">
                                                     <div style="width:4px;height:0;border:5px solid rgba(51, 120, 190, 0.4);overflow:hidden"></div>
@@ -196,7 +196,7 @@
                                             <td class="legend-label" data-bind="text: taFastType() + '(' + taFastestPeriod() + ')'">SMA(5)</span></td>
                                             <td class="legend-value" data-bind="text: formatNumber(hoverTaFastest()), visible: hoverTaFastest">3,81</span></td>
                                         </tr>
-                                        <tr>
+                                        <tr data-bind="visible: showTaFast">
                                             <td class="legend-color-box">
                                                 <div style="border:1px solid transparent;padding:1px">
                                                     <div style="width:4px;height:0;border:5px solid rgba(178, 56, 59, 0.4);overflow:hidden"></div>
@@ -205,7 +205,7 @@
                                             <td class="legend-label" data-bind="text: taFastType() + '(' + taFastPeriod() + ')'">SMA(14)</span></td>
                                             <td class="legend-value" data-bind="text: formatNumber(hoverTaFast()), visible: hoverTaFast">3,87</span></td>
                                         </tr>
-                                        <tr>
+                                        <tr data-bind="visible: showTaSlow">
                                             <td class="legend-color-box">
                                                 <div style="border:1px solid transparent;padding:1px">
                                                     <div style="width:4px;height:0;border:5px solid rgba(0, 0, 0, 0.4);overflow:hidden"></div>
@@ -214,7 +214,7 @@
                                             <td class="legend-label" data-bind="text: taSlowType() + '(' + taSlowPeriod() + ')'">SMA(50)</span></td>
                                             <td class="legend-value" data-bind="text: formatNumber(hoverTaSlow()), visible: hoverTaSlow">4,06</span></td>
                                         </tr>
-                                        <tr>
+                                        <tr data-bind="visible: showTaSlow">
                                             <td class="legend-color-box">
                                                 <div style="border:1px solid transparent;padding:1px">
                                                     <div style="width:4px;height:0;border:5px solid rgba(0, 0, 0, 0.2);overflow:hidden"></div>
@@ -223,7 +223,7 @@
                                             <td class="legend-label" data-bind="text: taSlowType() + '(' + taSlowerPeriod() + ')'">SMA(100)</span></td>
                                             <td class="legend-value" data-bind="text: formatNumber(hoverTaSlower()), visible: hoverTaSlower">4,41</span></td>
                                         </tr>
-                                        <tr>
+                                        <tr data-bind="visible: showTaSlow">
                                             <td class="legend-color-box">
                                                 <div style="border:1px solid transparent;padding:1px">
                                                     <div style="width:4px;height:0;border:5px solid rgba(0, 0, 0, 0.1);overflow:hidden"></div>
