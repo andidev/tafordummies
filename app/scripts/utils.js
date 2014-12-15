@@ -8,6 +8,7 @@
 /* exported defaultDate */
 /* exported faArrowClass */
 /* exported textColorClass */
+/* exported getLinks */
 
 function defaultValue(defaultVal, data) {
     if (data === undefined) {
@@ -85,4 +86,13 @@ function textColorClass(number) {
     } else {
         return '';
     }
+}
+
+function getLinks(id, symbols) {
+    for (var i = 0; i < symbols.length; i++) {
+        if (symbols[i].id === id) {
+            return symbols[i].links;
+        }
+    }
+    return [];
 }

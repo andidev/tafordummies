@@ -10,6 +10,7 @@
 /* global defaultBooleanValue */
 /* global defaultNumberValue */
 /* global defaultDate */
+/* global getLinks */
 /* global formatDate */
 /* global formatLongDate */
 /* global formatAbrevatedNumber */
@@ -49,9 +50,30 @@ function ViewModel() {
 
     self.debug = ko.observable(defaultBooleanValue(defaultParams.debug, url.param('debug')));
     self.symbols = ko.observableArray([
-        {id: '^OMX', text: 'OMXS30'},
-        {id: 'PXX.TO', text: 'Black Pearl Resources'},
-        {id: 'AOI.ST', text: 'Africa Oil'},
+        {id: '^OMX', text: 'OMXS30', links: [
+                {text: 'Avanza', link: 'https://www.avanza.se/index/om-indexet.html/19002/omx-stockholm-30'}
+            ]},
+        {id: 'PXX.TO', text: 'Black Pearl Resources', links: [
+                {text: 'Avanza OMX', link: 'https://www.avanza.se/aktier/om-aktien.html/85707/blackpearl-resources-sdb'},
+                {text: 'Avanza TMX', link: 'https://www.avanza.se/aktier/om-aktien.html/140688/blackpearl-resources-inc'},
+                {text: 'Avanza Forum', link: 'https://www.avanza.se/placera/forum/forum/blackpearl-resources-sdb.html'},
+                {text: 'Canadian Insider', link: 'https://canadianinsider.com/node/7?menu_tickersearch=pxx'},
+                {text: 'Stockwatch Shorts', link: 'http://www.stockwatch.com/Analytics/Shorts.aspx?action=go&symbol=PXX&region=C'},
+                {text: 'Stockhouse', link: 'http://www.stockhouse.com/companies/bullboard/t.pxx/blackpearl-resources-inc'},
+                {text: 'Big Charts OMX', link: 'http://bigcharts.marketwatch.com/kaavio.Webhost/charts/big.chart?type=64&size=4&state=9&style=380&freq=5mi&time=1day&symb=se:pxxssdb'},
+                {text: 'Big Charts TMX', link: 'http://bigcharts.marketwatch.com/kaavio.Webhost/charts/big.chart?type=64&size=4&state=9&style=380&freq=5mi&time=1day&symb=ca:pxx'}
+
+            ]},
+        {id: 'AOI.ST', text: 'Africa Oil', links: [
+                {text: 'Avanza OMX', link: 'https://www.avanza.se/aktier/om-aktien.html/250993/africa-oil'},
+                {text: 'Avanza TMX', link: 'https://www.avanza.se/aktier/om-aktien.html/476936/africa-oil'},
+                {text: 'Avanza Forum', link: 'https://www.avanza.se/placera/forum/forum/africa-oil-corp.html'},
+                {text: 'Canadian Insider', link: 'https://canadianinsider.com/node/7?menu_tickersearch=aoi'},
+                {text: 'Stockwatch Shorts', link: 'http://www.stockwatch.com/Analytics/Shorts.aspx?action=go&symbol=AOI&region=C'},
+                {text: 'Stockhouse', link: 'http://www.stockhouse.com/companies/bullboard/v.aoi/africa-oil-corp'},
+                {text: 'Big Charts Sweden', link: 'http://bigcharts.marketwatch.com/kaavio.Webhost/charts/big.chart?type=64&size=4&state=9&style=380&freq=5mi&time=1day&symb=se:aoi'},
+                {text: 'Big Charts Canada', link: 'http://bigcharts.marketwatch.com/kaavio.Webhost/charts/big.chart?type=64&size=4&state=9&style=380&freq=5mi&time=1day&symb=ca:aoi'}
+            ]},
         {id: 'GIX.TO', text: 'Geologix Explorations Inc.'},
         {id: 'FOE.OL', text: 'F.OLSEN ENERGY'},
         {id: 'HM-B.ST', text: 'HM-B'},
@@ -68,6 +90,9 @@ function ViewModel() {
             }
         });
         return symbolName;
+    });
+    self.symbolLinks = ko.computed(function () {
+        return getLinks(self.symbol(), self.symbols());
     });
     self.flotFinanceSymbol = ko.computed(function () {
         if (self.symbol()) {

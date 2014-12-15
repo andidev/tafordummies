@@ -154,6 +154,15 @@
                                         </li>
                                     </ul>
                                 </div>
+                                <div class="btn-group" data-bind="visible: symbolLinks ">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-link"></i></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-keep-open" role="menu">
+                                        <li data-bind="foreach: symbolLinks">
+                                            <a href="#" class="clearfix" data-bind="text: text, attr: { href: link }" target="_blank">Auto <span class="" data-bind="visible: scale() === 'auto', text: ' - ' + _.str.capitalize(computeScale()) + ''"></span> <i class="fa pull-right" data-bind="css: {'fa-check': scale() === 'auto'}"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog fa-lg"></i>
                                     </button>
