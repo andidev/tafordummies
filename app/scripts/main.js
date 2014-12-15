@@ -1689,7 +1689,7 @@ function ViewModel() {
 
             var params;
             if (_.isEmpty(state)) {
-                params = '/';
+                params = '';
             } else {
                 params = '?' + $.param(state);
             }
