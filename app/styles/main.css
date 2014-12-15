@@ -5,6 +5,11 @@ body {
     padding: 40px 15px;
     text-align: center;
 }
+/* Remove bootstrap responsiveness */
+.container {
+    max-width: none !important;
+    width: 1170px;
+}
 
 
 

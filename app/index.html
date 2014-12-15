@@ -52,8 +52,8 @@
         <div class="container">
 
             <div id="ta-container" class="row">
-                <div class="col-md-12">
-                    <div id="ta-header" class="col-md-12">
+                <div class="col-md-12 col-sm-12 col-md-12 col-xs-12">
+                    <div id="ta-header" class="col-md-12 col-sm-12 col-md-12 col-xs-12">
                         <div class="pull-left">
                             <ul class="list-inline">
                                 <li><input id="symbol"/></li>
@@ -174,7 +174,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="ta-plots" class="col-md-12">
+                    <div id="ta-plots" class="col-md-12 col-sm-12 col-md-12 col-xs-12">
                         <div id="main-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo, mousewheel: scrollPanZoom}"></div>
                         <div id="volume-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
                         <div id="rsi-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
@@ -311,7 +311,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="ta-footer" class="col-md-12">
+                    <div id="ta-footer" class="col-md-12 col-sm-12 col-md-12 col-xs-12">
                         <div class="pull-left">
                             <div id="time-periods" class="btn-group">
                                 <button type="button" class="btn btn-default" data-bind="click: changeTimePeriodToAll, css: {active: timePeriod() === 'all'}">All</button>
