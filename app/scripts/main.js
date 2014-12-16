@@ -1143,6 +1143,7 @@ function ViewModel() {
 
     self.previousPriceInfoIndex = null;
     self.hoverPercent = ko.observable('');
+    self.hoverChange = ko.observable('');
     self.hoverPrice = ko.observable();
     self.hoverTaFastest = ko.observable();
     self.hoverTaFast = ko.observable();
@@ -1231,11 +1232,18 @@ function ViewModel() {
             }
             self.$mainPlot.highlight(0, priceInfoIndex);
 
+            var change = null;
+            if (priceToTheLeft !== null) {
+                change = price - priceToTheLeft;
+            }
+
             var percent = null;
             if (priceToTheLeft !== null) {
-                percent = (price - priceToTheLeft) / priceToTheLeft;
+                percent = change / priceToTheLeft;
             }
+
             self.hoverPercent(percent);
+            self.hoverChange(change);
             self.hoverPrice(price);
             self.hoverTaFastest(self.mainPlotArgs.series[1].data[priceInfoIndex][1]);
             self.hoverTaFast(self.mainPlotArgs.series[2].data[priceInfoIndex][1]);
