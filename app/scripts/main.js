@@ -1149,6 +1149,25 @@ function ViewModel() {
     self.hoverTaSlow = ko.observable();
     self.hoverTaSlower = ko.observable();
     self.hoverTaSlowest = ko.observable();
+    self.hoverValues = ko.computed(function () {
+        var hoverValues = [];
+        hoverValues.push({name: self.symbolName(), value: self.hoverPrice(), color: self.price().color});
+        if (self.showTaFast()) {
+            hoverValues.push({name: self.taFastType() + '(' + self.taFastestPeriod() + ')', value: self.hoverTaFastest(), color: self.taFastest().color});
+            hoverValues.push({name: self.taFastType() + '(' + self.taFastPeriod() + ')', value: self.hoverTaFast(), color: self.taFast().color});
+        }
+        if (self.showTaSlow()) {
+            hoverValues.push({name: self.taSlowType() + '(' + self.taSlowPeriod() + ')', value: self.hoverTaSlow(), color: self.taSlow().color});
+            hoverValues.push({name: self.taSlowType() + '(' + self.taSlowerPeriod() + ')', value: self.hoverTaSlower(), color: self.taSlower().color});
+            hoverValues.push({name: self.taSlowType() + '(' + self.taSlowestPeriod() + ')', value: self.hoverTaSlowest(), color: self.taSlowest().color});
+        }
+        if (!self.altKeyDown) {
+            hoverValues.sort(function (a, b) {
+                return a.value - b.value;
+            });
+        }
+        return hoverValues;
+    });
     self.hoverVolume = ko.observable();
     self.hoverRsi = ko.observable();
     self.hoverMacd = ko.observable();
