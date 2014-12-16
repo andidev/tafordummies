@@ -1,4 +1,6 @@
-symbols = [
+'use strict';
+/* exported symbols */
+var symbols = [
         {id: '^GSPC', text: 'S&P-500', links: [
                 {text: 'Avanza', link: 'https://www.avanza.se/index/om-indexet.html/19004/s-p-500'}
             ]},
@@ -49,4 +51,4 @@ symbols = [
         {id: 'FOE.OL', text: 'F.OLSEN ENERGY'},
         {id: 'HM-B.ST', text: 'HM-B'},
         {id: '^VIX', text: 'VOLATILITY S&P-500'}
-    ]
+    ];

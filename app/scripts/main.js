@@ -5,6 +5,7 @@
 /* global log */
 /* global moment */
 /* global numeral */
+/* global symbols */
 /* global async */
 /* global defaultValue */
 /* global defaultBooleanValue */
