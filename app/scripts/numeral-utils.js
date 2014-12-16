@@ -51,7 +51,7 @@ function formatPercent(number) {
     if (number === undefined || number === null || number === '') {
         return '';
     }
-    if (number > 0) {
+    if (number >= 0) {
         return '&nbsp;' + numeral(number).format('0.00%');
     } else {
         return numeral(number).format('0.00%');
