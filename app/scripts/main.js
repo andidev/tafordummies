@@ -967,8 +967,12 @@ function ViewModel() {
             return true;
         }
 
-        log.trace('Handling keyboard shortcuts (keyCode = ' + keyCode + ')', event);
-        if (keyCode === 37) { // Left arrow
+        log.info('Handling keyboard shortcuts (keyCode = ' + keyCode + ')', event);
+        if (keyCode === 67) { // C key
+            log.trace('C key up');
+            $("#symbol").select2("open");
+            return false;
+        } else if (keyCode === 37) { // Left arrow
             if ($('.slider-handle:focus').length) {
                 return true;
             }
@@ -1066,7 +1070,10 @@ function ViewModel() {
         self.keyDown = true;
 
         var keyCode = (event.which ? event.which : event.keyCode);
-        if (keyCode === 37) { // Left arrow
+        if (keyCode === 67) { // C key
+            log.trace('C key down');
+            return true;
+        } else if (keyCode === 37) { // Left arrow
             log.trace('Left arrow key down');
             if (event.target.tagName === 'INPUT') {
                 return true;
