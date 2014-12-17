@@ -967,7 +967,7 @@ function ViewModel() {
             return true;
         }
 
-        log.info('Handling keyboard shortcuts (keyCode = ' + keyCode + ')', event);
+        log.trace('Handling keyboard shortcuts (keyCode = ' + keyCode + ')', event);
         if (keyCode === 67) { // C key
             log.trace('C key up');
             $("#symbol").select2("open");
@@ -1039,6 +1039,17 @@ function ViewModel() {
         } else if (keyCode === 77) { // M key
             log.trace('M key up');
             self.toggleMacd();
+            return false;
+        } else if (keyCode === 76) { // L key
+            log.trace('L key up');
+            var $linkButton = $(".fa-link").parent();
+            $linkButton.click();
+            var $firstVisibleLink = $linkButton.parent().find('a:first:visible');
+            if ($firstVisibleLink.length) {
+                $firstVisibleLink.focus();
+            } else {
+                $linkButton.focus();
+            }
             return false;
         } else if (keyCode === 27) { // Escape
             log.trace('Escape key up');
@@ -1127,6 +1138,9 @@ function ViewModel() {
             }
         } else if (keyCode === 77) { // M key
             log.trace('M key down');
+            return true;
+        } else if (keyCode === 76) { // L key
+            log.trace('L key down');
             return true;
         } else if (keyCode === 27) { // Escape
             log.trace('Escape key down');
