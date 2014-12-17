@@ -5,6 +5,7 @@
 /* global log */
 /* global moment */
 /* global numeral */
+/* global links */
 /* global symbols */
 /* global async */
 /* global defaultValue */
@@ -50,6 +51,7 @@ function ViewModel() {
     defaultParams.debug = false;
 
     self.debug = ko.observable(defaultBooleanValue(defaultParams.debug, url.param('debug')));
+    self.links = ko.observableArray(links); // Load links from links.js
     self.symbols = ko.observableArray(symbols); // Load symbols from symbols.js
     self.symbol = ko.observable();
     self.symbolName = ko.computed(function () {
