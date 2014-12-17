@@ -192,7 +192,7 @@
                         <div id="hover-info">
                             <div id="hover-date" class="text-center text-muted text-bold" data-bind="text: hoverDateFormatted">23 May 2012</div>
                             <div id="hover-percent" class="text-center text-bold text-large text-success" data-bind="css: textColorClass(hoverPercent())"><i class="fa" data-bind="css: faArrowClass(hoverPercent())"></i> <span data-bind="html: formatPercent(hoverPercent())">1,03%</span></div>
-                            <div id="hover-change" class="text-center text-bold text-small text-success" data-bind="css: textColorClass(hoverChange())"><span data-bind="html: formatNumber(hoverChange())">0.1</span></div>
+                            <div id="hover-change" class="text-center text-bold text-small text-success" data-bind="css: textColorClass(hoverChange()), visible: altKeyDown"><span data-bind="html: formatNumber(hoverChange())">0.1</span></div>
                             <div>
                                 <hr class="hr-thin">
                                 <table id="hover-info-main-plot">

@@ -944,7 +944,7 @@ function ViewModel() {
         self.plot();
         self.pushState();
     };
-    self.altKeyDown = false;
+    self.altKeyDown = ko.observable(false);
     self.keyDown = false;
     $(document).focus(function () {
         self.keyDown = false;
@@ -1067,8 +1067,7 @@ function ViewModel() {
             return false;
         } else if (keyCode === 18) { // Alt
             log.trace('Alt key up');
-            self.altKeyDown = false;
-            self.hoverDate(self.hoverDate()); // Refresh hover date
+            self.altKeyDown(false);
             return true;
         }
         return true;
@@ -1158,8 +1157,7 @@ function ViewModel() {
             return false;
         } else if (keyCode === 18) { // Alt
             log.trace('Alt key down');
-            self.altKeyDown = true;
-            self.hoverDate(self.hoverDate()); // Refresh hover date
+            self.altKeyDown(true);
             return true;
         }
         return true;
@@ -1186,7 +1184,7 @@ function ViewModel() {
             hoverValues.push({name: self.taSlowType() + '(' + self.taSlowerPeriod() + ')', value: self.hoverTaSlower(), color: self.taSlower().color});
             hoverValues.push({name: self.taSlowType() + '(' + self.taSlowestPeriod() + ')', value: self.hoverTaSlowest(), color: self.taSlowest().color});
         }
-        if (!self.altKeyDown) {
+        if (!self.altKeyDown()) {
             hoverValues.sort(function (a, b) {
                 return a.value - b.value;
             });
@@ -1202,7 +1200,7 @@ function ViewModel() {
     self.hoverDateFormatted = ko.computed(function () {
         if (self.hoverDate() === undefined) {
             return '';
-        } else if (self.altKeyDown) {
+        } else if (self.altKeyDown()) {
             // Show detailed format
             return formatLongDate(self.hoverDate());
         } else {
