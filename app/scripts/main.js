@@ -944,7 +944,7 @@ function ViewModel() {
         self.plot();
         self.pushState();
     };
-    self.altKeyDown = ko.observable(false);
+    self.dKeyDown = ko.observable(false);
     self.keyDown = false;
     $(document).focus(function () {
         self.keyDown = false;
@@ -1051,6 +1051,10 @@ function ViewModel() {
                 $linkButton.focus();
             }
             return false;
+        } else if (keyCode === 68) { // D key
+            log.trace('D key up');
+            self.dKeyDown(false);
+            return true;
         } else if (keyCode === 27) { // Escape
             log.trace('Escape key up');
             if (self.timePeriod() === '3years') {
@@ -1065,10 +1069,6 @@ function ViewModel() {
             log.trace('Backspace key up');
             self.undoZoom();
             return false;
-        } else if (keyCode === 18) { // Alt
-            log.trace('Alt key up');
-            self.altKeyDown(false);
-            return true;
         }
         return true;
     };
@@ -1141,6 +1141,10 @@ function ViewModel() {
         } else if (keyCode === 76) { // L key
             log.trace('L key down');
             return true;
+        } else if (keyCode === 68) { // D key
+            log.trace('D key down');
+            self.dKeyDown(true);
+            return true;
         } else if (keyCode === 27) { // Escape
             log.trace('Escape key down');
             if ($('.datepicker-dropdown:visible').length) {
@@ -1155,10 +1159,6 @@ function ViewModel() {
                 return true;
             }
             return false;
-        } else if (keyCode === 18) { // Alt
-            log.trace('Alt key down');
-            self.altKeyDown(true);
-            return true;
         }
         return true;
     };
@@ -1184,7 +1184,7 @@ function ViewModel() {
             hoverValues.push({name: self.taSlowType() + '(' + self.taSlowerPeriod() + ')', value: self.hoverTaSlower(), color: self.taSlower().color});
             hoverValues.push({name: self.taSlowType() + '(' + self.taSlowestPeriod() + ')', value: self.hoverTaSlowest(), color: self.taSlowest().color});
         }
-        if (!self.altKeyDown()) {
+        if (!self.dKeyDown()) {
             hoverValues.sort(function (a, b) {
                 return a.value - b.value;
             });
@@ -1200,7 +1200,7 @@ function ViewModel() {
     self.hoverDateFormatted = ko.computed(function () {
         if (self.hoverDate() === undefined) {
             return '';
-        } else if (self.altKeyDown()) {
+        } else if (self.dKeyDown()) {
             // Show detailed format
             return formatLongDate(self.hoverDate());
         } else {
