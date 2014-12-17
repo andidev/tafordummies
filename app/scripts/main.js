@@ -970,7 +970,7 @@ function ViewModel() {
         log.trace('Handling keyboard shortcuts (keyCode = ' + keyCode + ')', event);
         if (keyCode === 67) { // C key
             log.trace('C key up');
-            $("#symbol").select2("open");
+            $('#symbol').select2('open');
             return false;
         } else if (keyCode === 37) { // Left arrow
             if ($('.slider-handle:focus').length) {
@@ -1042,7 +1042,7 @@ function ViewModel() {
             return false;
         } else if (keyCode === 76) { // L key
             log.trace('L key up');
-            var $linkButton = $(".fa-link").parent();
+            var $linkButton = $('.fa-link').parent();
             $linkButton.click();
             var $firstVisibleLink = $linkButton.parent().find('a:first:visible');
             if ($firstVisibleLink.length) {
