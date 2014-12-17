@@ -86,7 +86,7 @@
     flotFinance.fn.getVolume = cached(function (scale, splitDetection) {
         var volume = this.convertYahooFinanceToFlotFormat('volume');
         if (splitDetection) {
-            var price = this.getClosePrice('days', false);
+            var price = this.getAdjClosePrice('days', false);
             volume = adjustSplitsVolume(price, volume);
         }
         return scaleTo(scale, volume, true);
@@ -113,7 +113,7 @@
      * @return     {Array} the RSI curve
      */
     flotFinance.fn.getRsi = cached(function (n, scale, splitDetection) {
-        var data = this.getClosePrice(scale, splitDetection);
+        var data = this.getAdjClosePrice(scale, splitDetection);
         var priceTA = this.getPriceTA(scale, splitDetection);
         data = convertToFlotFormat(priceTA.rsi(n, false).asArray(), data);
         return data;
@@ -125,7 +125,7 @@
      * @return     {Array} the Simple Moving Avarage
      */
     flotFinance.fn.getSmaPrice = cached(function (n, scale, splitDetection) {
-        var data = this.getClosePrice(scale, splitDetection);
+        var data = this.getAdjClosePrice(scale, splitDetection);
         var priceTA = this.getPriceTA(scale, splitDetection);
         data = convertToFlotFormat(priceTA.sma(n).asArray(), data);
         return data;
@@ -137,7 +137,7 @@
      * @return     {Array} the Simple Moving Avarage
      */
     flotFinance.fn.getEmaPrice = cached(function (n, scale, splitDetection) {
-        var data = this.getClosePrice(scale, splitDetection);
+        var data = this.getAdjClosePrice(scale, splitDetection);
         var priceTA = this.getPriceTA(scale, splitDetection);
         data = convertToFlotFormat(priceTA.ema(n).asArray(), data);
         return data;
@@ -149,7 +149,7 @@
      * @return     {Array} the MACD curve
      */
     flotFinance.fn.getMacd = cached(function (nSlow, nFast, nSignal, scale, splitDetection) {
-        var data = this.getClosePrice(scale, splitDetection);
+        var data = this.getAdjClosePrice(scale, splitDetection);
         var macdTA = this.getMacdTA(nSlow, nFast, nSignal, scale, splitDetection);
         data = convertToFlotFormat(macdTA.macd.asArray(), data);
         return data;
@@ -161,7 +161,7 @@
      * @return     {Array} the MACD signal
      */
     flotFinance.fn.getMacdSignal = cached(function (nSlow, nFast, nSignal, scale, splitDetection) {
-        var data = this.getClosePrice(scale, splitDetection);
+        var data = this.getAdjClosePrice(scale, splitDetection);
         var macdTA = this.getMacdTA(nSlow, nFast, nSignal, scale, splitDetection);
         data = convertToFlotFormat(macdTA.signal.asArray(), data);
         return data;
@@ -173,7 +173,7 @@
      * @return     {Array} the MACD curve
      */
     flotFinance.fn.getMacdDivergence = cached(function (nSlow, nFast, nSignal, scale, splitDetection) {
-        var data = this.getClosePrice(scale, splitDetection);
+        var data = this.getAdjClosePrice(scale, splitDetection);
         var macdTA = this.getMacdTA(nSlow, nFast, nSignal, scale, splitDetection);
         data = convertToFlotFormat(macdTA.divergence.asArray(), data);
         return data;
@@ -205,7 +205,7 @@
      * @return     {Array} the MACD curve
      */
     flotFinance.fn.getPriceTA = cached(function (scale, splitDetection) {
-        var data = this.getClosePrice(scale, splitDetection);
+        var data = this.getAdjClosePrice(scale, splitDetection);
         var priceTA = TA(getPricesAsArray(data));
         return priceTA;
     });
@@ -222,7 +222,7 @@
     });
 
     flotFinance.fn.isCloseEqualToAdjClose = function () {
-        var close = this.getClosePrice();
+        var close = this.getAdjClosePrice();
         var adjclose = this.getAdjClosePrice();
         for (var i = 0; i < close.length; i++) {
             if (close[i][1] !== adjclose[i][1]) {

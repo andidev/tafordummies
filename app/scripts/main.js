@@ -1477,12 +1477,12 @@ function ViewModel() {
         var start = moment().valueOf();
 
         self.mainPlotArgs.series = [];
-        self.price().data = self.flotFinanceSymbol().getClosePrice(self.computeScale(), self.splitDetection());
+        self.price().data = self.flotFinanceSymbol().getAdjClosePrice(self.computeScale(), self.splitDetection());
 
         if (self.scale() === 'auto' && self.timePeriod() === 'all') {
             // Set time period all and reload data
             self.scaleTimePeriodAll(self.computeScaleForZoom(getFirstPriceDate(), getLastPriceDate()));
-            self.price().data = (self.flotFinanceSymbol().getClosePrice(self.computeScale(), self.splitDetection()));
+            self.price().data = (self.flotFinanceSymbol().getAdjClosePrice(self.computeScale(), self.splitDetection()));
         }
 
         if (self.toDate() === null) {
