@@ -75,3 +75,8 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+/* Make pull right adjust to closest relative parent */
+.pull-right-parent {
+    position: static;
+}
