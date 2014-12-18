@@ -1315,7 +1315,8 @@ function ViewModel() {
     self.init = function () {
         self.symbol(defaultValue('^GSPC', url.param('symbol')));
         $('#symbol').select2({
-            width: '200px',
+            width: '250px',
+            dropdownAutoWidth: true,
             data: function () {
                 var data = [];
                 $(self.symbols()).each(function (index, symbol) {
