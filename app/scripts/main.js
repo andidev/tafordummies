@@ -7,6 +7,7 @@
 /* global numeral */
 /* global links */
 /* global symbols */
+/* global yahooSymbols */
 /* global async */
 /* global defaultValue */
 /* global defaultBooleanValue */
@@ -1317,10 +1318,22 @@ function ViewModel() {
         $('#symbol').select2({
             width: '250px',
             dropdownAutoWidth: true,
+            minimumInputLength: 3,
             data: function () {
                 var data = [];
+                var optgroup = {text: 'Favorites', children: []};
                 $(self.symbols()).each(function (index, symbol) {
-                    data.push(symbol);
+                    optgroup.children.push({id: symbol.id, text: symbol.id + ' ' + symbol.text});
+                });
+                data.push(optgroup);
+                $(yahooSymbols.query.results.industry).each(function (index, industry) {
+                    var optgroup = {text: industry.name, children: []};
+                    $(industry.company).each(function (index, company) {
+                        if (!_.where(self.symbols(), {id: company.symbol}).length) {
+                            optgroup.children.push({id: company.symbol, text: company.symbol + ' ' + company.name});
+                        }
+                    });
+                    data.push(optgroup);
                 });
                 return {text: 'text', results: data};
             },
