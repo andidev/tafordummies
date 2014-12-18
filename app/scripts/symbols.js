@@ -7,7 +7,7 @@ var symbols = [
         {id: '^OMX', text: 'OMXS30', links: [
                 {text: 'Avanza', link: 'https://www.avanza.se/index/om-indexet.html/19002/omx-stockholm-30'}
             ]},
-        {id: 'AOI.ST', text: 'Africa Oil ST', links: [
+        {id: 'AOI.ST', text: 'Africa Oil Corp ST', links: [
                 {text: 'Avanza ST', link: 'https://www.avanza.se/aktier/om-aktien.html/250993/africa-oil'},
                 {text: 'Avanza TO', link: 'https://www.avanza.se/aktier/om-aktien.html/476936/africa-oil'},
                 {text: 'Avanza Forum', link: 'https://www.avanza.se/placera/forum/forum/africa-oil-corp.html'},
@@ -20,7 +20,7 @@ var symbols = [
                 {text: 'Big Charts ST', link: 'http://bigcharts.marketwatch.com/kaavio.Webhost/charts/big.chart?type=64&size=4&state=9&style=380&freq=5mi&time=1day&symb=se:aoi'},
                 {text: 'Big Charts TO', link: 'http://bigcharts.marketwatch.com/kaavio.Webhost/charts/big.chart?type=64&size=4&state=9&style=380&freq=5mi&time=1day&symb=ca:aoi'}
             ]},
-        {id: 'PXX.TO', text: 'Black Pearl Resources TO', links: [
+        {id: 'PXX.TO', text: 'BlackPearl Resources Inc TO', links: [
                 {text: 'Avanza ST', link: 'https://www.avanza.se/aktier/om-aktien.html/85707/blackpearl-resources-sdb'},
                 {text: 'Avanza TO', link: 'https://www.avanza.se/aktier/om-aktien.html/140688/blackpearl-resources-inc'},
                 {text: 'Avanza Forum', link: 'https://www.avanza.se/placera/forum/forum/blackpearl-resources-sdb.html'},
