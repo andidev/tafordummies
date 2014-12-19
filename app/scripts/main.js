@@ -1345,9 +1345,11 @@ function ViewModel() {
             self.scaleTimePeriodAll('days');
             if (self.timePeriod() === 'custom') {
                 if (self.fromDate().isSame(getFirstPriceDate())) {
+                    // Set null to keep first date
                     self.fromDate(null);
                 }
                 if (self.toDate().isSame(getLastPriceDate())) {
+                    // Set null to keep last date
                     self.toDate(null);
                 }
             } else {
@@ -1486,15 +1488,16 @@ function ViewModel() {
             self.price().data = (self.flotFinanceSymbol().getAdjClosePrice(self.computeScale(), self.splitDetection()));
         }
 
-        if (self.toDate() === null) {
+        if (self.timePeriod() === 'custom') {
+            if (self.toDate() === null || self.toDate().isAfter(getLastPriceDate())) { // null is used to keep last date
+                self.toDate(getLastPriceDate());
+            }
+            if (self.fromDate() === null || self.fromDate().isBefore(getFirstPriceDate())) { // null is used to keep first date
+                self.fromDate(getFirstPriceDate());
+            }
+        } else {
             self.toDate(getLastPriceDate());
-        } else if (self.toDate().isAfter(getLastPriceDate())) {
-            self.toDate(getLastPriceDate());
-        }
-        if (self.fromDate() === null) {
             self.fromDate(getFromDateForTimePeriod());
-        } else if (self.fromDate().isBefore(getFirstPriceDate())) {
-            self.fromDate(getFirstPriceDate());
         }
 
         // Get Price
@@ -2151,12 +2154,8 @@ function ViewModel() {
                 return getFirstPriceDate();
             }
             return aWeekAgo;
-        } else {
-            if (self.fromDate() === null) {
-                return getFirstPriceDate();
-            }
-            return self.fromDate().clone();
         }
+        throw 'Invalid time period "' + self.timePeriod() + '"';
     }
     function getDeltaForTimePeriod(factor) {
         var delta = self.toDate().diff(self.fromDate()) / factor;
