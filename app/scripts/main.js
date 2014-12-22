@@ -72,6 +72,9 @@ function ViewModel() {
             return flotFinance(self.symbol());
         }
     });
+    self.date = ko.observable({
+        data: {}
+    });
     self.price = ko.observable({
         label: self.symbol(),
         data: [],
@@ -244,6 +247,13 @@ function ViewModel() {
         $('#to-date').datepicker('setDate', self.toDate().toDate());
         return formatDate(self.toDate());
     });
+    self.toDateIndex = function () {
+        var index = self.date().data[self.toDate().format('YYYYMMDD')];
+        if (index === undefined) {
+            return null;
+        }
+        return index;
+    };
     self.fromDate = ko.observable(defaultDate(defaultParams.fromDate, url.param('fromDate')));
     self.fromDateFormatted = ko.computed(function () {
         if (self.fromDate() === null) {
@@ -252,16 +262,46 @@ function ViewModel() {
         $('#from-date').datepicker('setDate', self.fromDate().toDate());
         return formatDate(self.fromDate());
     });
+    self.fromDateIndex = function () {
+        var index = self.date().data[self.fromDate().format('YYYYMMDD')];
+        if (index === undefined) {
+            return null;
+        }
+        return index;
+    };
     self.settings = {
         showXaxisTicksInGrid: true,
         paddingFactor: 0.05
     };
     self.commonPlotOptions = {
         xaxis: {
-            mode: 'time',
             reserveSpace: true,
             min: null,
-            max: null
+            max: null,
+//            ticks: function (axis) {
+//                var ticks = [];
+//                if (self.toDate().diff(self.fromDate(), 'years', true) >= 50) {
+//                    return formatDateYears(self.date().data[val]);
+//                } else if (self.toDate().diff(self.fromDate(), 'years', true) >= 3) {
+//                    return formatDateMonths(self.date().data[val]);
+//                } else if (self.toDate().diff(self.fromDate(), 'years', true) >= 1) {
+//                    return formatDateWeeks(self.date().data[val]);
+//                } else {
+//                    return formatDateDays(self.date().data[val]);
+//                }
+//                return ticks;
+//            },
+            tickFormatter: function (val, axis) {
+                if (self.toDate().diff(self.fromDate(), 'years', true) >= 50) {
+                    return formatDateYears(self.date().data[val]);
+                } else if (self.toDate().diff(self.fromDate(), 'years', true) >= 3) {
+                    return formatDateMonths(self.date().data[val]);
+                } else if (self.toDate().diff(self.fromDate(), 'years', true) >= 1) {
+                    return formatDateWeeks(self.date().data[val]);
+                } else {
+                    return formatDateDays(self.date().data[val]);
+                }
+            }
         },
         yaxes: [{
                 position: 'left',
@@ -425,8 +465,8 @@ function ViewModel() {
             timePeriod: self.timePeriod()
         });
         self.timePeriod('all');
-        self.toDate(getLastPriceDate());
-        self.fromDate(getFromDateForTimePeriod());
+        self.updateToDate(getLastPriceDate());
+        self.updateFromDate(getFromDateForTimePeriod());
         self.processData();
         self.plot();
         self.pushState();
@@ -439,8 +479,8 @@ function ViewModel() {
             timePeriod: self.timePeriod()
         });
         self.timePeriod('10years');
-        self.toDate(getLastPriceDate());
-        self.fromDate(getFromDateForTimePeriod());
+        self.updateToDate(getLastPriceDate());
+        self.updateFromDate(getFromDateForTimePeriod());
         self.processData();
         self.plot();
         self.pushState();
@@ -453,8 +493,8 @@ function ViewModel() {
             timePeriod: self.timePeriod()
         });
         self.timePeriod('3years');
-        self.toDate(getLastPriceDate());
-        self.fromDate(getFromDateForTimePeriod());
+        self.updateToDate(getLastPriceDate());
+        self.updateFromDate(getFromDateForTimePeriod());
         self.processData();
         self.plot();
         self.pushState();
@@ -467,8 +507,8 @@ function ViewModel() {
             timePeriod: self.timePeriod()
         });
         self.timePeriod('year');
-        self.toDate(getLastPriceDate());
-        self.fromDate(getFromDateForTimePeriod());
+        self.updateToDate(getLastPriceDate());
+        self.updateFromDate(getFromDateForTimePeriod());
         self.processData();
         self.plot();
         self.pushState();
@@ -481,8 +521,8 @@ function ViewModel() {
             timePeriod: self.timePeriod()
         });
         self.timePeriod('3months');
-        self.toDate(getLastPriceDate());
-        self.fromDate(getFromDateForTimePeriod());
+        self.updateToDate(getLastPriceDate());
+        self.updateFromDate(getFromDateForTimePeriod());
         self.processData();
         self.plot();
         self.pushState();
@@ -495,8 +535,10 @@ function ViewModel() {
             timePeriod: self.timePeriod()
         });
         self.timePeriod('month');
-        self.toDate(getLastPriceDate());
-        self.fromDate(getFromDateForTimePeriod());
+        log.error(getLastPriceDate().format('YYYY-MM-DD'));
+        log.error(getFromDateForTimePeriod().format('YYYY-MM-DD'));
+        self.updateToDate(getLastPriceDate());
+        self.updateFromDate(getFromDateForTimePeriod());
         self.processData();
         self.plot();
         self.pushState();
@@ -509,8 +551,8 @@ function ViewModel() {
             timePeriod: self.timePeriod()
         });
         self.timePeriod('week');
-        self.toDate(getLastPriceDate());
-        self.fromDate(getFromDateForTimePeriod());
+        self.updateToDate(getLastPriceDate());
+        self.updateFromDate(getFromDateForTimePeriod());
         self.processData();
         self.plot();
         self.pushState();
@@ -713,10 +755,17 @@ function ViewModel() {
     self.updateFromDate = function (date) {
         log.trace('Updating from date');
         var bouncedMillis = null;
-        var minDate = self.price().data[0][0];
-        if (date.isBefore(minDate)) {
-            bouncedMillis = minDate.diff(self.fromDate());
-            date = minDate.clone();
+        if (date === null) {
+            self.fromDate(null);
+            return;
+        }
+        if (date.isBefore(getFirstPriceDate())) {
+            bouncedMillis = getFirstPriceDate().diff(self.fromDate());
+            date = getFirstPriceDate().clone();
+        }
+        while (self.date().data[date.format('YYYYMMDD')] === undefined) {
+            date = date.clone().add(1, 'day');
+            log.error(date.format('YYYY-MM-DD'));
         }
         self.fromDate(date);
         return bouncedMillis;
@@ -724,10 +773,16 @@ function ViewModel() {
     self.updateToDate = function (date) {
         log.trace('Updating to date');
         var bouncedMillis = null;
-        var maxDate = self.price().data[self.price().data.length - 1][0];
-        if (date.isAfter(maxDate)) {
-            bouncedMillis = maxDate.diff(self.toDate());
-            date = maxDate.clone();
+        if (date === null) {
+            self.toDate(null);
+            return;
+        }
+        if (date.isAfter(getLastPriceDate())) {
+            bouncedMillis = getLastPriceDate().diff(self.toDate());
+            date = getLastPriceDate().clone();
+        }
+        while (self.date().data[date.format('YYYYMMDD')] === undefined) {
+            date = date.clone().subtract(1, 'day');
         }
         self.toDate(date);
         return bouncedMillis;
@@ -787,8 +842,8 @@ function ViewModel() {
                     toDate: self.toDate().clone(),
                     timePeriod: self.timePeriod()
                 });
-                var from = self.price().data[fromIndex][0].clone();
-                var to = self.price().data[toIndex][0].clone();
+                var from = self.date().data[fromIndex].clone();
+                var to = self.date().data[toIndex].clone();
                 log.info('Zooming selected from ' + formatDate(from) + ' to ' + formatDate(to));
                 self.updateFromDate(from);
                 self.updateToDate(to);
@@ -1163,7 +1218,7 @@ function ViewModel() {
         return true;
     };
 
-    self.previousPriceInfoIndex = null;
+    self.previousHoverIndex = null;
     self.hoverPercent = ko.observable('');
     self.hoverChange = ko.observable('');
     self.hoverPrice = ko.observable();
@@ -1208,94 +1263,87 @@ function ViewModel() {
         }
     });
 
-    self.showPriceInfo = function (viewModel, event, pos) {
+    self.showHoverInfo = function (viewModel, event, pos) {
         if (self.$mainPlot) {
-            var priceInfoIndex = self.findClosestDatapoint(pos.x);
-            if (priceInfoIndex === self.previousPriceInfoIndex) {
+            // Find closes datapoint
+            var hoverIndex = self.findClosestDatapoint(pos.x);
+            if (hoverIndex === self.previousHoverIndex) {
                 // No changes to update
                 return;
             }
-            log.trace('Showing price info');
-            if (self.price().data[priceInfoIndex][0].isBefore(self.fromDate())) {
-                // Do not hover dates before from date
-                priceInfoIndex = self.findClosestDatapoint(self.fromDate());
-            }
-            if (self.price().data[priceInfoIndex][0].isAfter(self.toDate())) {
-                // Do not hover dates after to date
-                priceInfoIndex = self.findClosestDatapoint(self.toDate());
-            }
-            self.$mainPlot.unhighlight(0, self.previousPriceInfoIndex);
-            var date = self.mainPlotArgs.series[0].data[priceInfoIndex][0];
-            var price = self.mainPlotArgs.series[0].data[priceInfoIndex][1];
-            var priceToTheLeft = priceInfoIndex > 0 ? self.mainPlotArgs.series[0].data[priceInfoIndex - 1][1] : null;
+
+            log.trace('Showing hover info');
+            self.$mainPlot.unhighlight(0, self.previousHoverIndex);
+            var hoverPrice = self.price().data[hoverIndex][1];
+            var hoverPriceToTheLeft = hoverIndex > 0 ? self.price().data[hoverIndex - 1][1] : null;
 
             // Lock the crosshair to the closest data point being hovered
             self.$mainPlot.lockCrosshair({
-                x: date,
-                y: price
+                x: hoverIndex,
+                y: hoverPrice
             });
             if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
                 self.$volumePlot.lockCrosshair({
-                    x: date,
-                    y: price
+                    x: hoverIndex,
+                    y: hoverPrice
                 });
             }
             if (self.showRsi() && self.$rsiPlot) {
                 self.$rsiPlot.lockCrosshair({
-                    x: date,
-                    y: price
+                    x: hoverIndex,
+                    y: hoverPrice
                 });
             }
             if (self.showMacd() && self.$macdPlot) {
                 self.$macdPlot.lockCrosshair({
-                    x: date,
-                    y: price
+                    x: hoverIndex,
+                    y: hoverPrice
                 });
             }
-            self.$mainPlot.highlight(0, priceInfoIndex);
+            self.$mainPlot.highlight(0, hoverIndex);
 
             var change = null;
-            if (priceToTheLeft !== null) {
-                change = price - priceToTheLeft;
+            if (hoverPriceToTheLeft !== null) {
+                change = hoverPrice - hoverPriceToTheLeft;
             }
 
             var percent = null;
-            if (priceToTheLeft !== null) {
-                percent = change / priceToTheLeft;
+            if (hoverPriceToTheLeft !== null) {
+                percent = change / hoverPriceToTheLeft;
             }
 
             self.hoverPercent(percent);
             self.hoverChange(change);
-            self.hoverPrice(price);
-            self.hoverTaFastest(self.mainPlotArgs.series[1].data[priceInfoIndex][1]);
-            self.hoverTaFast(self.mainPlotArgs.series[2].data[priceInfoIndex][1]);
-            self.hoverTaSlow(self.mainPlotArgs.series[3].data[priceInfoIndex][1]);
-            self.hoverTaSlower(self.mainPlotArgs.series[4].data[priceInfoIndex][1]);
-            self.hoverTaSlowest(self.mainPlotArgs.series[5].data[priceInfoIndex][1]);
-            if (self.hasVolume() && self.$volumePlot) {
-                self.hoverVolume(self.volumePlotArgs.series[0].data[priceInfoIndex][1]);
+            self.hoverPrice(hoverPrice);
+            self.hoverTaFastest(self.taFastest().data[hoverIndex][1]);
+            self.hoverTaFast(self.taFast().data[hoverIndex][1]);
+            self.hoverTaSlow(self.taSlow().data[hoverIndex][1]);
+            self.hoverTaSlower(self.taSlower().data[hoverIndex][1]);
+            self.hoverTaSlowest(self.taSlowest().data[hoverIndex][1]);
+            if (self.hasVolume()) {
+                self.hoverVolume(self.volume().data[hoverIndex][1]);
             }
-            if (self.showRsi() && self.$rsiPlot) {
-                self.hoverRsi(self.rsiPlotArgs.series[0].data[priceInfoIndex][1]);
+            if (self.showRsi()) {
+                self.hoverRsi(self.rsi().data[hoverIndex][1]);
             }
-            if (self.showMacd() && self.$macdPlot) {
-                self.hoverMacdDivergence(self.macdPlotArgs.series[0].data[priceInfoIndex][1]);
-                self.hoverMacd(self.macdPlotArgs.series[1].data[priceInfoIndex][1]);
-                self.hoverMacdSignal(self.macdPlotArgs.series[2].data[priceInfoIndex][1]);
+            if (self.showMacd()) {
+                self.hoverMacdDivergence(self.macdDivergence().data[hoverIndex][1]);
+                self.hoverMacd(self.macd().data[hoverIndex][1]);
+                self.hoverMacdSignal(self.macdSignal().data[hoverIndex][1]);
             }
-            self.hoverDate(date);
+            self.hoverDate(self.date().data[hoverIndex]);
             $('#hover-info').fadeIn(200);
-            self.previousPriceInfoIndex = priceInfoIndex;
+            self.previousHoverIndex = hoverIndex;
         }
     };
-    self.hidePriceInfo = function (viewModel, event) {
+    self.hideHoverInfo = function (viewModel, event) {
         if (self.$mainPlot) {
             if ($('#hover-info').is(event.toElement)) {
                 // Do not hide hover info if it is hovered
                 return;
             }
             self.$mainPlot.clearCrosshair();
-            self.$mainPlot.unhighlight(0, self.previousPriceInfoIndex);
+            self.$mainPlot.unhighlight(0, self.previousHoverIndex);
             if (self.showVolume() && self.hasVolume() && self.$volumePlot) {
                 self.$volumePlot.clearCrosshair();
             }
@@ -1307,7 +1355,7 @@ function ViewModel() {
             }
             $('#hover-info').stop(true, true);
             $('#hover-info').hide();
-            self.previousPriceInfoIndex = null;
+            self.previousHoverIndex = null;
         }
     };
 
@@ -1346,15 +1394,15 @@ function ViewModel() {
             if (self.timePeriod() === 'custom') {
                 if (self.fromDate().isSame(getFirstPriceDate())) {
                     // Set null to keep first date
-                    self.fromDate(null);
+                    self.updateFromDate(null);
                 }
                 if (self.toDate().isSame(getLastPriceDate())) {
                     // Set null to keep last date
-                    self.toDate(null);
+                    self.updateToDate(null);
                 }
             } else {
-                self.fromDate(null);
-                self.toDate(null);
+                self.updateFromDate(null);
+                self.updateToDate(null);
             }
             self.processData();
             self.plot();
@@ -1480,24 +1528,30 @@ function ViewModel() {
         var start = moment().valueOf();
 
         self.mainPlotArgs.series = [];
+        self.date().data = self.flotFinanceSymbol().getDate(self.computeScale());
         self.price().data = self.flotFinanceSymbol().getAdjClosePrice(self.computeScale(), self.splitDetection());
 
         if (self.scale() === 'auto' && self.timePeriod() === 'all') {
             // Set time period all and reload data
             self.scaleTimePeriodAll(self.computeScaleForZoom(getFirstPriceDate(), getLastPriceDate()));
+            self.date().data = self.flotFinanceSymbol().getDate(self.computeScale());
             self.price().data = (self.flotFinanceSymbol().getAdjClosePrice(self.computeScale(), self.splitDetection()));
         }
 
         if (self.timePeriod() === 'custom') {
             if (self.toDate() === null || self.toDate().isAfter(getLastPriceDate())) { // null is used to keep last date
-                self.toDate(getLastPriceDate());
+                self.updateToDate(getLastPriceDate());
+            } else {
+                self.updateToDate(self.toDate());
             }
             if (self.fromDate() === null || self.fromDate().isBefore(getFirstPriceDate())) { // null is used to keep first date
-                self.fromDate(getFirstPriceDate());
+                self.updateFromDate(getFirstPriceDate());
+            } else {
+                self.updateFromDate(self.fromDate());
             }
         } else {
-            self.toDate(getLastPriceDate());
-            self.fromDate(getFromDateForTimePeriod());
+            self.updateToDate(getLastPriceDate());
+            self.updateFromDate(getFromDateForTimePeriod());
         }
 
         // Get Price
@@ -1635,16 +1689,6 @@ function ViewModel() {
             self.volumePlotArgs.options.xaxis.font = null;
         }
         if (self.showVolume() && self.hasVolume()) {
-            if (self.computeScale() === 'days') {
-                self.volume().bars.barWidth = 72000000; // 86400000 == 24h // a day in milliseconds
-            } else if (self.computeScale() === 'weeks') {
-                self.volume().bars.barWidth = 518400000; // 604800000 == 7 days // a week in milliseconds
-            } else if (self.computeScale() === 'months') {
-                self.volume().bars.barWidth = 2246400000; // 2419200000 == 28 days // a month in milliseconds
-            } else if (self.computeScale() === 'years') {
-                self.volume().bars.barWidth = 31017600000; // 31536000000 == 356 days // a year in milliseconds
-            }
-
             if (self.settings.showXaxisTicksInGrid) {
                 self.volumePlotArgs.options.xaxis.tickColor = null;
             } else {
@@ -1832,14 +1876,14 @@ function ViewModel() {
                     self.scaleTimePeriodAll('days');
                     if (self.timePeriod() === 'custom') {
                         if (self.fromDate().isSame(getFirstPriceDate())) {
-                            self.fromDate(null);
+                            self.updateFromDate(null);
                         }
                         if (self.toDate().isSame(getLastPriceDate())) {
-                            self.toDate(null);
+                            self.updateToDate(null);
                         }
                     } else {
-                        self.fromDate(null);
-                        self.toDate(null);
+                        self.updateFromDate(null);
+                        self.updateToDate(null);
                     }
                     self.processData();
                     self.plot();
@@ -1847,8 +1891,8 @@ function ViewModel() {
                     // State data available
                     log.trace('Loading state ', state);
                     self.timePeriod(defaultValue(defaultParams.timePeriod, state.timePeriod));
-                    self.fromDate(defaultDate(defaultParams.fromDate, state.fromDate));
-                    self.toDate(defaultDate(defaultParams.toDate, state.toDate));
+                    self.updateFromDate(defaultDate(defaultParams.fromDate, state.fromDate));
+                    self.updateToDate(defaultDate(defaultParams.toDate, state.toDate));
                     self.scale(defaultValue(defaultParams.scale, state.scale));
                     self.showVolume(defaultBooleanValue(defaultParams.showVolume, state.showVolume));
                     self.showRsi(defaultBooleanValue(defaultParams.showRsi, state.showRsi));
@@ -1887,16 +1931,16 @@ function ViewModel() {
     self.updatePlotAxisMinAndMax = function () {
         log.trace('updatePlotAxisMinAndMax()');
         // Update xaxis min/max
-        self.mainPlotArgs.options.xaxis.min = self.fromDate();
-        self.mainPlotArgs.options.xaxis.max = self.toDate();
+        self.mainPlotArgs.options.xaxis.min = self.fromDateIndex();
+        self.mainPlotArgs.options.xaxis.max = self.toDateIndex();
 
         // Find yaxis min/max
-        var yaxisMinMax = findYaxisMinMax(self.price(), self.fromDate(), self.toDate());
+        var yaxisMinMax = findYaxisMinMax(self.price(), self.fromDateIndex(), self.toDateIndex());
         if (self.showTaFast()) {
-            yaxisMinMax = findYaxisMinMax([self.taFastest(), self.taFast()], self.fromDate(), self.toDate(), yaxisMinMax);
+            yaxisMinMax = findYaxisMinMax([self.taFastest(), self.taFast()], self.fromDateIndex(), self.toDateIndex(), yaxisMinMax);
         }
         if (self.showTaSlow()) {
-            yaxisMinMax = findYaxisMinMax([self.taSlow(), self.taSlower(), self.taSlowest()], self.fromDate(), self.toDate(), yaxisMinMax);
+            yaxisMinMax = findYaxisMinMax([self.taSlow(), self.taSlower(), self.taSlowest()], self.fromDateIndex(), self.toDateIndex(), yaxisMinMax);
         }
         yaxisMinMax = addPaddingsToYaxisMinMax(yaxisMinMax, self.settings.paddingFactor);
 
@@ -1912,34 +1956,35 @@ function ViewModel() {
     self.updateMacdPlotAxisMinAndMax = function () {
         log.trace('updateMacdPlotAxisMinAndMax()');
         // Update xaxis min/max
-        self.macdPlotArgs.options.xaxis.min = self.fromDate();
-        self.macdPlotArgs.options.xaxis.max = self.toDate();
+        self.macdPlotArgs.options.xaxis.min = self.fromDateIndex();
+        self.macdPlotArgs.options.xaxis.max = self.toDateIndex();
 
+        var yaxisMinMax;
         // Find yaxis min/max for left yaxis
-        var yaxisLeftMinMax = findYaxisMinMax([self.macd(), self.macdSignal()], self.fromDate(), self.toDate());
-        yaxisLeftMinMax = addPaddingsToYaxisMinMax(yaxisLeftMinMax, self.settings.paddingFactor);
-
-        // Update yaxis min/max for left yaxis
-        self.macdPlotArgs.options.yaxes[0].min = yaxisLeftMinMax.min;
-        self.macdPlotArgs.options.yaxes[0].max = yaxisLeftMinMax.max;
+        yaxisMinMax = findYaxisMinMax([self.macd(), self.macdSignal()], self.fromDateIndex(), self.toDateIndex());
 
         // Find yaxis min/max for right yaxis
-        var yaxisRightMinMax = findYaxisMinMax(self.macdDivergence(), self.fromDate(), self.toDate());
-        yaxisRightMinMax = addPaddingsToYaxisMinMax(yaxisRightMinMax, self.settings.paddingFactor);
+        yaxisMinMax = findYaxisMinMax(self.macdDivergence(), self.fromDateIndex(), self.toDateIndex(), yaxisMinMax);
+
+        yaxisMinMax = addPaddingsToYaxisMinMax(yaxisMinMax, self.settings.paddingFactor);
+
+        // Update yaxis min/max for left yaxis
+        self.macdPlotArgs.options.yaxes[0].min = yaxisMinMax.min;
+        self.macdPlotArgs.options.yaxes[0].max = yaxisMinMax.max;
 
         // Update yaxis min/max for right yaxis
-        self.macdPlotArgs.options.yaxes[1].min = yaxisRightMinMax.min;
-        self.macdPlotArgs.options.yaxes[1].max = yaxisRightMinMax.max;
+        self.macdPlotArgs.options.yaxes[1].min = yaxisMinMax.min;
+        self.macdPlotArgs.options.yaxes[1].max = yaxisMinMax.max;
     };
 
     self.updateVolumePlotAxisMinAndMax = function () {
         log.trace('updateVolumePlotAxisMinAndMax()');
         // Update xaxis min/max
-        self.volumePlotArgs.options.xaxis.min = self.fromDate();
-        self.volumePlotArgs.options.xaxis.max = self.toDate();
+        self.volumePlotArgs.options.xaxis.min = self.fromDateIndex();
+        self.volumePlotArgs.options.xaxis.max = self.toDateIndex();
 
         // Find yaxis min/max for left yaxis
-        var yaxisLeftMinMax = findYaxisMinMax(self.volume(), self.fromDate(), self.toDate());
+        var yaxisLeftMinMax = findYaxisMinMax(self.volume(), self.fromDateIndex(), self.toDateIndex());
         yaxisLeftMinMax = addPaddingsToYaxisMinMax(yaxisLeftMinMax, self.settings.paddingFactor);
 
         // Update yaxis min/max for left yaxis
@@ -1950,41 +1995,19 @@ function ViewModel() {
     self.updateRsiPlotAxisMinAndMax = function () {
         log.trace('updateRsiPlotAxisMinAndMax()');
         // Update xaxis min/max
-        self.rsiPlotArgs.options.xaxis.min = self.fromDate();
-        self.rsiPlotArgs.options.xaxis.max = self.toDate();
+        self.rsiPlotArgs.options.xaxis.min = self.fromDateIndex();
+        self.rsiPlotArgs.options.xaxis.max = self.toDateIndex();
     };
 
-    self.findClosestDatapoint = function (date) {
+    self.findClosestDatapoint = function (posX) {
         log.trace('findClosestDatapoint()');
-        var data = self.mainPlotArgs.series[0].data;
-        var minIndex = 0;
-        var maxIndex = data.length - 1;
-        var currentIndex;
-        var currentDate;
-        var currentDateToLeft;
-        var currentDateToRight;
-
-        while (minIndex <= maxIndex) {
-            currentIndex = Math.floor((minIndex + maxIndex) / 2);
-            if (data[currentIndex - 1] === undefined) {
-                return 0;
-            } else if (data[currentIndex + 1] === undefined) {
-                return data.length - 1;
-            }
-
-            currentDate = data[currentIndex][0].valueOf();
-            currentDateToLeft = currentDate - (currentDate - data[currentIndex - 1][0].valueOf()) / 2;
-            currentDateToRight = currentDate + (data[currentIndex + 1][0].valueOf() - currentDate) / 2;
-
-            if (date < currentDateToLeft) {
-                maxIndex = currentIndex - 1;
-            } else if (date >= currentDateToRight) {
-                minIndex = currentIndex + 1;
-            } else {
-                return currentIndex;
-            }
+        var index = Math.round(posX);
+        if (index < self.fromDateIndex()) {
+            index = self.fromDateIndex(); // Do not hover datapoints before from date
+        } else if (index > self.toDateIndex()) {
+            index = self.toDateIndex(); // Do not hover datapoints after to date
         }
-        return null;
+        return index;    
     };
 
     self.highestIndex = null;
@@ -1993,39 +2016,28 @@ function ViewModel() {
         log.trace('updateLowestAndHighest()');
 
         // Find highest and lowest
-        var first;
-        var last;
-        var highest;
-        var lowest;
-        var data = self.mainPlotArgs.series[0].data;
-        $.each(data, function (index, value) {
-            if (first === undefined && value[0].valueOf() >= self.mainPlotArgs.options.xaxis.min.valueOf()) {
-                first = value[1];
-            }
-            if (value[0].valueOf() <= self.mainPlotArgs.options.xaxis.max.valueOf()) {
-                last = value[1];
-            }
+        var data = self.price().data;
 
-            // Check if value is within current time period
-            if (value[0].valueOf() >= self.mainPlotArgs.options.xaxis.min.valueOf() && value[0].valueOf() <= self.mainPlotArgs.options.xaxis.max.valueOf()) {
-                // Set initial min/max values
-                if (highest === undefined) {
-                    highest = value[1];
-                    self.highestIndex = index;
-                    lowest = value[1];
-                    self.lowestIndex = index;
-                }
-                // Update min and max if current value is a new min or max
-                if (value[1] > highest) {
-                    highest = value[1];
-                    self.highestIndex = index;
-                } else if (value[1] < lowest) {
-                    lowest = value[1];
-                    self.lowestIndex = index;
-                }
+        // Calculate Percent
+        var firstPrice = data[self.fromDateIndex()][1];
+        var lastPrice = data[self.toDateIndex()][1];
+        self.percent((lastPrice - firstPrice) / firstPrice);
+
+        // Calculate Highest/Lowest
+        var highest = data[self.fromDateIndex()][1];
+        var lowest = data[self.fromDateIndex()][1];
+        for (var i = self.fromDateIndex(); i <= self.toDateIndex(); i++) {
+            var price = data[i][1];
+            if (price > highest) {
+                // Update highest since current value is a new max
+                highest = price;
+                self.highestIndex = i;
+            } else if (price < lowest) {
+                // Update lowest since current value is a new min
+                lowest = price;
+                self.lowestIndex = i;
             }
-        });
-        self.percent((last - first) / first);
+        }
         self.highest(highest);
         self.lowest(lowest);
     };
@@ -2039,9 +2051,9 @@ function ViewModel() {
         var stocks = 0;
         var money = 1000;
         var profit;
-        var data = self.mainPlotArgs.series[0].data;
+        var data = self.price().data;
         $.each(data, function (index, value) {
-            if (value[0].valueOf() < self.mainPlotArgs.options.xaxis.min.valueOf() || value[0].valueOf() > self.mainPlotArgs.options.xaxis.max.valueOf()) {
+            if (value[0] < self.mainPlotArgs.options.xaxis.min || value[0] > self.mainPlotArgs.options.xaxis.max) {
                 return true;
             }
             if (index === 0 || self.macdDivergence().data[index][1] === null) {
@@ -2058,7 +2070,7 @@ function ViewModel() {
                 if (money !== 0) {
                     stocks = money / value[1];
                     money = 0;
-                    log.trace('bougth for price ' + value[1] + ' on ' + value[0].format());
+                    log.trace('bougth for price ' + value[1] + ' on ' + self.date().data[index].format());
                 }
             } else if (lastMacd > 0 && macd < 0) {
                 log.trace('negative trend detected');
@@ -2066,7 +2078,7 @@ function ViewModel() {
                     money = stocks * value[1];
                     profit = money / 1000 - 1;
                     stocks = 0;
-                    log.trace('sold for price ' + value[1] + ' on ' + value[0].format() + ' with profit ' + numeral(profit).format('0.00%'));
+                    log.trace('sold for price ' + value[1] + ' on ' + self.date().data[index].format() + ' with profit ' + numeral(profit).format('0.00%'));
                 }
             }
             lastMacd = self.macdDivergence().data[index][1];
@@ -2110,10 +2122,10 @@ function ViewModel() {
     };
 
     function getFirstPriceDate() {
-        return self.price().data[0][0].clone();
+        return self.date().data[0].clone();
     }
     function getLastPriceDate() {
-        return self.price().data[self.price().data.length - 1][0].clone();
+        return self.date().data[self.date().data.length - 1].clone();
     }
     function getFromDateForTimePeriod() {
         if (self.timePeriod() === 'all') {

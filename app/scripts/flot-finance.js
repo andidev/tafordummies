@@ -3,7 +3,6 @@
 /* global moment */
 /* global TA */
 /* global yahooFinance */
-/* global formatDate */
 /* jshint newcap: false */
 
 (function () {
@@ -53,16 +52,25 @@
 
     // Public methods
     /**
+     * Get the dates
+     *
+     * @return     {Array} the dates
+     */
+    flotFinance.fn.getDate = cached(function (scale) {
+        return this.getData(scale).date;
+    });
+
+    /**
      * Get the close price
      *
      * @return     {Array} the close price
      */
     flotFinance.fn.getClosePrice = cached(function (scale, splitDetection) {
-        var close = this.convertYahooFinanceToFlotFormat('close');
+        var close = this.getData(scale).close;
         if (splitDetection) {
             close = adjustSplits(close);
         }
-        return scaleTo(scale, close);
+        return close;
     });
 
     /**
@@ -71,11 +79,11 @@
      * @return     {Array} the adjusted close price
      */
     flotFinance.fn.getAdjClosePrice = cached(function (scale, splitDetection) {
-        var close = this.convertYahooFinanceToFlotFormat('adjclose');
+        var adjclose = this.getData(scale).adjclose;
         if (splitDetection) {
-            close = adjustSplits(close);
+            adjclose = adjustSplits(adjclose);
         }
-        return scaleTo(scale, close);
+        return adjclose;
     });
 
     /**
@@ -84,12 +92,12 @@
      * @return     {Array} the volume
      */
     flotFinance.fn.getVolume = cached(function (scale, splitDetection) {
-        var volume = this.convertYahooFinanceToFlotFormat('volume');
+        var volume = this.getData(scale).volume;
         if (splitDetection) {
-            var price = this.getAdjClosePrice('days', false);
-            volume = adjustSplitsVolume(price, volume);
+            var adjclose = this.getData(scale).adjclose;
+            volume = adjustSplitsVolume(adjclose, volume);
         }
-        return scaleTo(scale, volume, true);
+        return volume;
     });
 
     /**
@@ -113,9 +121,8 @@
      * @return     {Array} the RSI curve
      */
     flotFinance.fn.getRsi = cached(function (n, scale, splitDetection) {
-        var data = this.getAdjClosePrice(scale, splitDetection);
         var priceTA = this.getPriceTA(scale, splitDetection);
-        data = convertToFlotFormat(priceTA.rsi(n, false).asArray(), data);
+        var data = convertToFlotFormat(priceTA.rsi(n, false).asArray());
         return data;
     });
 
@@ -125,9 +132,8 @@
      * @return     {Array} the Simple Moving Avarage
      */
     flotFinance.fn.getSmaPrice = cached(function (n, scale, splitDetection) {
-        var data = this.getAdjClosePrice(scale, splitDetection);
         var priceTA = this.getPriceTA(scale, splitDetection);
-        data = convertToFlotFormat(priceTA.sma(n).asArray(), data);
+        var data = convertToFlotFormat(priceTA.sma(n).asArray());
         return data;
     });
 
@@ -137,9 +143,8 @@
      * @return     {Array} the Simple Moving Avarage
      */
     flotFinance.fn.getEmaPrice = cached(function (n, scale, splitDetection) {
-        var data = this.getAdjClosePrice(scale, splitDetection);
         var priceTA = this.getPriceTA(scale, splitDetection);
-        data = convertToFlotFormat(priceTA.ema(n).asArray(), data);
+        var data = convertToFlotFormat(priceTA.ema(n).asArray());
         return data;
     });
 
@@ -149,9 +154,8 @@
      * @return     {Array} the MACD curve
      */
     flotFinance.fn.getMacd = cached(function (nSlow, nFast, nSignal, scale, splitDetection) {
-        var data = this.getAdjClosePrice(scale, splitDetection);
         var macdTA = this.getMacdTA(nSlow, nFast, nSignal, scale, splitDetection);
-        data = convertToFlotFormat(macdTA.macd.asArray(), data);
+        var data = convertToFlotFormat(macdTA.macd.asArray());
         return data;
     });
 
@@ -161,9 +165,8 @@
      * @return     {Array} the MACD signal
      */
     flotFinance.fn.getMacdSignal = cached(function (nSlow, nFast, nSignal, scale, splitDetection) {
-        var data = this.getAdjClosePrice(scale, splitDetection);
         var macdTA = this.getMacdTA(nSlow, nFast, nSignal, scale, splitDetection);
-        data = convertToFlotFormat(macdTA.signal.asArray(), data);
+        var data = convertToFlotFormat(macdTA.signal.asArray());
         return data;
     });
 
@@ -173,30 +176,193 @@
      * @return     {Array} the MACD curve
      */
     flotFinance.fn.getMacdDivergence = cached(function (nSlow, nFast, nSignal, scale, splitDetection) {
-        var data = this.getAdjClosePrice(scale, splitDetection);
         var macdTA = this.getMacdTA(nSlow, nFast, nSignal, scale, splitDetection);
-        data = convertToFlotFormat(macdTA.divergence.asArray(), data);
+        var data = convertToFlotFormat(macdTA.divergence.asArray());
         return data;
     });
 
+
     /**
-     * Convert Yahoo Finance format to Flot format
+     * Get (convert, parse and scale) the Yahoo Finance data
      *
-     * @param {type} column to use (available columns open, high, low, close, volume, adjclose)
+     * @param {String} scale
      *
      * @returns {Array}
      */
-    flotFinance.fn.convertYahooFinanceToFlotFormat = cached(function (column) {
-        log.trace('Converting Yahoo Finance to Flot format');
+    flotFinance.fn.getData = cached(function (scale) {
+        log.trace('Getting (converting, parsing and scaling) Yahoo Finance data');
         var self = this;
-        var returnvalue = $.map(this.yahooFinanceData, function (value) {
-            // Remove holidays which are stored with no volume
-            if (self.hasVolume() && value.volume === '000') {
-                return null;
-            }
-            return [[moment(value.date), parseFloat(value[column])]];
-        }).reverse();
-        return returnvalue;
+        var data = {
+            date: {},  // Store date as a bimap
+            open: [],
+            high: [],
+            low: [],
+            close: [],
+            adjclose: [],
+            volume: []
+        };
+        var value;
+        var previousValue;
+        var previousDate;
+        var lastValue;
+        var lastDate;
+        var index = 0;
+        var lastIndex;
+        var i;
+        switch (scale) {
+            case undefined:
+            case 'days':
+                for (i = this.yahooFinanceData.length - 1; i >= 0; i--) {
+                    value = this.yahooFinanceData[i];
+                    // Remove holidays which are stored with no volume
+                    if (self.hasVolume() && value.volume === '000') {
+                        continue;
+                    }
+                    data.date[index] = moment(value.date); // Store index to date entry
+                    data.date[moment(value.date).format('YYYYMMDD')] = index; // Store date to index entry
+                    data.open[index] = [index, parseFloat(value.open)];
+                    data.high[index] = [index, parseFloat(value.high)];
+                    data.low[index] = [index, parseFloat(value.low)];
+                    data.close[index] = [index, parseFloat(value.close)];
+                    data.adjclose[index] = [index, parseFloat(value.adjclose)];
+                    data.volume[index] = [index, parseFloat(value.volume)];
+                    index++;
+                }
+                data.date.length = index;
+                return data;
+            case 'weeks':
+                var week;
+                var previousWeek = null;
+                for (i = this.yahooFinanceData.length - 2; i >= 0; i--) {
+                    value = this.yahooFinanceData[i];
+                    // Remove holidays which are stored with no volume
+                    if (self.hasVolume() && value.volume === '000') {
+                        continue;
+                    }
+                    previousValue = this.yahooFinanceData[i + 1];
+                    previousDate = moment(previousValue.date);
+                    if (previousWeek === null) {
+                        previousWeek = previousDate.week();
+                    }
+                    week = moment(value.date).week();
+                    if (week !== previousWeek) {
+                        data.date[index] = previousDate; // Store index to date entry
+                        data.date[previousDate.format('YYYYMMDD')] = index; // Store date to index entry
+                        data.open[index] = [index, parseFloat(previousValue.open)];
+                        data.high[index] = [index, parseFloat(previousValue.high)];
+                        data.low[index] = [index, parseFloat(previousValue.low)];
+                        data.close[index] = [index, parseFloat(previousValue.close)];
+                        data.adjclose[index] = [index, parseFloat(previousValue.adjclose)];
+                        data.volume[index] = [index, (data.volume[index] ? data.volume[index][1] : 0) + parseFloat(previousValue.volume)];
+                        previousWeek = week;
+                        index++;
+                    } else {
+                        data.volume[index] = [index, (data.volume[index] ? data.volume[index][1] : 0) + parseFloat(previousValue.volume)];
+                        lastIndex = i;
+                    }
+                }
+                lastValue = this.yahooFinanceData[lastIndex];
+                lastDate = moment(lastValue.date);
+                data.date[index] = lastDate; // Store index to date entry
+                data.date[lastDate.format('YYYYMMDD')] = index; // Store date to index entry
+                data.open[index] = [index, parseFloat(lastValue.open)];
+                data.high[index] = [index, parseFloat(lastValue.high)];
+                data.low[index] = [index, parseFloat(lastValue.low)];
+                data.close[index] = [index, parseFloat(lastValue.close)];
+                data.adjclose[index] = [index, parseFloat(lastValue.adjclose)];
+                // Skip volume since its already added
+                index++;
+                data.date.length = index;
+                return data;
+            case 'months':
+                var month;
+                var previousMonth = null;
+                for (i = this.yahooFinanceData.length - 2; i >= 0; i--) {
+                    value = this.yahooFinanceData[i];
+                    // Remove holidays which are stored with no volume
+                    if (self.hasVolume() && value.volume === '000') {
+                        continue;
+                    }
+                    previousValue = this.yahooFinanceData[i + 1];
+                    previousDate = moment(previousValue.date);
+                    if (previousMonth === null) {
+                        previousMonth = previousDate.month();
+                    }
+                    month = moment(value.date).month();
+                    if (month !== previousMonth) {
+                        data.date[index] = previousDate; // Store index to date entry
+                        data.date[previousDate.format('YYYYMMDD')] = index; // Store date to index entry
+                        data.open[index] = [index, parseFloat(previousValue.open)];
+                        data.high[index] = [index, parseFloat(previousValue.high)];
+                        data.low[index] = [index, parseFloat(previousValue.low)];
+                        data.close[index] = [index, parseFloat(previousValue.close)];
+                        data.adjclose[index] = [index, parseFloat(previousValue.adjclose)];
+                        data.volume[index] = [index, (data.volume[index] ? data.volume[index][1] : 0) + parseFloat(previousValue.volume)];
+                        previousMonth = month;
+                        index++;
+                    } else {
+                        data.volume[index] = [index, (data.volume[index] ? data.volume[index][1] : 0) + parseFloat(previousValue.volume)];
+                        lastIndex = i;
+                    }
+                }
+                lastValue = this.yahooFinanceData[lastIndex];
+                lastDate = moment(lastValue.date);
+                data.date[index] = lastDate; // Store index to date entry
+                data.date[lastDate.format('YYYYMMDD')] = index; // Store date to index entry
+                data.open[index] = [index, parseFloat(lastValue.open)];
+                data.high[index] = [index, parseFloat(lastValue.high)];
+                data.low[index] = [index, parseFloat(lastValue.low)];
+                data.close[index] = [index, parseFloat(lastValue.close)];
+                data.adjclose[index] = [index, parseFloat(lastValue.adjclose)];
+                // Skip volume since its already added
+                index++;
+                data.date.length = index;
+                return data;
+            case 'years':
+                var year;
+                var previousYear = null;
+                for (i = this.yahooFinanceData.length - 2; i >= 0; i--) {
+                    value = this.yahooFinanceData[i];
+                    // Remove holidays which are stored with no volume
+                    if (self.hasVolume() && value.volume === '000') {
+                        continue;
+                    }
+                    previousValue = this.yahooFinanceData[i + 1];
+                    previousDate = moment(previousValue.date);
+                    if (previousYear === null) {
+                        previousYear = previousDate.year();
+                    }
+                    year = moment(value.date).year();
+                    if (year !== previousYear) {
+                        data.date[index] = previousDate; // Store index to date entry
+                        data.date[previousDate.format('YYYYMMDD')] = index; // Store date to index entry
+                        data.open[index] = [index, parseFloat(previousValue.open)];
+                        data.high[index] = [index, parseFloat(previousValue.high)];
+                        data.low[index] = [index, parseFloat(previousValue.low)];
+                        data.close[index] = [index, parseFloat(previousValue.close)];
+                        data.adjclose[index] = [index, parseFloat(previousValue.adjclose)];
+                        data.volume[index] = [index, (data.volume[index] ? data.volume[index][1] : 0) + parseFloat(previousValue.volume)];
+                        previousYear = year;
+                        index++;
+                    } else {
+                        data.volume[index] = [index, (data.volume[index] ? data.volume[index][1] : 0) + parseFloat(previousValue.volume)];
+                        lastIndex = i;
+                    }
+                }
+                lastValue = this.yahooFinanceData[lastIndex];
+                lastDate = moment(lastValue.date);
+                data.date[index] = lastDate; // Store index to date entry
+                data.date[lastDate.format('YYYYMMDD')] = index; // Store date to index entry
+                data.open[index] = [index, parseFloat(lastValue.open)];
+                data.high[index] = [index, parseFloat(lastValue.high)];
+                data.low[index] = [index, parseFloat(lastValue.low)];
+                data.close[index] = [index, parseFloat(lastValue.close)];
+                data.adjclose[index] = [index, parseFloat(lastValue.adjclose)];
+                // Skip volume since its already added
+                index++;
+                data.date.length = index;
+                return data;
+        }
     });
 
     /**
@@ -205,8 +371,8 @@
      * @return     {Array} the MACD curve
      */
     flotFinance.fn.getPriceTA = cached(function (scale, splitDetection) {
-        var data = this.getAdjClosePrice(scale, splitDetection);
-        var priceTA = TA(getPricesAsArray(data));
+        var adjclose = this.getAdjClosePrice(scale, splitDetection);
+        var priceTA = TA(convertToTaFormat(adjclose));
         return priceTA;
     });
 
@@ -235,148 +401,24 @@
         return true;
     };
 
-    // Private methods
-    var scaleTo = function (scale, data, add) {
-        switch (scale) {
-            case undefined:
-            case 'days':
-                // Keep original day scale
-                return data;
-            case 'weeks':
-                return scaleToWeeks(data, add);
-            case 'months':
-                return scaleToMonths(data, add);
-            case 'years':
-                return scaleToYears(data, add);
-        }
-    };
-
-    var scaleToWeeks = function (data, add) {
-        log.trace('Scaling data to week', data);
-        console.time('scaleToWeeks');
-        var scaledData = [];
-        var currentWeek = data[0][0].isoWeek();
-        var currentWeekIndex = 0;
-        if (add) {
-            scaledData[currentWeekIndex] = [data[0][0], data[0][1]];
-            $.each(data, function (index, value) {
-                var week = value[0].isoWeek();
-                if (week === currentWeek) {
-                    scaledData[currentWeekIndex] = [value[0], scaledData[currentWeekIndex][1] + value[1]];
-                } else {
-                    currentWeek = week;
-                    currentWeekIndex = currentWeekIndex + 1;
-                    scaledData[currentWeekIndex] = [value[0], value[1]];
-                }
-            });
-            console.timeEnd('scaleToWeeks');
-            return scaledData;
-        } else {
-            $.each(data, function (index, value) {
-                var week = value[0].isoWeek();
-                if (week === currentWeek) {
-                    scaledData[currentWeekIndex] = [value[0], value[1]];
-                } else {
-                    currentWeek = week;
-                    currentWeekIndex = currentWeekIndex + 1;
-                    scaledData[currentWeekIndex] = [value[0], value[1]];
-                }
-            });
-            console.timeEnd('scaleToWeeks');
-            return scaledData;
-        }
-    };
-
-    var scaleToMonths = function (data, add) {
-        log.trace('Scaling data to month', data);
-        console.time('scaleToMonths');
-        var scaledData = [];
-        var currentMonth = data[0][0].month();
-        var currentMonthIndex = 0;
-        if (add) {
-            scaledData[currentMonthIndex] = [data[0][0], data[0][1]];
-            $.each(data, function (index, value) {
-                var month = value[0].month();
-                if (month === currentMonth) {
-                    scaledData[currentMonthIndex] = [value[0], scaledData[currentMonthIndex][1] + value[1]];
-                } else {
-                    currentMonth = month;
-                    currentMonthIndex++;
-                    scaledData[currentMonthIndex] = [value[0], value[1]];
-                }
-            });
-            console.timeEnd('scaleToMonths');
-            return scaledData;
-        } else {
-            $.each(data, function (index, value) {
-                var month = value[0].month();
-                if (month === currentMonth) {
-                    scaledData[currentMonthIndex] = [value[0], value[1]];
-                } else {
-                    currentMonth = month;
-                    currentMonthIndex++;
-                    scaledData[currentMonthIndex] = [value[0], value[1]];
-                }
-            });
-            console.timeEnd('scaleToMonths');
-            return scaledData;
-        }
-    };
-
-    var scaleToYears = function (data, add) {
-        log.trace('Scaling data to year', data);
-        console.time('scaleToYears');
-        var scaledData = [];
-        var currentYear = data[0][0].year();
-        var currentYearIndex = 0;
-        if (add) {
-            scaledData[currentYearIndex] = [data[0][0], data[0][1]];
-            $.each(data, function (index, value) {
-                var year = value[0].year();
-                if (year === currentYear) {
-                    scaledData[currentYearIndex] = [value[0], scaledData[currentYearIndex][1] + value[1]];
-                } else {
-                    currentYear = year;
-                    currentYearIndex++;
-                    scaledData[currentYearIndex] = [value[0], value[1]];
-                }
-            });
-            console.timeEnd('scaleToYears');
-            return scaledData;
-        } else {
-            $.each(data, function (index, value) {
-                var year = value[0].year();
-                if (year === currentYear) {
-                    scaledData[currentYearIndex] = [value[0], value[1]];
-                } else {
-                    currentYear = year;
-                    currentYearIndex++;
-                    scaledData[currentYearIndex] = [value[0], value[1]];
-                }
-            });
-            console.timeEnd('scaleToYears');
-            return scaledData;
-        }
-    };
-
     var adjustSplits = function (data) {
         log.trace('Adjusting splits to data', data);
         var splitData = [];
-        splitData[data.length - 1] = [data[data.length - 1][0].clone(), data[data.length - 1][1]];
+        splitData[data.length - 1] = [data[data.length - 1][0], data[data.length - 1][1]];
         var previousPrice = data[data.length - 1][1];
-        var previousDate = data[data.length - 1][0];
+        var previousIndex = data[data.length - 1][0];
         var adjustFactor = 1;
         for (var i = data.length - 2; i >= 0; i--) {
             if (Math.round(data[i][1] / previousPrice) >= 2) {
-                log.info('Split found and adjusted between ' + formatDate(data[i][0]) + ' (' + data[i][1] + ') to ' + formatDate(previousDate) + ' (' + previousPrice + ')');
+                log.info('Split found and adjusted between ' + data[i][0] + ' (' + data[i][1] + ') to ' + previousIndex + ' (' + previousPrice + ')');
                 adjustFactor = adjustFactor / Math.round(data[i][1] / previousPrice);
             }
             previousPrice = data[i][1];
-            previousDate = data[i][0];
+            previousIndex = data[i][0];
             if (adjustFactor !== 1) {
-                splitData[i] = [data[i][0].clone(), data[i][1] * adjustFactor];
+                splitData[i] = [data[i][0], data[i][1] * adjustFactor];
             } else {
-                splitData[i] = [data[i][0].clone(), data[i][1]];
+                splitData[i] = [data[i][0], data[i][1]];
             }
         }
         return splitData;
@@ -385,35 +427,35 @@
     var adjustSplitsVolume = function (data, volume) {
         log.trace('Adjusting splits to data', data);
         var splitVolume = [];
-        splitVolume[volume.length - 1] = [volume[volume.length - 1][0].clone(), volume[volume.length - 1][1]];
+        splitVolume[volume.length - 1] = [volume[volume.length - 1][0], volume[volume.length - 1][1]];
         var previousPrice = data[data.length - 1][1];
-        var previousDate = data[data.length - 1][0];
+        var previousIndex = data[data.length - 1][0];
         var adjustFactor = 1;
         for (var i = data.length - 2; i >= 0; i--) {
             if (Math.round(data[i][1] / previousPrice) >= 2) {
-                log.info('Split found and adjusted between ' + formatDate(data[i][0]) + ' (' + data[i][1] + ') to ' + formatDate(previousDate) + ' (' + previousPrice + ')');
+                log.info('Split found and adjusted between ' + data[i][0] + ' (' + data[i][1] + ') to ' + previousIndex + ' (' + previousPrice + ')');
                 adjustFactor = adjustFactor / Math.round(data[i][1] / previousPrice);
             }
             previousPrice = data[i][1];
-            previousDate = data[i][0];
+            previousIndex = data[i][0];
             if (adjustFactor !== 1) {
-                splitVolume[i] = [volume[i][0].clone(), volume[i][1] * adjustFactor];
+                splitVolume[i] = [volume[i][0], volume[i][1] * adjustFactor];
             } else {
-                splitVolume[i] = [volume[i][0].clone(), volume[i][1]];
+                splitVolume[i] = [volume[i][0], volume[i][1]];
             }
         }
         return splitVolume;
     };
 
-    var convertToFlotFormat = function (arg1, arg2) {
+    var convertToFlotFormat = function (arg1) {
         // Array passed as arg1 and price in Flot format as arg2
         log.trace('Converting array to Flot format');
         return $.map(arg1, function (value, index) {
-            return [[arg2[index][0], value]];
+            return [[index, value]];
         });
     };
 
-    var getPricesAsArray = function (data) {
+    var convertToTaFormat = function (data) {
         return $.map(data, function (value) {
             return value[1];
         });

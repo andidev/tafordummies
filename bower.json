@@ -35,7 +35,6 @@
         "flotcharts": {
             "main": [
                 "jquery.flot.js",
-                "jquery.flot.time.js",
                 "jquery.flot.selection.js",
                 "jquery.flot.crosshair.js"
             ]

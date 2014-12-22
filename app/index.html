@@ -185,10 +185,10 @@
                         </div>
                     </div>
                     <div id="ta-plots" class="col-md-12 col-sm-12 col-md-12 col-xs-12">
-                        <div id="main-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo, mousewheel: scrollPanZoom}"></div>
-                        <div id="volume-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
-                        <div id="rsi-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
-                        <div id="macd-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showPriceInfo, mouseout: hidePriceInfo}"></div>
+                        <div id="main-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showHoverInfo, mouseout: hideHoverInfo, mousewheel: scrollPanZoom}"></div>
+                        <div id="volume-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showHoverInfo, mouseout: hideHoverInfo}"></div>
+                        <div id="rsi-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showHoverInfo, mouseout: hideHoverInfo}"></div>
+                        <div id="macd-plot" data-bind="event: { mousedown: mouseDown, mousemove: mouseMove, plotselected: zoomSelection, plotselecting: syncSelectionInPlot, plothover: showHoverInfo, mouseout: hideHoverInfo}"></div>
                         <div id="hover-info">
                             <div id="hover-date" class="text-center text-muted text-bold" data-bind="text: hoverDateFormatted">23 May 2012</div>
                             <div id="hover-percent" class="text-center text-bold text-large text-success" data-bind="css: textColorClass(hoverPercent())"><i class="fa" data-bind="css: faArrowClass(hoverPercent())"></i> <span data-bind="html: formatPercent(hoverPercent())">1,03%</span></div>
@@ -307,6 +307,7 @@
             <div class="row">
                 <h1>To Do</h1>
                 <ul>
+                    <li>http://localhost:9000/?timePeriod=all&scale=years cuts of last value at top of chart</li>
                     <li>Refactor keyboard shortcuts code</li>
                     <li>Refactor startDate fromDate logic/bounce logic</li>
                     <li>Make it impossible to zoom more than two days with keys</li>
@@ -333,7 +334,6 @@
         <script src="bower_components/numeral/numeral.js"></script>
         <script src="bower_components/datejs/build/production/date.min.js"></script>
         <script src="bower_components/flotcharts/jquery.flot.js"></script>
-        <script src="bower_components/flotcharts/jquery.flot.time.js"></script>
         <script src="bower_components/flotcharts/jquery.flot.selection.js"></script>
         <script src="bower_components/flotcharts/jquery.flot.crosshair.js"></script>
         <script src="bower_components/knockoutjs/dist/knockout.js"></script>

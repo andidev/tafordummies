@@ -32,3 +32,31 @@ function formatLongDate(date) {
     }
     return date.format('ddd D MMM YYYY');
 }
+
+function formatDateYears(date) {
+    if (date === undefined || date === null || date === '') {
+        return '';
+    }
+    return date.format('YYYY');
+}
+
+function formatDateMonths(date) {
+    if (date === undefined || date === null || date === '') {
+        return '';
+    }
+    return date.format('YYYY');
+}
+
+function formatDateWeeks(date) {
+    if (date === undefined || date === null || date === '') {
+        return '';
+    }
+    return date.format('MMM YY');
+}
+
+function formatDateDays(date) {
+    if (date === undefined || date === null || date === '') {
+        return '';
+    }
+    return date.format('D MMM');
+}
